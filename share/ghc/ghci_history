@@ -1,0 +1,100 @@
+fact 100
+let fact 0 = 1 ; fact n = n * fact (pred n)
+fact 100
+fact 3
+let fact :: Integer -> Integer ; fact 0 = 1 ; fact n = n * fact (pred n)
+putStrLn $ concatMap (($ " ") . Numeric.showHex) [0,12..256]
+length [0,12..256]
+length [0,9..256]
+length (putStrLn . ($ "") . Numeric.showHex) [0,9..256]
+length_ (putStrLn . ($ "") . Numeric.showHex) [0,9..256]
+mapM_ (putStrLn . ($ "") . Numeric.showHex) [0,9..256]
+map (($ "") . Numeric.showHex) [0,9..256]
+map Numeric.showHex [0,9..256]
+:m + Numeric 
+:m + Data.Char 
+map toHex [0,9..256]
+[0,9..256]
+[0,9..]
+magnitude (2.6 :+ 1.2)
+magnitude (3.2 :+ 0.0)
+magnitude  (3.2 :+ 0.0)
+abs (3.2 :+ 0.0)
+length (3.2 :+ 0.0)
+length ((3.2 :: Double) :+ 0.0)
+length (3.2 :: Double :+ 0.0)
+length (3.2 :+ 0.0)
+length (3.2 :: Double) :+ 0.0
+length 3.2 :: Double :+ 0.0
+length 3.2 :+ 0.0
+length 3.2 :+ 0
+:m Data.Complex 
+length 3.2 :+ 0
+:i Random
+:t randomRIO
+randomRIO ([0], [1])
+randomRIO (0, 1)
+;
+:t (./)
+:t ('')
+:t (.')
+:t ('.)
+:t (~.)
+:t (.")
+:t (..)
+:t (.,)
+:t (=<<)
+:t liftM
+:t lift
+2^54
+2^53
+first (+ 1) (0, 1)
+:t first
+first (0, 1) (+ 1)
+:t first
+ls
+:m + Control.Arrow
+let rot13 str = multiReplace ((zip `on` map (: [])) str (rotate 13 str)) in rot13 ['A'.. 'Z'] . rot13 ['a'.. 'z'] $ x
+multiReplace ((zip `on` map (: [])) ['a'.. 'z'] (rotate 13 ['a'.. 'z'])) x
+let x = "EBG KVVV vf n fvzcyr yrggre fhofgvghgvba pvcure gung ercynprf n yrggre jvgu gur yrggre KVVV yrggref nsgre vg va gur nycunorg. EBG KVVV vf na rknzcyr bs gur Pnrfne pvcure, qrirybcrq va napvrag Ebzr. Synt vf SYNTFjmtkOWFNZdjkkNH. Vafreg na haqrefpber vzzrqvngryl nsgre SYNT."
+multiReplace ((zip `on` map (: [])) ['a'.. 'z'] (rotate 13 ['a'.. 'z'])) "abc"
+:m + Data.List.HT Data.Char Data.Function
+multiReplace ((zip `on` map (: [])) ['a'.. 'z'] (rotate 13 ['a'.. 'z'])) "abc"
+multiReplace (zip ['a'.. 'z'] (rotate 13 ['a'.. 'z'])) "abc"
+((multiReplace .) . zip) ['a'.. 'z'] (rotate 13 ['a'.. 'z']) "abc"
+(multiReplace . zip) ['a'.. 'z'] (rotate 13 ['a'.. 'z']) "abc"
+(,) ['a'.. 'z'] (rotate 13 ['a'.. 'z']) 
+replace ['a'.. 'z'] (rotate 13 ['a'.. 'z']) "abc"
+replace ['a'.. 'z'] (rotate 13 ['a'.. 'z'])
+:m + Data.List.HT Data.Char 
+replace ['a'.. 'z'] (['a'.. 'z'])
+let a = ['a'.. 'z'] in replace a (take (length a) . drop 13 . cycle $ a) x
+let a = ['a'.. 'z'] in replace a (take (length a) . drop 1 . cycle $ a) x
+let a = ['a'.. 'z'] in (,,) a (take (length a) . drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] in (,,) a (take (length a) . drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in (,,) a (take (2 * length a) . drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in (,,) a (drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in a
+replace "ab" "bc" "abc"
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (tail . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (take (2 * length a') . drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace x a (drop 1 . cycle $ a)
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace x a (drop 1 . cycle $ a)
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (drop 1 . cycle $ a) x
+let a' = ['a'.. 'z'] ; a = a' ++ map toUpper a' in replace a (drop 1 . cycle $ a) x
+replace ['a'.. 'z'] (drop 1 .cycle $ ['a'.. 'z']) x
+:t Data.Char.generalCategory 
+Data.Char.LowercaseLetter 
+:m + Data.List.HT Data.Char 
+:m + Data.List.HT Data.String
+replace x
+let x = "EBG KVVV vf n fvzcyr yrggre fhofgvghgvba pvcure gung ercynprf n yrggre jvgu gur yrggre KVVV yrggref nsgre vg va gur nycunorg. EBG KVVV vf na rknzcyr bs gur Pnrfne pvcure, qrirybcrq va napvrag Ebzr. Synt vf SYNTFjmtkOWFNZdjkkNH. Vafreg na haqrefpber vzzrqvngryl nsgre SYNT."
+:t replace
+:m + Data.List.HT 
+:t replace
+:m + Data.String.HT 
+:m + Data.String

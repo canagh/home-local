@@ -1,0 +1,43 @@
+#!/bin/bash
+
+while [ -n "$1" ] ; do
+    case "$1" in
+        -h | --help )
+            echo 'fortyping [-h] [--help]'
+            exit
+            ;;
+        -* )
+            echo 'fortyping: unknown option: '"$1" 1>&2
+            exit 1
+            ;;
+        * )
+            echo 'fortyping: unknown argument: '"$1" 1>&2
+            exit 1
+            ;;
+    esac
+done
+
+while true ; do
+    echo -e '\e[34m'"$ fortune"'\e[0m' # show the command which makes the message
+    message=`fortune`
+    echo "$message" # show the player the whole message
+    for word in $message ; do # split it into words: lines are too long
+        while true ; do
+            # tell the word
+            echo -en '\e[32m'"> "'\e[0m'
+            echo -e '\e[01m'"$word"'\e[0m'
+            # hear the word
+            echo -en '\e[32m'"> "'\e[0m'
+            read input
+            # compare
+            if [ "$word" = "$input" ] ; then
+                echo -e '\e[34m'"ok"'\e[0m'
+                break
+            else
+                echo -e '\e[31m'"wrong"'\e[0m'
+                # retry
+            fi
+        done
+    done
+    echo # open a line
+done

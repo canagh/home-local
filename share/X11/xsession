@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# run window-mgr
+exec gnome-session-xmonad

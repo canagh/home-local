@@ -1,0 +1,7 @@
+[user]
+	name = cana
+	email = nm_ff_stad@yahoo.co.jp
+[color]
+	ui = auto
+[core]
+	excludesfile = ~/local/share/git/gitignore

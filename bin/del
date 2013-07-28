@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if which trash-put >/dev/null 2>&1; then
+    # moves them into ~/.local/share/Trash/files or /.Trash-$UID
+    # to install:
+    # $ sudo apt-get install trash-cli
+    exec trash-put "$@"
+
+elif
+    [ -d ~/.trash ] || mkdir ~/.trash
+    exec mv -t ~/.trash "$@"
+fi

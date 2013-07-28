@@ -1,0 +1,20 @@
+#!/bin/bash
+
+while [ -n "$1" ] ; do
+    case "$1" in
+        -h | -\? | --help ) echo 'usage: export PATH="$(echo $PATH | '$(basename "$0")')"' ; exit ;;
+        -* ) echo $(basename "$0")': unknown option: '"$1" >&2 ; exit 1 ;;
+        * ) echo $(basename "$0")': unknown argument: '"$1" >&2 ; exit 1 ;;
+    esac
+done
+
+paths=($(tr ':' '\n'))
+cache="${paths[0]}"
+
+for path in ${paths[@]:1} ; do
+    if echo :"$cache": | grep -v :"$path": > /dev/null ; then
+        cache="$cache":"$path"
+    fi
+done
+
+echo "$cache"

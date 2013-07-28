@@ -1,0 +1,52 @@
+#!/bin/sh
+
+
+## work
+CURRENT_PROJECT_DIRECTORY=~/work/cogile
+work() {
+    # you should rewrite frequently
+    cd "$CURRENT_PROJECT_DIRECTORY"
+    [ -e .virtualenv ] && . .virtualenv/bin/activate
+    [ -e .virthualenv ] && . .virthualenv/bin/activate
+    echo -e "\e[34m\$ git log\e[0m"
+    git --no-pager log --color | head -n16
+    echo
+    echo -e "\e[34m\$ git diff\e[0m"
+    git --no-pager diff --color
+    echo
+    echo -e "\e[34m\$ ls\e[0m"
+    ls
+}
+
+
+MLOCATE_HOME_DB=$HOME/var/home.mlocate.db
+updatedb.home() {
+	updatedb --database-root $HOME --output $MLOCATE_HOME_DB --require-visibility 0 $@
+}
+locate.home() {
+	locate --database $MLOCATE_HOME_DB $@
+}
+
+
+## logout for gnome
+if ps ax | grep -v grep | grep gnome-session > /dev/null ; then
+	alias logout='gnome-session-quit --no-prompt'
+fi
+
+
+## power management
+alias suspend=pm-suspend
+alias hibernate=pm-hibernate
+alias powersave=pm-powersave
+alias suspend-hybrid=pmsuspend-hybrid
+
+
+apt-add-japanese-repository() {
+    # https://ubuntulinux.jp/japanese
+    wget -q https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg -O- | apt-key add -
+    wget -q https://www.ubuntulinux.jp/ubuntu-jp-ppa-keyring.gpg -O- | apt-key add -
+    wget https://www.ubuntulinux.jp/sources.list.d/oneiric.list -O /etc/apt/sources.list.d/ubuntu-ja.list
+    apt-get update
+    apt-get upgrade
+    apt-get install ubuntu-desktop-ja
+}

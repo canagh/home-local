@@ -1,0 +1,26 @@
+#!/bin/sh
+# pipe from stdin to firefox
+
+ext=txt
+while [ -n "$1" ]
+do
+	case $1 in
+		-e | --extension ) ext=$2 ; shift 2 ;;
+		-t | --text | --txt ) ext=txt ; shift ;;
+		-h | --html | --htm ) ext=html ; shift ;;
+
+		--) shift ; break ;;
+		-*) echo 'unknown option: '"$1" ; exit ;;
+		*) break ;;
+	esac
+done
+
+TEMPFILE=`mktemp -t XXXXXX.$ext` || exit 1
+trap "rm -f -- '$TEMPFILE'" EXIT
+
+cat > $TEMPFILE
+firefox -- $TEMPFILE
+
+rm -f -- "$TEMPFILE"
+trap - EXIT
+exit

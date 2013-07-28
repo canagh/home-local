@@ -1,0 +1,96 @@
+#!/bin/sh
+
+error() {
+    echo $(basename "$0")': '"$@" >&2
+    exit 1
+}
+
+while [ "$1" ] ; do
+    case "$1" in
+        -h )
+            echo $(basename "$0")' TYPE [ARGS]...'
+            exit
+            ;;
+
+        -- ) shift ; break ;;
+        -* ) error 'unknown option: '"$1" ;;
+        * ) break ;;
+    esac
+done
+
+[ "$#" -eq 0 ] && error 'type is not given'
+type="$1"
+shift
+
+cur_argc="$#"
+argc_non0() {
+    [ "$cur_argc" -eq 0 ] && error "$type"': arguments not given'
+}
+argc() {
+    ok=
+    for arg in "$@"; do
+        [ "$cur_argc" -eq "$arg" ] && ok=t && break
+    done
+    [ "$ok" ] || case "$cur_argc" in
+        0 ) argc_non0 ;;
+        * ) error "$type"': wrong number of arguments: '"$cur_argc" ;;
+    esac
+}
+
+case "$type" in
+    axfc )
+        argc 1 2
+        case "$#" in
+            1 )
+                elem=$(echo $1 | sed -e 's/_.*//')
+                num=$(echo $1 | sed -e 's/.*_//')
+                ;;
+            2 )
+                elem=$1
+                num=$2
+                ;;
+        esac
+        [ -n "$elem" -a -n "$(echo "$num" | grep '^[[:digit:]]\+$')" ] || error "$type"': wrong format argument: '"$*"
+        echo http://www1.axfc.net/uploader/"$elem"/so/"$num"
+        ;;
+
+    nicovideo | nico )
+        argc 1
+        num=$(echo "$1" | grep '^\(sm\)\?[[:digit:]]\+$')
+        [ "$num" ] || error "$type"': wrong format argument: '"$1"
+        echo http://www.nicovideo.jp/watch/sm"$num"
+        ;;
+
+    duckduckgo | ddg )
+        argc_non0
+        echo http://duckduckgo.com/\?q="$*"
+        ;;
+
+    bing | b )
+        argc_non0
+        echo http://www.bing.com/search\?q="$*"
+        ;;
+
+    wikipedia | wikip )
+        argc_non0
+        echo http://ja.wikipedia.org/wiki/"$*"
+        ;;
+
+    google | g )
+        argc_non0
+        echo http://www.google.co.jp/search\?q="$*"
+        ;;
+
+    weblio )
+        argc_non0
+        echo http://ejje.weblio.jp/content/"$*"\#main
+        ;;
+
+    hoogle )
+        argc_non0
+        echo http://www.haskell.org/hoogle/\?hoogle="$*"
+        ;;
+
+    * ) error 'unknown type: '"$type" ;;
+esac
+

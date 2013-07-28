@@ -1,0 +1,33 @@
+#!/bin/sh
+
+while [ "$1" ] ; do
+    case "$1" in
+        -s | --style ) STYLE_TYPE=$2 ; shift 2 ;;
+        -- ) shift ; break ;;
+        -* ) echo $(basename "$0")': unknown option: '"$1" >&2 ; exit -1 ;;
+        * ) break ;;
+    esac
+done
+
+if [ "$1" ] ; then
+    IMAGE_PATH="$1"
+
+    shift
+    if [ "$*" ] ; then
+        echo $(basename "$0")': discard arguments: '"$*" >&2
+    fi
+else
+    echo $(basename "$0")': nothing to do' >&2
+    exit 1 ;
+fi
+
+# to call from cron(8)
+# http://stackoverflow.com/questions/10374520/gsettings-with-cron
+
+DISPLAY=:0 GSETTINGS_BACKEND=dconf gsettings set org.gnome.desktop.background picture-uri file://$IMAGE_PATH # gnome3
+#gconftool-2 --type string --set /desktop/gnome/background/picture_filename $IMAGE_PATH # gnome2
+
+if [ -n "$STYLE_TYPE" ] ; then
+    DISPLAY=:0 GSETTINGS_BACKEND=dconf gsettings set org.gnome.desktop.background picture-options $STYLE_TYPE
+    #gconftool-2 --type string --set /desktop/gnome/background/picture_options $STYLE_TYPE
+fi

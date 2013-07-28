@@ -1,0 +1,50 @@
+#!/usr/bin/python2
+# -*- mode: python -*-
+
+import os
+import sys
+import tempfile
+import subprocess
+import argparse
+from twitter import * # python-twitter
+
+
+# arguments
+parser = argparse.ArgumentParser(description='Post to twitter.')
+parser.add_argument('strings', metavar='STRING', type=str, nargs='*',
+                    help='string to tweet')
+parser.add_argument('-i', '--interactive', action='store_true',
+                    help='confirm before send tweet')
+args = parser.parse_args()
+
+
+# oauth
+CONSUMER_KEY = "28tv3McTokjNsD3XAsmQ"
+CONSUMER_SECRET = "wdI8Oa7F1Ufu9U89yIisn4pYeArqQyJCrkSR1bGeTE"
+TWITTER_CREDS = os.path.expanduser('~/.twitter/oauth')
+
+if not os.path.exists(TWITTER_CREDS):
+    oauth_dance("Command-line Tool for myself", CONSUMER_KEY, CONSUMER_SECRET, TWITTER_CREDS)
+
+oauth_token, oauth_secret = read_token_file(TWITTER_CREDS)
+
+twitter = Twitter(auth=OAuth(
+        oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+
+
+# exec
+msg = None
+if len(args.strings) == 0:
+    if sys.stdin.isatty():
+        file = tempfile.NamedTemporaryFile()
+        subprocess.check_call([os.environ['EDITOR'], file.name])
+        msg = file.read().strip()
+    else:
+        msg = sys.stdin.read().strip()
+else:
+    msg = ' '.join(args.strings)
+
+if args.interactive and (raw_input('tweet: are you sure you want to tweet `' + msg + "'? [y/N] ") not in ['y', 'Y', 'yes', 'YES']):
+    exit()
+
+twitter.statuses.update(status=msg)

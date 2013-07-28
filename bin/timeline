@@ -1,0 +1,40 @@
+#!/usr/bin/python2
+# -*- mode: python -*-
+
+import os
+import sys
+import argparse
+from twitter import * # python-twitter
+
+
+# arguments
+parser = argparse.ArgumentParser(description='Get timeline from twitter.')
+parser.add_argument('-n', '--lines', metavar='NUM',
+        type=int, default=20, choices=xrange(1,2000),
+        help='length of line to read (default: 20)')
+parser.add_argument('-1', '--replace-newline', nargs='?', const=' ', default=None,
+        metavar='STRING', help='replace newlines with " " or given')
+args = parser.parse_args()
+
+
+# oauth
+CONSUMER_KEY = '28tv3McTokjNsD3XAsmQ'
+CONSUMER_SECRET = 'wdI8Oa7F1Ufu9U89yIisn4pYeArqQyJCrkSR1bGeTE'
+TWITTER_CREDS = os.path.expanduser('~/.twitter/oauth')
+
+if not os.path.exists(TWITTER_CREDS):
+    oauth_dance('Command-line Tool for myself',
+                CONSUMER_KEY, CONSUMER_SECRET, TWITTER_CREDS)
+
+oauth_token, oauth_secret = read_token_file(TWITTER_CREDS)
+
+twitter = Twitter(auth=OAuth(
+        oauth_token, oauth_secret, CONSUMER_KEY, CONSUMER_SECRET))
+
+
+# exec
+tweets = twitter.statuses.home_timeline(count=args.lines)
+for tweet in reversed(tweets):
+    if args.replace_newline:
+        tweet['text'] = tweet['text'].replace('\n', args.replace_newline)
+    print tweet['user']['screen_name'].encode('utf_8'), tweet['text'].encode('utf_8')

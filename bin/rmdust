@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# options
+depth=(-maxdepth 1)
+symlink=(-H)
+actions=(-print -delete)
+while [ -n "$1" ] ; do
+    case "$1" in
+        -h | -\? | --help ) echo $(basename "$0")' [-r|--recursively] [-s|--simulate] [-p|--print-command] [-P|-L|-H] [--] [DIRECTORY]...' ; exit ;;
+        -r | --recursively ) depth=() ; shift ;; # recursively search directories
+        -s | --simulate ) actions=(-print) ; shift ;; # don't delete
+        -p | --print-command ) print_command=t ; shift ;; # print a command, but exec it
+        -P | -L | -H ) symlink=("$1") ; shift ;; # options about symlink to give to find(1)
+        --) shift ; break ;;
+        -*) echo 'rmdust: unknown option: '"$1" >&2 ; exit -1 ;;
+        *) break ;;
+    esac
+done
+
+# exec
+command=(find "${symlink[@]}" "${@:-$PWD}" "${depth[@]}" \( -name '*~' -or -name '#*#' -or -name '.\#*' \) "${actions[@]}")
+if [ -n "$print_command" ] ; then
+    echo "${command[@]}"
+else
+    "${command[@]}"
+fi

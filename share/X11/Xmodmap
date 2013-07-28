@@ -1,0 +1,17 @@
+! for xmonad
+add mod3 = Muhenkan
+
+! swap esc and grave/tilde
+!keycode  9 = Zenkaku_Hankaku Kanji grave asciitilde dead_grave dead_tilde grave asciitilde dollar asciitilde dead_tilde dead_tilde
+!keycode 49 = Escape NoSymbol Escape NoSymbol Escape Escape
+keycode 49 = Escape Escape Escape Escape Escape Escape
+keycode  9 = Zenkaku_Hankaku Kanji grave asciitilde grave asciitilde grave asciitilde dollar asciitilde asciitilde asciitilde
+
+! swap space and ctrl
+!keycode 37 = space
+!keycode 65 = Control_L
+!remove control = Control_L
+!add control = Control_L
+
+! enable caps_lock
+keycode 136 = Caps_Lock

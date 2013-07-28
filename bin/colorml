@@ -1,0 +1,43 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my %esc = ( 'clear' => "\e[0m", 'bold' => "\e[1m", 'underscore' => "\e[4m", 'blink' => "\e[5m", 'reverse' => "\e[7m", 'concealed' => "\e[8m", 'black' => "\e[30m", 'red' => "\e[31m", 'green' => "\e[32m", 'yellow' => "\e[33m", 'blue' => "\e[34m", 'magenta' => "\e[35m", 'cyan' => "\e[36m", 'white' => "\e[37m", 'on_black' => "\e[40m", 'on_red' => "\e[41m", 'on_green' => "\e[42m", 'on_yellow' => "\e[43m", 'on_blue' => "\e[44m", 'on_magenta' => "\e[45m", 'on_cyan' => "\e[46m", 'on_white' => "\e[47m" );
+
+my @stack = ();
+
+sub colorize {
+    print "\e[0m";
+    for (@stack) {
+        print $esc{$_};
+    }
+}
+
+sub proc {
+    if ($_[0] =~ /<(\/?)(\w{1,12})>/) {
+        print $`;
+        if (exists($esc{$2})) {
+            # valid tag
+            if ($1) {
+                # close tag
+                @stack = grep(!/^$2$/, @stack);
+                &colorize();
+            } else {
+                # open tag
+                push(@stack, $2);
+                &colorize();
+            }
+        } else {
+            # invalid tag
+            print $&;
+        }
+        &proc($'); # tail recursion
+    } else {
+        # not a tag
+        print $_[0];
+    }
+}
+
+for (<>) {
+    &proc($_);
+}

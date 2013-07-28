@@ -1,0 +1,20 @@
+#compdef rmdust
+
+_rmdust() {
+    _arguments \
+        {-h,--help} \
+        {-r,--recursively} \
+        {-s,--simulate} \
+        {-p,--print} \
+        '--' \
+        '*: :__rmdust_arguments'
+}
+
+__rmdust_arguments() {
+    _files
+    _values 'ypes' \
+        'backup[dufault]' \
+        'haskell' \
+        'html' \
+        'gnome'
+}

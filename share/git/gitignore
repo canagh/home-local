@@ -1,0 +1,25 @@
+# vim: filetype=conf
+
+
+# buckup
+*~
+## emacs buckup
+\#*\#
+## vim buckup
+*.swp
+
+
+# virtual environment
+## python virtualenv
+.virtualenv/
+## haskell virthualenv
+.virthualenv/
+
+
+# editor configuration
+## python vim rope
+.ropeproject/
+
+
+# temporary directory
+/tmp/

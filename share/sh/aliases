@@ -1,0 +1,122 @@
+#!/bin/sh
+# This can be used by both zsh and bash.
+
+
+# shortcuts
+
+## basic commands
+alias s=sudo
+alias xx=exec
+alias md=mkdir
+alias loc=locate
+alias mk=make
+alias j=jobs
+alias g=grep
+alias killa=killall
+
+## additional commands
+alias cmk=cmake
+alias ag=apt-get
+alias ac=apt-cache
+alias nau=nautilus
+alias del=trash-put
+alias gd=goldendict
+
+## with options
+### basic commands
+alias la='ls -A'
+alias ll='ls -alF'
+alias kill9='kill -KILL'
+alias killall9='killall -KILL'
+alias psa='ps a'
+alias psx='ps x'
+alias psax='ps ax'
+alias psaux='ps aux'
+alias cd..='cd ..'
+alias fg1='fg %1'
+alias fg2='fg %2'
+alias fg3='fg %3'
+alias fg4='fg %4'
+
+### additional aliases
+alias py=python
+alias py3=python3
+alias py32=python3.2
+alias py2=python2
+alias py27=python2.7
+alias pyc=pycompile
+alias py3c=py3compile
+alias doxy='doxygen Doxyfile'
+alias fx='firefox -new-tab'
+
+
+
+# configurations
+
+alias grep='grep --color=auto'
+alias ls='ls --color=auto'
+alias jobs='jobs -l'
+alias wc='env POSIXLY_CORRECT= wc'
+alias sudo='sudo -E '
+alias fd="env ANSICOLOR=1 fd"
+
+export PYTHONSTARTUP=~/local/share/python/startup.py
+export RUBYLIB=$HOME/lib/site_ruby${RUBYLIB:-:}
+
+## the prompt is same to the man's one
+export LESS='-r -j10 -P \ ?f%f:Standerd Input\.. ?lmline %lm:.?L/%L. ?PB%PB\%:. (press h for help or q to quit)\ \'
+
+alias talk='ojtalk -vname mei_normal'
+alias talk-angry='ojtalk -vname mei_angry'
+alias talk-bashful='ojtalk -vname mei_bashful'
+alias talk-happy='ojtalk -vname mei_happy'
+alias talk-sad='ojtalk -vname mei_sad'
+
+
+# lightweight functions
+
+## encoding
+alias sjis='iconv -f utf8 -t sjis'
+alias unsjis='iconv -f sjis -t utf8'
+alias euc='iconv -f utf8 -t eucjp'
+alias uneuc='iconv -f eucjp -t utf8'
+
+## grep
+if which fgrep >/dev/null ; then
+    alias fgrep='fgrep --color=auto'
+else
+    alias fgrep='grep --fixed-strings' # -F
+fi
+if which egrep >/dev/null ; then
+    alias egrep='egrep --color=auto'
+else
+    alias egrep='grep --extended-regexp' # -E
+fi
+alias vgrep='grep --invert-match' # -v
+
+caw() { cat `which $@` }
+
+## ps
+psh()  { ps   | head -n 1 } # ps  のheaderを表示
+pshu() { ps u | head -n 1 } # ps uのheaderを表示
+### CPU 使用率の高い方から8つ
+pst() { pshu ; ps aux | sort -r -n +2 | grep -v 'ps aux' | grep -v grep | head -n 8 }
+### メモリ占有率の高い方から8つ
+psm() { pshu ; ps aux | sort -r -n +3 | grep -v 'ps aux' | grep -v grep | head -n 8 }
+psg() { pshu ; ps aux | grep $* | grep -v 'ps aux' | grep -v grep }
+
+alias gitignored='git ls-files -o -i --exclude-standard'
+
+alias notify='notify-send -i terminal'
+
+## virtual environment
+### python
+virtualenv.activate() { . ${@:-$PWD}/.virtualenv/bin/activate }
+### haskell
+virthualenv.activate() { . ${@:-$PWD}/.virthualenv/bin/activate }
+
+
+##
+## more commands
+##
+. ~/local/share/sh/commands

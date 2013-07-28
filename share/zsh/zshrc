@@ -1,0 +1,151 @@
+#!/usr/bin/zsh
+
+##
+## history
+##______________________________________________________________
+
+# 保存する量
+HISTSIZE=100000000
+SAVEHIST=100000000
+
+# 保存先の指定(必須,しなければ履歴は遺棄)
+HISTFILE=$HOME/var/share/zsh/history
+
+# 複数の zsh を同時に使う時など history ファイルに上書きせず追加する
+setopt append_history
+
+# 同じコマンドラインはヒストリに追加しない
+setopt hist_ignore_all_dups
+
+# シェルのプロセスごとに履歴を共有
+setopt share_history
+
+
+##
+## key bindings
+##______________________________________________________________
+# keybinding is emacs-like
+bindkey -e
+
+
+
+##
+## prompt
+##______________________________________________________________
+# color = 34 = front/blue
+if [ -z "$ZSH_PROMRT_INITED" ] ; then
+    export ZSH_PROMRT_INITED=t
+    export PROMPT=$'%{\e[34m%}%n%# %{\e[m%}'
+    export PS2=$'%{\e[34m%}%_> %{\e[m%}'
+    export RPROMPT=$'%{\e[34m%}%~%{\e[m%}' # right
+fi
+
+
+
+
+##
+## complement
+##______________________________________________________________
+
+# set my completion files dir
+# does this need to exec before "autoload -U compinit"?
+ZSH_USER_FPATH=$HOME/local/share/zsh/completion
+fpath=($ZSH_USER_FPATH $fpath)
+autoload -U $ZSH_USER_FPATH/*(:t)
+
+autoload -U compinit ; compinit -u
+
+
+# verbose completion message
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*' group-name ''
+
+# color possible completions
+eval `dircolors`
+export ZLS_COLORS=$LS_COLORS
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:default' menu select=1 # select completion by arrow-keys
+
+# sudo cmd で補完したいけど補完が効かない…、という場合
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
+                             /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
+
+# 補完候補リストを詰めて表示
+setopt list_packed
+
+# 補完候補リストの日本語を適正表示
+setopt print_eight_bit
+
+# カッコの対応などを自動的に補完する
+setopt auto_param_keys
+
+# ディレクトリ名の補完で末尾の / を自動的に付加し、次の補完に備える
+setopt auto_param_slash
+
+# 最後がディレクトリ名で終わっている場合末尾の / を自動的に取り除く
+setopt auto_remove_slash
+
+# =command を command のパス名に展開する
+setopt equals
+
+# コマンドのスペルチェックをする
+setopt correct
+
+# {a-c} を a b c に展開する機能を使えるようにする
+setopt brace_ccl
+
+# 補完候補が複数ある時に、一覧表示する
+setopt auto_list
+# auto_list の補完候補一覧で、ls -F のようにファイルの種別をマーク表示
+setopt list_types
+
+# 補完キー（Tab, Ctrl+I) を連打するだけで順に補完候補を自動で補完する
+setopt auto_menu
+
+# コマンドラインの引数で --prefix=/usr などの = 以降でも補完できる
+setopt magic_equal_subst
+
+
+
+
+##
+## misc
+##______________________________________________________________
+
+# 戻り値が 0 以外の場合終了コードを表示する
+setopt print_exit_value
+
+REPORTTIME=60 # CPUを8秒以上使った時は time を表示
+TIMEFMT="\
+    The name of this job.             :%J
+    CPU seconds spent in user mode.   :%U
+    CPU seconds spent in kernel mode. :%S
+    Elapsed time in seconds.          :%E
+    The  CPU percentage.              :%P"
+
+# ビープ音を鳴らさないようにする
+setopt NO_beep
+
+# for, repeat, select, if, function などで簡略文法が使えるようになる
+setopt short_loops
+
+# cd -[tab] でpushd
+setopt autopushd
+
+
+
+##
+## more
+##______________________________________________________________
+
+# load alias
+source ~/local/share/sh/aliases
+
+# 初期位置は~/tmp
+if [ -z "$ZSH_MOVED_TO_TMP" ] ; then
+    export ZSH_MOVED_TO_TMP=t
+    [ -e ~/tmp ] && cd ~/tmp
+fi
