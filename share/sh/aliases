@@ -118,6 +118,7 @@ alias notify='notify-send -i terminal'
 
 vimrc() { vim ~/.vimrc }
 shrc() { $EDITOR ~/local/share/sh/aliases && . ~/local/share/sh/aliases }
+alias tmp='cd ~/tmp'
 
 ## virtual environment
 ### python

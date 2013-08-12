@@ -3,7 +3,7 @@
 templates_dir=${TEMPLATES_DIR:-$HOME/.templates}
 name_type=random
 
-while [ -n "$1" ] ; do
+while [ "$1" ] ; do
     case "$1" in
         -h | --help )
             echo `basename "$0"`' [OPTIONS..] TEMPLATE [FILENAMES..]'
