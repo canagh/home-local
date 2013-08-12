@@ -2,7 +2,37 @@
 use strict;
 use warnings;
 
+use Getopt::Long;
+use File::Basename;
+my $quote;
+my @excludes;
+my $whitelist;
+die "usage: " . basename $0 . " [--quote] INPUT\n"
+    unless GetOptions(
+        'quote' => \$quote,
+        'exclude=s@' => \@excludes,
+        'whitelist' => \$whitelist,
+    );
+
 my %esc = ( 'clear' => "\e[0m", 'bold' => "\e[1m", 'underscore' => "\e[4m", 'blink' => "\e[5m", 'reverse' => "\e[7m", 'concealed' => "\e[8m", 'black' => "\e[30m", 'red' => "\e[31m", 'green' => "\e[32m", 'yellow' => "\e[33m", 'blue' => "\e[34m", 'magenta' => "\e[35m", 'cyan' => "\e[36m", 'white' => "\e[37m", 'on_black' => "\e[40m", 'on_red' => "\e[41m", 'on_green' => "\e[42m", 'on_yellow' => "\e[43m", 'on_blue' => "\e[44m", 'on_magenta' => "\e[45m", 'on_cyan' => "\e[46m", 'on_white' => "\e[47m" );
+if ($quote) {
+    foreach (keys %esc) {
+        $esc{$_} = quotemeta $esc{$_};
+        $esc{$_} =~ s/^\\/\\e/;
+    }
+}
+
+my @keys;
+if ($whitelist) {
+    @keys = @excludes;
+} else {
+    @keys = keys %esc;
+    my $exclude;
+    foreach $exclude (@excludes) {
+        @keys = grep {$_ ne $exclude} @keys;
+    }
+}
+
 
 my @stack = ();
 
@@ -16,11 +46,11 @@ sub colorize {
 sub proc {
     if ($_[0] =~ /<(\/?)(\w{1,12})>/) {
         print $`;
-        if (exists($esc{$2})) {
+        if (grep {$_ eq $2} @keys) {
             # valid tag
             if ($1) {
                 # close tag
-                @stack = grep(!/^$2$/, @stack);
+                @stack = grep {$_ ne $2} @stack;
                 &colorize();
             } else {
                 # open tag

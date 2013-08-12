@@ -26,6 +26,9 @@ set list
 set backup
 if has('persistent_undo')
     set undodir=~/.vim/undo
+    if !isdirectory(&undodir)
+        call mkdir(&undodir)
+    endif
     set undofile
 endif
 "}}}
@@ -63,14 +66,9 @@ nnoremap <silent> <Leader>o   :<C-u>for i in range(1, v:count1) \| call append(l
 nnoremap <silent> <Leader>O   :<C-u>for i in range(1, v:count1) \| call append(line('.')-1, '') \| endfor \| silent! call repeat#set(mapleader."O", v:count1)<CR>
 " }}}
 
-" This is not so useful
-" " <Leader>> i/I/a/A で1文字挿入 {{{
-" nnoremap <Leader>i   :<C-u>exec printf("norm %di%s", v:count1, nr2char(getchar()))<CR>
-" nnoremap <Leader>I   :<C-u>exec printf("norm %dI%s", v:count1, nr2char(getchar()))<CR>
-" nnoremap <Leader>a   :<C-u>exec printf("norm %da%s", v:count1, nr2char(getchar()))<CR>
-" nnoremap <Leader>A   :<C-u>exec printf("norm %dA%s", v:count1, nr2char(getchar()))<CR>
-" " }}}
-
+" Q で :q {{{
+nnoremap <silent> Q :<C-u>quit<CR>
+" }}}
 
 " neobundle.vim {{ {
 if has('vim_starting')
@@ -101,6 +99,7 @@ NeoBundle 'Align'
 " unite
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/vimfiler'
 
 " completion
 NeoBundle 'Shougo/neocomplcache'
@@ -191,6 +190,12 @@ nnoremap <silent> [unite]vr :UniteResume<CR>/"
 " unite-outline
 nnoremap <silent> [unite]o :<C-u>Unite<Space>outline<CR>
 
+" vimfiler {{{
+let g:vimfiler_as_default_explorer = 1
+au FileType vimfiler nnoremap q <Plug>(vimfiler_exit)
+au FileType vimfiler nnoremap Q :<C-U>quit<CR>
+" }}}
+
 " neocomplcache {{{
 let g:neocomplcache_enable_at_startup = 1
 " Enable omni completion. Not required if they are already set elsewhere in .vimrc
@@ -230,6 +235,7 @@ hi EasyMotionShade  ctermbg=none ctermfg=blue
 let g:quickrun_config={}
 
 " YankRing.vim {{{
+let g:yankring_history_dir = '$HOME/.vim'
 nnoremap <silent> <Leader>yu :YRShow<CR>
 nnoremap <Leader>y/ :YRSearch<Space>
 "}}}
@@ -277,12 +283,13 @@ autocmd FileType c,cpp source $HOME/.vim/bundle/opengl.vim/syntax/opengl.vim
 " }}}
 
 " vim-smartchr {{{
+autocmd FileType c,cpp inoremap <buffer><expr> <Space> smartchr#one_of(' ', ' ')
 " 演算子の間に空白を入れる
 autocmd FileType c,cpp inoremap <buffer><expr> < search('^#include\%#', 'bcn')? ' <': smartchr#one_of('<', ' << ', ' < ')
 autocmd FileType c,cpp inoremap <buffer><expr> > search('<.*\%#', 'bcn')? '>': smartchr#one_of(' > ' , ' >> ', '>')
 autocmd FileType c,cpp inoremap <buffer><expr> + smartchr#one_of(' + ', '++', '+')
 autocmd FileType c,cpp inoremap <buffer><expr> - smartchr#one_of(' - ', '--', '-')
-autocmd FileType c,cpp inoremap <buffer><expr> / smartchr#one_of(' / ', '// ', '/// ', '/')
+autocmd FileType c,cpp inoremap <buffer><expr> / smartchr#one_of('/', '// ', '/// ')
 " *はポインタで使うので、空白はいれない
 autocmd FileType c,cpp inoremap <buffer><expr> & smartchr#one_of('&', ' && ')
 autocmd FileType c,cpp inoremap <buffer><expr> % smartchr#one_of(' % ', '%')
@@ -290,22 +297,18 @@ autocmd FileType c,cpp inoremap <buffer><expr> <Bar> smartchr#one_of(' <Bar> ', 
 autocmd FileType c,cpp inoremap <buffer><expr> , smartchr#one_of(', ', ',')
 " 3項演算子の場合は、後ろのみ空白を入れる
 autocmd FileType c,cpp inoremap <buffer><expr> ? smartchr#one_of('? ', '?')
-
 " =の場合、単純な代入や比較演算子として入力する場合は前後にスペースをいれる。
 " 複合演算代入としての入力の場合は、直前のスペースを削除して=を入力
 autocmd FileType c,cpp inoremap <buffer><expr> = search('\(&\<bar><bar>\<bar>+\<bar>-\<bar>/\<bar>>\<bar><\) \%#', 'bcn')? '<bs>= '
 				\ : search('\(*\<bar>!\)\%#', 'bcn') ? '= '
 				\ : smartchr#one_of(' = ', ' == ', '=')
-
 " 下記の文字は連続して現れることがまれなので、二回続けて入力したら改行する
 autocmd FileType c,cpp inoremap <buffer><expr> } smartchr#one_of('}', '}<cr>}')
 autocmd FileType c,cpp inoremap <buffer><expr> ; smartchr#one_of(';', ';<cr>;')
 " 「->」は入力しづらいので、..で置換え
 autocmd FileType c,cpp inoremap <buffer><expr> . smartchr#loop('.', '->', '...')
 " 行先頭での#入力で、プリプロセス命令文を入力
-autocmd FileType c,cpp inoremap <buffer><expr> # search('^\(#.\+\)\?\%#','bcn')? smartchr#one_of('#define', '#include', '#ifdef', '#endif', '#'): '#'
-
-autocmd FileType c,cpp inoremap <buffer><expr> " search('^#include\%#', 'bcn')? ' "': '"'
+autocmd FileType c,cpp inoremap <buffer><expr> # search('^\(#.\+\)\?\%#','bcn')? smartchr#one_of('#include ', '#'): '#'
 " if, for, while, switch文直後の(は自動で間に空白を入れる
 autocmd FileType c,cpp inoremap <buffer><expr> ( search('\<\(\if\<bar>for\<bar>while\<bar>switch\)\%#', 'bcn')? ' (': '('
 " }}}

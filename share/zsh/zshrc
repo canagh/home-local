@@ -9,7 +9,7 @@ HISTSIZE=100000000
 SAVEHIST=100000000
 
 # 保存先の指定(必須,しなければ履歴は遺棄)
-HISTFILE=$HOME/var/share/zsh/history
+HISTFILE=$HOME/var/zsh/history
 
 # 複数の zsh を同時に使う時など history ファイルに上書きせず追加する
 setopt append_history
@@ -142,7 +142,11 @@ setopt autopushd
 ##______________________________________________________________
 
 # load alias
-source ~/local/share/sh/aliases
+. ~/local/share/sh/aliases
+
+# ^Dでexitをcommand化
+# shでもokだったが念の為ここ
+alias ''=exit
 
 # 初期位置は~/tmp
 if [ -z "$ZSH_MOVED_TO_TMP" ] ; then

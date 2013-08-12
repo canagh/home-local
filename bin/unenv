@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+
+use Getopt::Long;
+use File::Basename;
+my @excludes;
+my $whitelist;
+my $minimum = 4;
+die "usage: " . basename $0 . " [--exclude NAME] [--whitelist] [--minimum NUM (default = $minimum)] INPUT\n"
+    unless GetOptions(
+        'exclude=s@' => \@excludes,
+        'whitelist' => \$whitelist,
+        'minimum=i' => \$minimum,
+    );
+
+# sort for longest matching
+my @keys;
+if ($whitelist) {
+    @keys = @excludes;
+} else {
+    @keys = sort {length $ENV{$a} cmp length $ENV{$b}} keys %ENV;
+    foreach (@excludes) {
+        @keys = grep !/^$_$/, @keys;
+    }
+}
+if ($minimum) {
+    @keys = grep {$minimum <= length $ENV{$_}} @keys;
+}
+
+my ($line, $key, $value);
+while ($line = <>) {
+    foreach $key (@keys) {
+        $value = quotemeta $ENV{$key};
+        $line =~ s/${value}/\$${key}/g;
+    }
+    print $line;
+}

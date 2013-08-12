@@ -8,10 +8,8 @@ export PATH="$HOME/local/bin":"$PATH"
 export LANG=en_US.UTF-8
 
 # tools
-export EDITOR=emacsclient
-export ALTERNATE_EDITOR=emacs
-export VISUAL=vi
-#export PAGER=view - # It can't recognize esc-sequence for coloring
+export EDITOR=vim
+export VISUAL=vim
 export PAGER=less
 
 # java -classpath : not to need specify myself
