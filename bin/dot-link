@@ -1,0 +1,37 @@
+#!/bin/sh
+
+base=~
+path=
+while [ "$1" ]; do
+    case "$1" in
+        -h | --help )
+            echo $(basename "$0")' [OPTIONS..] -- [STRINGS..]'
+            exit
+            ;;
+        -b | --base )
+            base="$2"
+            shift 2
+            ;;
+        -p | --path )
+            path=t
+            shift
+            ;;
+        -* )
+            echo $(basename "$0")': unknown option: '\`"$1"\' 1>&2
+            exit 1
+            ;;
+        * )
+            break
+            ;;
+    esac
+done
+
+while [ "$1" ]; do
+    if [ "$path" ]; then
+        str=."$1"
+    else
+        str=.$(basename "$1")
+    fi
+    ln -siT $(realpath "$1") "$base"/"$str"
+    shift
+done
