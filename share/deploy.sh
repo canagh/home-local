@@ -6,11 +6,8 @@ dot_mkdir() {
 }
 cd $(dirname "$0")
 
-dot-link conkyrc
-dot-link screenrc
 dot-link sh/profile
 dot-link zsh/zshrc
-dot-link zsh/zlogout
 
 dot_mkdir vim
 dot-link -p vim/vimrc
