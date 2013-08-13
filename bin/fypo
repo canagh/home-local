@@ -13,7 +13,9 @@ my $minimum_ratio = 4;
 my $sensitivity = 0.3;
 my $use_look;
 my $no_header;
-die 'usage: ' . basename $0 . " FILE..\n"
+die 'Usage: ' . basename $0 . " FILE..\n"
+    . "Help to find typos from source code.\n"
+    . "Error messages of some language (e.g. c++) are too complicated, even if the cause is only a typo!"
     unless GetOptions(
         'excludes=s@' => \@excludes,
         'minimum=i' => \$minimum,

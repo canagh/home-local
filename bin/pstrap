@@ -5,22 +5,26 @@ wait=1s # for sleep(1)
 # option
 while [ "$1" ] ; do
     case $1 in
-        -h | --help ) echo $(basename "$0")' [-w|--wait] [--] PID...' ; exit ;;
+        -h | --help )
+            echo 'Usage: '`basename "$0"`' [-w|--wait] [--] PID...'
+            echo 'Watch the process and terminate when they have died.'
+            echo 'e.g. use this to shutdown your PC after the end of cp(1).'
+            exit ;;
         -w ) wait="$2" ; shift 2 ;;
         -- ) shift ; break ;;
-        -* ) $(basename "$0")': unknown option: '"$1" >&2 ; exit 1 ;;
+        -* ) `basename "$0"`': unknown option: '"$1" >&2 ; exit 1 ;;
         * ) break ;;
     esac
 done
 
 if [ $# -eq 0 ] ; then
-    echo $(basename "$0")': missing argument' >&2
+    echo `basename "$0"`': missing argument' >&2
     exit 1
 fi
 
 for arg in "$@"; do
     if echo "$arg" | grep -v '^[[:digit:]]\+$' >/dev/null 2>&1; then
-        echo $(basename "$0")': wrong argument (a PID required): '"$arg" >&2
+        echo `basename "$0"`': wrong argument (a PID required): '"$arg" >&2
         exit 1
     fi
 done

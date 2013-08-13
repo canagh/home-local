@@ -6,11 +6,12 @@ source=
 while [ "$1" ] ; do
     case "$1" in
         -h | --help )
-            echo $(basename "$0")' [-s|--source PATH] [-c|--compiler PATH] -- [COMPILER_OPTIONS..]'
+            echo `basename "$0"`' [-s|--source PATH] [-c|--compiler PATH (default: '"$compiler"')] -- [COMPILER_OPTIONS..]'
+            echo 'Compile a code and execute it without makeing any files.'
             exit
             ;;
         -s | --source )
-            source=$(realpath "$2")
+            source=`realpath "$2"`
             shift 2
             ;;
         -c | --compiler )
@@ -18,7 +19,7 @@ while [ "$1" ] ; do
             shift 2
             ;;
         -* )
-            echo $(basename "$0")': unknown option: '\`"$1"\' 1>&2
+            echo `basename "$0"`': unknown option: '\`"$1"\' 1>&2
             exit 1
             ;;
         * )
@@ -27,12 +28,12 @@ while [ "$1" ] ; do
     esac
 done
 
-TEMPDIR=$(mktemp -d) || exit 1
+TEMPDIR=`mktemp -d` || exit 1
 trap "rm -rf -- '$TEMPDIR'" EXIT
 cd $TEMPDIR
 
 if [ ! "$source" ]; then
-    source=$(basename "$0").cpp
+    source=`basename "$0"`.cpp
     if [ -t 0 ]; then
         $EDITOR $source || exit 1
     else

@@ -1,14 +1,15 @@
 #!/bin/sh
 
 error() {
-    echo $(basename "$0")': '"$@" >&2
+    echo `basename "$0"`': '"$@" >&2
     exit 1
 }
 
 while [ "$1" ] ; do
     case "$1" in
         -h )
-            echo $(basename "$0")' TYPE [ARGS]...'
+            echo 'Usage: '`basename "$0"`' TYPE [ARGS]...'
+            echo 'Make urls from some words (like modern browser'\''s search engine bars.'
             exit
             ;;
 
@@ -42,21 +43,21 @@ case "$type" in
         argc 1 2
         case "$#" in
             1 )
-                elem=$(echo $1 | sed -e 's/_.*//')
-                num=$(echo $1 | sed -e 's/.*_//')
+                elem=`echo $1 | sed -e 's/_.*//'`
+                num=`echo $1 | sed -e 's/.*_//'`
                 ;;
             2 )
                 elem=$1
                 num=$2
                 ;;
         esac
-        [ -n "$elem" -a -n "$(echo "$num" | grep '^[[:digit:]]\+$')" ] || error "$type"': wrong format argument: '"$*"
+        [ -n "$elem" -a -n "`echo "$num" | grep '^[[:digit:]]\+$'`" ] || error "$type"': wrong format argument: '"$*"
         echo http://www1.axfc.net/uploader/"$elem"/so/"$num"
         ;;
 
     nicovideo | nico )
         argc 1
-        num=$(echo "$1" | grep '^\(sm\)\?[[:digit:]]\+$')
+        num=`echo "$1" | grep '^\(sm\)\?[[:digit:]]\+$'`
         [ "$num" ] || error "$type"': wrong format argument: '"$1"
         echo http://www.nicovideo.jp/watch/sm"$num"
         ;;

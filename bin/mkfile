@@ -6,7 +6,8 @@ name_type=random
 while [ "$1" ] ; do
     case "$1" in
         -h | --help )
-            echo `basename "$0"`' [OPTIONS..] TEMPLATE [FILENAMES..]'
+            echo 'Usage: '`basename "$0"`' [OPTIONS..] TEMPLATE [FILENAMES..]'
+            echo 'Make files from templates (as nautilus (GNOME'\''s filer) does).'
             exit
             ;;
         -s | --same-name )
@@ -28,7 +29,7 @@ while [ "$1" ] ; do
 done
 
 # find the template
-for file in $(find "$templates_dir" -type f -name "$1") ; do
+for file in `find "$templates_dir" -type f -name "$1"` ; do
     if [ -n "$template" ] ; then
         echo `basename "$0"`': more than one templates found: '\`"$template"\'' and '\`"$1"\' 1>&2
         exit 1
@@ -49,10 +50,11 @@ for i in ${@:-.} ; do
     elif [ -d "$i" ] ; then
         case $name_type in
             random )
-                file="$(mktemp --tmpdir="$i" "$(basename $0)".XXXXXX)"
+                base="`basename "$0"`"
+                file="`mktemp --tmpdir="$i" "$base".XXXXXX`"
                 ;;
             same )
-                file="$i"/"$(basename "$template")"
+                file="$i"/"`basename "$template"`"
                 if [ -e "$file" ] ; then
                     echo 'mkfile: the file '\`"$i"\'' already exists' 1>&2
                     continue

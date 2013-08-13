@@ -1,3 +1,0 @@
-#!/usr/bin/zsh
-
-(cd ~/local && git add . && git commit -a --message 'commit by '"$(realpath "$0")")

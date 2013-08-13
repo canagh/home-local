@@ -3,8 +3,10 @@
 while [ -n "$1" ] ; do
     case "$1" in
         -h | --help )
-            echo 'runit [-h|--help] [--directory DIR] [--] [OPTIONS..]'
-            exit 0
+            echo 'Usage :'`basename "$0"`' [-h|--help] [--directory DIR] [--] [OPTIONS..]'
+            echo 'Run the executable which the directory has only.'
+            echo 'If the directory has two or more executables, exit without execution.'
+            exit
             ;;
         --directory )
             dir="$2"
