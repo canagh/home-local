@@ -155,6 +155,9 @@ NeoBundle 'hail2u/vim-css3-syntax'
 "NeoBundle 'desert256.vim'
 NeoBundle 'w0ng/vim-hybrid'
 
+NeoBundle 'sudo.vim'
+NeoBundle 'tyru/autochmodx.vim'
+
 " tools
 NeoBundle 'rkitover/vimpager'
 
