@@ -50,6 +50,7 @@ alias doxy='doxygen Doxyfile'
 alias fx='firefox -new-tab'
 alias tls=trash-list
 alias nau='nautilus .'
+alias open=gnome-open
 
 
 # configurations
