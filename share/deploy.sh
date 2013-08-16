@@ -8,6 +8,7 @@ cd $(dirname "$0")
 
 dot-link sh/profile
 dot-link zsh/zshrc
+dot-link zsh/zlogin
 dot-link zsh/zlogout
 
 dot_mkdir vim
