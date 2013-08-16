@@ -1,4 +1,7 @@
 #!/bin/sh
 
+ibus-daemon -d
+goldendict &
+
 # run window-mgr
 exec gnome-session-xmonad
