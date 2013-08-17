@@ -1,10 +1,4 @@
-# if running bash  # why?
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
-    fi
-fi
-
-# define envvars
+#!/usr/bin/zsh
 . ~/local/share/sh/environment
+
+cat ~/todo

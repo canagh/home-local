@@ -1,0 +1,104 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+use feature 'switch';
+
+use File::Basename;
+use Getopt::Long;
+
+use constant {
+    THREAD  => 'thread',
+    BOARD   => 'board',
+    HOST    => 'host',
+    DAT     => 'dat',
+    SUBJECT => 'subject',
+    READCGI => 'readcgi',
+    BBSCGI  => 'bbscgi',
+    TSV     => 'tsv',
+    TYPE    => 'type',
+};
+
+sub parse() {
+    my %attr = ();
+    my $string = $_[0];
+
+    given ($string) {
+        when (/^h?ttps?:\/\/[\w.]+\/?$/) {
+            $attr{HOST} = (split '/', $string)[2];
+        }
+        when (/^\w+\W+\d+$/) {
+            ($attr{BOARD}, $attr{THREAD}) = split /\W+/, $string;
+        }
+        when (/^[\w.]+\W+\w+$/) {
+            ($attr{HOST}, $attr{BOARD}) = split /[^\w.]+/, $string;
+        }
+        when (/^[\w.]+\W+\w+\W+\d+$/) {
+            ($attr{HOST}, $attr{BOARD}, $attr{THREAD}) = split /[^\w.]+/, $string;
+        }
+        when (/\/read\.cgi\//) {
+            ($attr{HOST}, $attr{BOARD}, $attr{THREAD}) = (split '/', $string)[2,5,6];
+        }
+        when (/\/dat\//) {
+            ($attr{HOST}, $attr{BOARD}, $attr{THREAD}) = (split '/', $string)[2,3,5];
+            $attr{THREAD} =~ s/\..*$/''/;
+        }
+        when (/\/subject.txt$/) {
+            ($attr{HOST}, $attr{BOARD}) = (split '/', $string)[2,3];
+        }
+        default {
+            die basename $0 . ": couldn't parse";
+        }
+    }
+
+    return %attr;
+}
+
+sub convert() {
+    my %args = @_;
+    sub error() { basename $0 . ": couldn't convert"; }
+
+    given ($args{TYPE}) {
+        when (DAT) {
+            die &error() unless $args{THREAD};
+            return &convert(%args, TYPE => BOARD) . 'dat/' . $args{THREAD} . '.dat';
+        }
+        when (READCGI) {
+            die &error() unless $args{HOST} and $args{BOARD} and $args{THREAD};
+            return 'http://' . $args{HOST} . '/test/read.cgi/' . $args{BOARD} . '/' . $args{THREAD} . '/';
+        }
+        when (BBSCGI) {
+            die &error() unless $args{HOST};
+            return 'http://' . $args{HOST} . '/test/bbs.cgi';
+        }
+        when (TSV) {
+            die &error() unless $args{HOST} and $args{BOARD} and $args{THREAD};
+            return join "\t", ($args{HOST}, $args{BOARD}, $args{THREAD});
+        }
+        when (BOARD) {
+            die &error() unless $args{HOST} and $args{BOARD};
+            return 'http://' . $args{HOST} . '/' . $args{BOARD} . '/';
+        }
+        when (SUBJECT) {
+            return &convert(%args, TYPE => BOARD) . 'subject.txt';
+        }
+        default {
+            &error();
+        }
+    }
+}
+
+
+die 'Usage: ' . basename $0 . " TYPE [URL]\n"
+    unless GetOptions(
+    );
+
+my $type = shift;
+foreach ((DAT, READCGI, BBSCGI, TSV, BOARD, SUBJECT, 0)) {
+    die basename $0 . ': wrong type: ' . $type unless $_;
+    last if $type eq $_;
+}
+
+my $url = join "\t", @ARGV;
+$url = readline unless $url;
+
+print &convert(&parse($url), TYPE => $type);

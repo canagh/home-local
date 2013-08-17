@@ -3,3 +3,5 @@
 ( cd ~/local ; git add . ; git commit --all --message commit )
 
 echo 'You should move ~/.zlogout ~/.logout'
+
+sleep 1

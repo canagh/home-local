@@ -237,6 +237,13 @@ hi EasyMotionShade  ctermbg=none ctermfg=blue
 " quickrun
 let g:quickrun_config={}
 
+" autochmodx.vim {{{
+let g:autochmodx_scriptish_file_patterns = [
+\   '\c.*\.sh$',
+\]
+let g:autochmodx_no_CursorHold_autocmd = 1
+" }}}
+
 " YankRing.vim {{{
 let g:yankring_history_dir = '$HOME/.vim'
 nnoremap <silent> <Leader>yu :YRShow<CR>

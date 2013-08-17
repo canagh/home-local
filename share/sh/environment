@@ -1,27 +1,20 @@
 #!/bin/sh
 
-# set PATH so it includes user's private bin if it exists
-export PATH="$HOME/.cabal/bin":"$PATH"
-export PATH="$HOME/bin":"$PATH"
-export PATH="$HOME/local/bin":"$PATH"
-
 export LANG=en_US.UTF-8
 
-# tools
 export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
-# java -classpath : not to need specify myself
-export CLASSPATH=$CLASSPATH:'./classes':'.'
 
-# define about emacs
-. ~/.emacs.d/emacsenv.sh
+export PATH="$HOME/.cabal/bin":"$PATH"
+export PATH="$HOME/bin":"$PATH"
+export PATH="$HOME/local/bin":"$PATH"
+export PATH="$HOME/var/bin":"$PATH"
 
 export PATH="$HOME/.rbenv/bin":"$PATH"
 if which rbenv > /dev/null ; then
     eval "$(rbenv init -)"
 fi
 
-# delete duplicated paths
 export PATH="$(echo $PATH | trimpath)"

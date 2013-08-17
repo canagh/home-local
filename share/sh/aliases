@@ -119,6 +119,7 @@ alias notify='notify-send -i terminal'
 
 vimrc() { vim ~/.vimrc }
 shrc() { $EDITOR ~/local/share/sh/aliases && . ~/local/share/sh/aliases }
+shenv() { $EDITOR ~/local/share/sh/environment && . ~/local/share/sh/environment }
 alias tmp='cd ~/tmp'
 
 ## virtual environment

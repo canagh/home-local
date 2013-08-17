@@ -7,7 +7,7 @@ use File::Basename;
 my $quote;
 my @excludes;
 my $whitelist;
-die "usage: " . basename $0 . " [--quote] INPUT\n"
+die "Usage: " . basename $0 . " [--quote] INPUT\n"
     unless GetOptions(
         'quote' => \$quote,
         'exclude=s@' => \@excludes,
