@@ -10,7 +10,7 @@ urxvt*shading: 10
 urxvt*inheritPixmap: True
 urxvt*font: xft:Monospace:size=10
 urxvt*boldFont: xft:Monospace:size=10
-urxvt.scrollBar: false
+urxvt*scrollBar: false
 
 !! Hybrid Terminal Colours
 *background: #1D1F21
