@@ -7,19 +7,23 @@ use File::Basename;
 use Getopt::Long;
 
 use constant {
-    THREAD  => 'thread',
-    BOARD   => 'board',
-    HOST    => 'host',
-    DAT     => 'dat',
-    SUBJECT => 'subject',
-    READCGI => 'readcgi',
-    BBSCGI  => 'bbscgi',
-    TSV     => 'tsv',
-    TYPE    => 'type',
+    THREAD      => 'thread',
+    BOARD       => 'board',
+    HOST        => 'host',
+
+    DAT         => 'dat',
+    SUBJECT     => 'subject',
+    READCGI     => 'readcgi',
+    BBSCGI      => 'bbscgi',
+    BOARD_INDEX => 'board_index',
+    TSV         => 'tsv',
+
+    TYPE        => 'type',
+    FORCE       => 'force',
 };
 
 sub parse() {
-    my %attr = ();
+    my %attr = (HOST => '', BOARD => '', THREAD => '');
     my $string = $_[0];
 
     given ($string) {
@@ -55,50 +59,60 @@ sub parse() {
 
 sub convert() {
     my %args = @_;
-    sub error() { basename $0 . ": couldn't convert"; }
+    my $error = sub { die basename $0 . ": couldn't convert: lack of infomation" unless $args{FORCE}; };
 
     given ($args{TYPE}) {
         when (DAT) {
-            die &error() unless $args{THREAD};
-            return &convert(%args, TYPE => BOARD) . 'dat/' . $args{THREAD} . '.dat';
+            $error->() unless $args{THREAD};
+            return &convert(%args, TYPE => BOARD_INDEX) . 'dat/' . $args{THREAD} . '.dat';
         }
         when (READCGI) {
-            die &error() unless $args{HOST} and $args{BOARD} and $args{THREAD};
+            $error->() unless $args{HOST} and $args{BOARD} and $args{THREAD};
             return 'http://' . $args{HOST} . '/test/read.cgi/' . $args{BOARD} . '/' . $args{THREAD} . '/';
         }
         when (BBSCGI) {
-            die &error() unless $args{HOST};
+            $error->() unless $args{HOST};
             return 'http://' . $args{HOST} . '/test/bbs.cgi';
         }
         when (TSV) {
-            die &error() unless $args{HOST} and $args{BOARD} and $args{THREAD};
+            $error->() unless $args{HOST} and $args{BOARD} and $args{THREAD};
             return join "\t", ($args{HOST}, $args{BOARD}, $args{THREAD});
         }
-        when (BOARD) {
-            die &error() unless $args{HOST} and $args{BOARD};
+        when (BOARD_INDEX) {
+            $error->() unless $args{HOST} and $args{BOARD};
             return 'http://' . $args{HOST} . '/' . $args{BOARD} . '/';
         }
         when (SUBJECT) {
-            return &convert(%args, TYPE => BOARD) . 'subject.txt';
+            return &convert(%args, TYPE => BOARD_INDEX) . 'subject.txt';
+        }
+        when (HOST) {
+            $error->() unless $args{HOST};
+            return $args{HOST};
+        }
+        when (BOARD) {
+            $error->() unless $args{BOARD};
+            return $args{BOARD};
+        }
+        when (THREAD) {
+            $error->() unless $args{THREAD};
+            return $args{THREAD};
         }
         default {
-            &error();
+            die basename $0 . ': wrong type: ' . $args{TYPE};
         }
     }
 }
 
 
+my $force;
 die 'Usage: ' . basename $0 . " TYPE [URL]\n"
     unless GetOptions(
+        'f|force' => \$force,
     );
 
 my $type = shift;
-foreach ((DAT, READCGI, BBSCGI, TSV, BOARD, SUBJECT, 0)) {
-    die basename $0 . ': wrong type: ' . $type unless $_;
-    last if $type eq $_;
-}
 
 my $url = join "\t", @ARGV;
 $url = readline unless $url;
 
-print &convert(&parse($url), TYPE => $type);
+print &convert(&parse($url), TYPE => $type, FORCE => $force);
