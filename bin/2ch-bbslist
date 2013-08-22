@@ -1,0 +1,29 @@
+#!/bin/sh
+
+[ "$CH2_DIR" ] || CH2_DIR=$HOME/.2ch
+bbsmenu='http://menu.2ch.net/bbsmenu.html'
+categories="$CH2_DIR"/2ch.net/categories
+hosts="$CH2_DIR"/hosts
+
+echo make "$categories"...
+wget -O - "$bbsmenu" | perl -e "`cat <<'EOS'
+use feature 'say';
+use feature 'switch';
+my $cat = '';
+while (<>) {
+    given( $_ ) {
+        when ( /^<BR><BR><B>(.*)<\/B><BR>/ ) {
+            $cat = $1;
+        }
+        when ( /<A HREF=(http:\/\/[^\/]+\/\w+\/)>(.*)<\/A><br>/ ) {
+            say join "\t", ($cat, $2, $1);
+        }
+    }
+}
+EOS
+`" >"$categories"
+echo done
+
+echo make "$hosts"...
+cat "$categories" | cut -f3 | 2ch-urlconv -f tsv | awk 'BEGIN { OFS = "\t" } { print $2, $1 }' | sort >"$hosts"
+echo done

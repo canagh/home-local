@@ -2,6 +2,7 @@
 use warnings;
 use strict;
 use feature 'switch';
+use feature 'say';
 
 use File::Basename;
 use Getopt::Long;
@@ -27,17 +28,20 @@ sub parse() {
     my $string = $_[0];
 
     given ($string) {
-        when (/^h?ttps?:\/\/[\w.]+\/?$/) {
-            $attr{HOST} = (split '/', $string)[2];
+        when (/^h?ttps?:\/\/([\w.]+)\/?$/) {
+            $attr{HOST} = $1;
         }
-        when (/^\w+\W+\d+$/) {
-            ($attr{BOARD}, $attr{THREAD}) = split /\W+/, $string;
+        when (/^h?ttps?:\/\/([\w.]+)\/(\w+)\/?$/) {
+            ($attr{HOST}, $attr{BOARD}) = ($1, $2);
         }
-        when (/^[\w.]+\W+\w+$/) {
-            ($attr{HOST}, $attr{BOARD}) = split /[^\w.]+/, $string;
+        when (/^(\w+)\W+(\d+)$/) {
+            ($attr{BOARD}, $attr{THREAD}) = ($1, $2);
         }
-        when (/^[\w.]+\W+\w+\W+\d+$/) {
-            ($attr{HOST}, $attr{BOARD}, $attr{THREAD}) = split /[^\w.]+/, $string;
+        when (/^([\w.]+)\W+(\w+)$/) {
+            ($attr{HOST}, $attr{BOARD}) = ($1, $2);
+        }
+        when (/^([\w.]+)\W+(\w+)\W+(\d+)$/) {
+            ($attr{HOST}, $attr{BOARD}, $attr{THREAD}) = ($1, $2, $3);
         }
         when (/\/read\.cgi\//) {
             ($attr{HOST}, $attr{BOARD}, $attr{THREAD}) = (split '/', $string)[2,5,6];
@@ -48,6 +52,9 @@ sub parse() {
         }
         when (/\/subject.txt$/) {
             ($attr{HOST}, $attr{BOARD}) = (split '/', $string)[2,3];
+        }
+        when (/^\w+$/) {
+            $attr{BOARD} = $string;
         }
         default {
             die basename $0 . ": couldn't parse";
@@ -103,16 +110,44 @@ sub convert() {
     }
 }
 
+sub solve() {
+    my %args = @_[0..5];
+    my @hosts = @_[6..$#_];
+
+    unless ($args{HOST}) {
+        foreach (@hosts) {
+            open FH, $_;
+            while (<FH>) {
+                chomp $_;
+                my ($board, $host) = split "\t", $_;
+                if ($args{BOARD} eq $board) {
+                    $args{HOST} = $host;
+                    @hosts = ();
+                    last;
+                }
+            }
+            close FH;
+        }
+    }
+    return %args;
+}
+
 
 my $force;
+my @hosts = (($ENV{'CH2_DIR'} or $ENV{'HOME'} . '/.2ch') . '/hosts');
 die 'Usage: ' . basename $0 . " TYPE [URL]\n"
     unless GetOptions(
         'f|force' => \$force,
+        'H|hosts=s@' => \@hosts,
     );
 
 my $type = shift;
 
 my $url = join "\t", @ARGV;
-$url = readline unless $url;
-
-print &convert(&parse($url), TYPE => $type, FORCE => $force);
+if ($url) {
+    say &convert(&solve(&parse($url), @hosts), TYPE => $type, FORCE => $force);
+} else {
+    while (<>) {
+        say &convert(&solve(&parse($_), @hosts), TYPE => $type, FORCE => $force);
+    }
+}
