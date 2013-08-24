@@ -1,0 +1,91 @@
+#!/usr/bin/python
+
+import re
+
+def parse(lines, typ=None, count=1):
+    title = None
+    for line in lines:
+        if typ is None:
+            typ = detect(line)
+        result = { 'dat': parse_dat_line, 'subject': parse_subject_line }[typ](line)
+        if 'title' in result:
+            title = result['title']
+        else:
+            if title is not None:
+                result['title'] = title
+        result['num'] = str(count)
+        result['type'] = typ
+        yield result
+        count += 1
+
+def detect(line):
+    return { 5: 'dat', 2: 'subject' }[ len(line.split('<>')) ]
+
+def parse_dat_line(line):
+    # NAME<>MAIL<>DATE TIME ID BE<> MESSAGE <>TITLE
+    items = line[:len(line)].split('<>')
+    info = items[2].split() + ['', '', '', '']
+    return { 'name'    : items[0]
+           , 'mail'    : items[1]
+           , 'date'    : info[0] # yyyy/mm/dd(D)
+           , 'time'    : info[1] # hh:mm:ss:cc
+           , 'id'      : info[2] and info[2][4:] # ID:wwwwwwww
+           , 'be'      : info[3] and info[3][4:] # BE:dddddddddd-www(dddd)
+           , 'message' : items[3][1:len(items[3])-1]
+           , 'title'   : items[4]
+           }
+
+subject_line_re = re.compile(r'^(\d+)\.dat<>(.+) \((\d+)\)$')
+def parse_subject_line(line):
+    # THREADID.dat<>TITLE (RESNUM)
+    m = subject_line_re.match(line)
+    return { 'id' : m.group(1)
+           , 'name'  : m.group(2)
+           , 'resnum' : m.group(3)
+           }
+
+
+parcent_dot_re = re.compile(r'%.')
+def convert(table, form):
+    dic = { '%N' : 'num'
+          , '%n' : 'name'
+          , '%M' : 'mail'
+          , '%d' : 'date'
+          , '%t' : 'time'
+          , '%i' : 'id'
+          , '%b' : 'be'
+          , '%m' : 'message'
+          , '%T' : 'title'
+          , '%r' : 'resnum'
+          , '%s' : 'speed'
+          }
+    for key in dic.keys():
+        if dic[key] in table:
+            dic[key] = table[dic[key]]
+        else:
+            del dic[key]
+    if form is None:
+        form = { 'dat': '%N\t%n\t%M\t%d %t\t%i\t%m', 'subject': '%i\t%n\t%r' }[table['type']]
+    return parcent_dot_re.sub(lambda m: dic.get(m.group(0), m.group(0)), form)
+
+
+import argparse
+import os
+import sys
+
+ch2dir=os.environ.get('CH2_DIR', os.environ['HOME'] + '/.2ch')
+parser = argparse.ArgumentParser(description='Format dat or subject.')
+parser.add_argument('files', metavar='FILE', nargs='*')
+parser.add_argument('-f', '--format', metavar='FORMAT')
+parser.add_argument('-F', '--force', action='store_true')
+parser.add_argument('-t', '--type', metavar='TYPE')
+args = parser.parse_args()
+
+if len(args.files) == 0:
+    for result in parse(sys.stdin):
+        print convert(result, args.format)
+else:
+    for fname in args.files:
+        with open(fname) as f:
+            for result in parse(f):
+                print convert(result, args.format)
