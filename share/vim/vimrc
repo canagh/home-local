@@ -110,10 +110,12 @@ NeoBundle 'ujihisa/neco-look'
 " jump
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'matchit.zip'
+NeoBundle 'osyo-manga/vim-anzu'
 " NeoBundle 'camelcasemotion'
 
 " marking
 NeoBundle 'nathanaelkane/vim-indent-guides'
+"NeoBundle 'cohama/vim-insert-linenr'
 "NeoBundle 'daisuzu/rainbowcyclone.vim'
 
 " exec
@@ -155,6 +157,7 @@ NeoBundle 'hail2u/vim-css3-syntax'
 "NeoBundle 'desert256.vim'
 NeoBundle 'w0ng/vim-hybrid'
 
+NeoBundle 'bling/vim-airline'
 NeoBundle 'sudo.vim'
 NeoBundle 'tyru/autochmodx.vim'
 
@@ -188,6 +191,7 @@ nnoremap <silent> [unite]F :<C-u>Unite -buffer-name=files file<CR>
 nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
 nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
 nnoremap <silent> [unite]vr :UniteResume<CR>/"
+let g:unite_enable_start_insert = 1
 "}}}
 
 " unite-outline
@@ -290,6 +294,17 @@ let g:indent_guides_guide_size=1
 
 " opengl.vim {{{
 autocmd FileType c,cpp source $HOME/.vim/bundle/opengl.vim/syntax/opengl.vim
+" }}}
+
+" anzu.vim {{{
+nmap n <Plug>(anzu-n-with-echo)
+nmap N <Plug>(anzu-N-with-echo)
+nmap * <Plug>(anzu-star-with-echo)
+nmap # <Plug>(anzu-sharp-with-echo)
+" clear status
+nmap <Esc><Esc> <Plug>(anzu-clear-search-status)
+set statusline=%{anzu#search_status()}
+let g:anzu_search_limit = 1000
 " }}}
 
 " vim-smartchr {{{
