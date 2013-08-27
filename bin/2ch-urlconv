@@ -37,7 +37,7 @@ sub parse() {
         when (/^(\w+)\W+(\d+)$/) {
             ($attr{BOARD}, $attr{THREAD}) = ($1, $2);
         }
-        when (/^([\w.]+)\W+(\w+)$/) {
+        when (/^([\w.]+)\W+(\w+)\W*$/) {
             ($attr{HOST}, $attr{BOARD}) = ($1, $2);
         }
         when (/^([\w.]+)\W+(\w+)\W+(\d+)$/) {

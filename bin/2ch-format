@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
 import re
+import copy
 
 def parse(lines, typ=None, count=1):
     title = None
@@ -8,12 +9,12 @@ def parse(lines, typ=None, count=1):
         if typ is None:
             typ = detect(line)
         result = { 'dat': parse_dat_line, 'subject': parse_subject_line }[typ](line)
-        if 'title' in result:
-            title = result['title']
-        else:
-            if title is not None:
+        if typ == 'dat':
+            if 'title' in result:
+                title = result['title']
+            elif title is not None:
                 result['title'] = title
-        result['num'] = str(count)
+        result['line'] = str(count)
         result['type'] = typ
         yield result
         count += 1
@@ -39,33 +40,42 @@ subject_line_re = re.compile(r'^(\d+)\.dat<>(.+) \((\d+)\)$')
 def parse_subject_line(line):
     # THREADID.dat<>TITLE (RESNUM)
     m = subject_line_re.match(line)
-    return { 'id' : m.group(1)
-           , 'name'  : m.group(2)
-           , 'resnum' : m.group(3)
+    return { 'thread' : m.group(1)
+           , 'title'  : m.group(2)
+           , 'res' : m.group(3)
            }
 
 
+convert_dic = \
+    { 'dat' :
+        { '%l' : 'line'
+        , '%n' : 'name'
+        , '%M' : 'mail'
+        , '%d' : 'date'
+        , '%t' : 'time'
+        , '%i' : 'id'
+        , '%b' : 'be'
+        , '%m' : 'message'
+        , '%T' : 'title'
+        }
+    , 'subject' :
+        { '%l' : 'line'
+        , '%t' : 'thread'
+        , '%T' : 'title'
+        , '%r' : 'res'
+        # , '%s' : 'speed'
+        }
+    }
+default_format = { 'dat': '%n\t%M\t%d %t %i %b\t%m', 'subject': '%t\t%T\t%r' }
 parcent_dot_re = re.compile(r'%.')
 def convert(table, form):
-    dic = { '%N' : 'num'
-          , '%n' : 'name'
-          , '%M' : 'mail'
-          , '%d' : 'date'
-          , '%t' : 'time'
-          , '%i' : 'id'
-          , '%b' : 'be'
-          , '%m' : 'message'
-          , '%T' : 'title'
-          , '%r' : 'resnum'
-          , '%s' : 'speed'
-          }
-    for key in dic.keys():
-        if dic[key] in table:
-            dic[key] = table[dic[key]]
-        else:
-            del dic[key]
+    template = convert_dic[table['type']]
+    dic = {}
+    for key, value in template.iteritems():
+        if value in table:
+            dic[key] = table[value]
     if form is None:
-        form = { 'dat': '%N\t%n\t%M\t%d %t\t%i\t%m', 'subject': '%i\t%n\t%r' }[table['type']]
+        form = default_format[table['type']]
     return parcent_dot_re.sub(lambda m: dic.get(m.group(0), m.group(0)), form)
 
 
@@ -74,7 +84,26 @@ import os
 import sys
 
 ch2dir=os.environ.get('CH2_DIR', os.environ['HOME'] + '/.2ch')
-parser = argparse.ArgumentParser(description='Format dat or subject.')
+parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description='Format dat or subject.',
+        epilog=\
+"""format specifiers:
+    thread:
+        {0}
+    board:
+        {1}
+
+default format strings:
+    thread:
+        {2}
+    board:
+        {3}
+""".format(
+            repr(convert_dic['dat']),
+            repr(convert_dic['subject']),
+            repr(default_format['dat']),
+            repr(default_format['subject'])))
 parser.add_argument('files', metavar='FILE', nargs='*')
 parser.add_argument('-f', '--format', metavar='FORMAT')
 parser.add_argument('-F', '--force', action='store_true')
