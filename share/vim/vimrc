@@ -1,6 +1,113 @@
+" neobundle.vim {{{
 set nocompatible
+
+if has('vim_starting')
+    set runtimepath+=~/.vim/bundle/neobundle.vim
+    call neobundle#rc(expand('~/.vim/bundle/'))
+endif
+
+" originalrepos on github
+" plugin manageings
+NeoBundle 'Shougo/neobundle.vim'
+" Shougo/vimproc {{{
+NeoBundle 'Shougo/vimproc', {
+      \ 'build' : {
+      \     'windows' : 'make -f make_mingw32.mak',
+      \     'cygwin' : 'make -f make_cygwin.mak',
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
+"}}}
+
+" edit
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'vim-scripts/repeat.vim'
+NeoBundle 'kana/vim-smartchr'
+NeoBundle 'Align'
+
+" unite
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/vimfiler', { 'depends' : 'Shougo/unite.vim' }
+
+NeoBundle 'bling/vim-airline'
+
+" completion
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'honza/snipmate-snippets'
+NeoBundle 'ujihisa/neco-look'
+
+" jump
+NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'matchit.zip'
+NeoBundle 'osyo-manga/vim-anzu'
+" NeoBundle 'camelcasemotion'
+
+" marking
+NeoBundle 'nathanaelkane/vim-indent-guides'
+"NeoBundle 'cohama/vim-insert-linenr'
+"NeoBundle 'daisuzu/rainbowcyclone.vim'
+
+NeoBundle 'thinca/vim-quickrun'
+
+" markdown
+"NeoBundle 'plasticboy/vim-markdown'
+"NeoBundle 'suan/vim-instant-markdown'
+
+NeoBundle 'YankRing.vim'
+
+" c++
+"NeoBundle 'Rip-Rip/clang_complete'
+NeoBundle 'vim-jp/cpp-vim'
+NeoBundle 'vim-scripts/opengl.vim'
+
+" haskell
+NeoBundle 'ujihisa/neco-ghc'
+NeoBundle 'lukerandall/haskellmode-vim'
+NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'bitc/vim-hdevtools'
+NeoBundle 'eagletmt/unite-haddock'
+NeoBundle 'dag/vim2hs'
+
+" python
+NeoBundle 'mitechie/pyflakes-pathogen'
+NeoBundle 'sontek/rope-vim'
+NeoBundle 'lambdalisue/vim-django-support'
+NeoBundle 'davidhalter/jedi-vim' " require $ git submodule update --init
+
+" html / css
+NeoBundle 'mattn/zencoding-vim'
+NeoBundle 'othree/html5.vim'
+NeoBundle 'hail2u/vim-css3-syntax'
+" NeoBundle 'css_color.vim' " too slow
+
+" colorscheme
+"NeoBundle 'desert256.vim'
+NeoBundle 'w0ng/vim-hybrid'
+
+NeoBundle 'sudo.vim'
+NeoBundle 'tyru/autochmodx.vim'
+
+NeoBundle 'rkitover/vimpager'
+
+" commentted-out plugins {{{
+" syntax check
+"NeoBundle 'scrooloose/syntastic'
+"NeoBundle 'osyo-manga/shabadou.vim'
+"NeoBundle 'osyo-manga/vim-watchdogs' " dep: shabadou
+
+"NeoBundle 'VimClojure'
+"NeoBundle 'Shougo/vimshell'
+"NeoBundle 'jpalardy/vim-slime'
+"NeoBundle 'https:/bitbucket.org/kovisoft/slimv'
+"}}}
+
+filetype plugin indent on     " required!
+" }}}
+
 syntax on
-" filetype plugin indent on " neobundle.vim overwrites this?
 set modeline
 let mapleader=" "
 
@@ -76,115 +183,6 @@ aug vimrc_vimscript
 aug end
 " }}}
 
-" neobundle.vim {{ {
-if has('vim_starting')
-    set runtimepath+=~/.vim/bundle/neobundle.vim
-    call neobundle#rc(expand('~/.vim/bundle/'))
-endif
-
-" originalrepos on github
-" plugin manageings
-NeoBundle 'Shougo/neobundle.vim'
-" Shougo/vimproc {{{
-NeoBundle 'Shougo/vimproc', {
-      \ 'build' : {
-      \     'windows' : 'make -f make_mingw32.mak',
-      \     'cygwin' : 'make -f make_cygwin.mak',
-      \     'mac' : 'make -f make_mac.mak',
-      \     'unix' : 'make -f make_unix.mak',
-      \    },
-      \ }
-"}}}
-
-" edit
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'vim-scripts/repeat.vim'
-NeoBundle 'kana/vim-smartchr'
-NeoBundle 'Align'
-
-" unite
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'Shougo/vimfiler'
-
-" completion
-NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'honza/snipmate-snippets'
-NeoBundle 'ujihisa/neco-look'
-
-" jump
-NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'matchit.zip'
-NeoBundle 'osyo-manga/vim-anzu'
-" NeoBundle 'camelcasemotion'
-
-" marking
-NeoBundle 'nathanaelkane/vim-indent-guides'
-"NeoBundle 'cohama/vim-insert-linenr'
-"NeoBundle 'daisuzu/rainbowcyclone.vim'
-
-" exec
-NeoBundle 'thinca/vim-quickrun'
-
-" markdown
-"NeoBundle 'plasticboy/vim-markdown'
-"NeoBundle 'suan/vim-instant-markdown'
-
-" yank
-NeoBundle 'YankRing.vim'
-
-" c++
-"NeoBundle 'Rip-Rip/clang_complete'
-NeoBundle 'vim-jp/cpp-vim'
-NeoBundle 'vim-scripts/opengl.vim'
-
-" haskell
-NeoBundle 'ujihisa/neco-ghc'
-NeoBundle 'lukerandall/haskellmode-vim'
-NeoBundle 'eagletmt/ghcmod-vim'
-NeoBundle 'bitc/vim-hdevtools'
-NeoBundle 'eagletmt/unite-haddock'
-NeoBundle 'dag/vim2hs'
-
-" python
-NeoBundle 'mitechie/pyflakes-pathogen'
-NeoBundle 'sontek/rope-vim'
-NeoBundle 'lambdalisue/vim-django-support'
-NeoBundle 'davidhalter/jedi-vim' " require $ git submodule update --init
-
-" html / css
-NeoBundle 'mattn/zencoding-vim'
-NeoBundle 'othree/html5.vim'
-NeoBundle 'hail2u/vim-css3-syntax'
-" NeoBundle 'css_color.vim' " too slow
-
-" colorscheme
-"NeoBundle 'desert256.vim'
-NeoBundle 'w0ng/vim-hybrid'
-
-NeoBundle 'bling/vim-airline'
-NeoBundle 'sudo.vim'
-NeoBundle 'tyru/autochmodx.vim'
-
-" tools
-NeoBundle 'rkitover/vimpager'
-
-" commentted-out plugins {{{
-" syntax check
-"NeoBundle 'scrooloose/syntastic'
-"NeoBundle 'osyo-manga/shabadou.vim'
-"NeoBundle 'osyo-manga/vim-watchdogs' " dep: shabadou
-
-"NeoBundle 'VimClojure'
-"NeoBundle 'Shougo/vimshell'
-"NeoBundle 'jpalardy/vim-slime'
-"NeoBundle 'https:/bitbucket.org/kovisoft/slimv'
-"}}}
-
-filetype plugin indent on     " required!
-" }} }
-
 " unite.vim {{{
 " The prefix key.
 nnoremap [unite] <Nop>
@@ -197,7 +195,7 @@ nnoremap <silent> [unite]F :<C-u>Unite -buffer-name=files file<CR>
 nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
 nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
 nnoremap <silent> [unite]vr :UniteResume<CR>/"
-let g:unite_enable_start_insert = 1
+" let g:unite_enable_start_insert = 1
 "}}}
 
 " unite-outline
@@ -298,14 +296,22 @@ let g:indent_guides_guide_size=1
 autocmd FileType c,cpp source $HOME/.vim/bundle/opengl.vim/syntax/opengl.vim
 " }}}
 
+" vim-airline {{{
+" Q. The statusline does not appear until I create a split.
+" A. This is the default setting of |laststatus|.  If you want it to appear all the time, add the following to your vimrc: >
+set laststatus=2
+" to avoid an error on the anzu.vim's extension
+if ! exists('g:airline_section_z')
+    let g:airline_section_z = ''
+endif
+" }}}
+
 " anzu.vim {{{
-nmap n <Plug>(anzu-n-with-echo)
-nmap N <Plug>(anzu-N-with-echo)
-nmap * <Plug>(anzu-star-with-echo)
-nmap # <Plug>(anzu-sharp-with-echo)
-" clear status
-nmap <Esc><Esc> <Plug>(anzu-clear-search-status)
-set statusline=%{anzu#search_status()}
+nmap n <Plug>(anzu-n)
+nmap N <Plug>(anzu-N)
+nmap * <Plug>(anzu-star)
+nmap # <Plug>(anzu-sharp)
+let g:airline#extensions#anzu#enabled = 1
 let g:anzu_search_limit = 1000
 " }}}
 

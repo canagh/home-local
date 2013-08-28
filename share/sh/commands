@@ -1,8 +1,7 @@
 #!/bin/sh
 
 
-## work
-CURRENT_PROJECT_DIRECTORY=~/work/cogile
+#CURRENT_PROJECT_DIRECTORY=~/work/
 work() {
     # you should rewrite frequently
     cd "$CURRENT_PROJECT_DIRECTORY"
@@ -16,6 +15,14 @@ work() {
     echo
     echo -e "\e[34m\$ ls\e[0m"
     ls
+}
+
+grep_unite() {
+    grep "$@" ~/.vim/bundle/unite.vim/**/*.vim
+}
+
+grep_vimfiler() {
+    grep "$@" ~/.vim/bundle/vimfiler/**/*.vim
 }
 
 
