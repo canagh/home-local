@@ -5,16 +5,25 @@ use warnings;
 use Getopt::Long;
 use File::Basename;
 my $quote;
+my $html;
+my $list;
 my @excludes;
 my $whitelist;
-die "Usage: " . basename $0 . " [--quote] INPUT\n"
+die "Usage: " . basename $0 . " [--quote] [--exclude TAG] [--whitelist] [--html] [--list] INPUT\n"
     unless GetOptions(
         'quote' => \$quote,
         'exclude=s@' => \@excludes,
         'whitelist' => \$whitelist,
+        'html' => \$html,
+        'list' => \$list,
     );
 
 my %esc = ( 'clear' => "\e[0m", 'bold' => "\e[1m", 'underscore' => "\e[4m", 'blink' => "\e[5m", 'reverse' => "\e[7m", 'concealed' => "\e[8m", 'black' => "\e[30m", 'red' => "\e[31m", 'green' => "\e[32m", 'yellow' => "\e[33m", 'blue' => "\e[34m", 'magenta' => "\e[35m", 'cyan' => "\e[36m", 'white' => "\e[37m", 'on_black' => "\e[40m", 'on_red' => "\e[41m", 'on_green' => "\e[42m", 'on_yellow' => "\e[43m", 'on_blue' => "\e[44m", 'on_magenta' => "\e[45m", 'on_cyan' => "\e[46m", 'on_white' => "\e[47m" );
+if ($html) {
+    $esc{'br'} = ""; # specialized
+    $esc{'b'} = $esc{'bold'};
+    $esc{'u'} = $esc{'underscore'};
+}
 if ($quote) {
     foreach (keys %esc) {
         $esc{$_} = quotemeta $esc{$_};
@@ -31,6 +40,13 @@ if ($whitelist) {
     foreach $exclude (@excludes) {
         @keys = grep {$_ ne $exclude} @keys;
     }
+}
+
+if ($list) {
+    foreach (sort @keys) {
+        print $_ . "\n";
+    }
+    exit 0;
 }
 
 
@@ -68,6 +84,12 @@ sub proc {
     }
 }
 
+my $replace_break = 0;
+if (grep {$_ eq 'br'} @keys) {
+    @keys = grep {$_ ne 'br'} @keys;
+    $replace_break = 1;
+}
 for (<>) {
+    $_ =~ s/<br>/\n/g if $replace_break;
     &proc($_);
 }

@@ -93,7 +93,7 @@ import argparse
 
 ch2dir=os.environ.get('CH2_DIR', os.environ['HOME'] + '/.2ch')
 parser = argparse.ArgumentParser(description='Post messages to 2ch.net.')
-parser.add_argument('-t', '--to', metavar='IDENTIFIER',
+parser.add_argument('target', metavar='TARGET', nargs='*',
         help='The IDENTIFIER of a thread you want to post to.')
 parser.add_argument('-n', '--name', metavar='STRING', default='',
         help='The default is "".')
@@ -101,7 +101,7 @@ parser.add_argument('-M', '--mail', metavar='ADDRESS', default='sage',
         help='The default is "sage".')
 parser.add_argument('-m', '--message', metavar='TEXT', default='',
         help='If empty or not given, $EDITOR is opened to make a message')
-parser.add_argument('--user-agent', metavar='STRING', default='Monazilla 1.00')
+parser.add_argument('-U', '--user-agent', metavar='STRING', default='Monazilla 1.00')
 parser.add_argument('-c', '--cookie', metavar='PATH', default=ch2dir + '/cookie')
 parser.add_argument('-f', '--force', action='store_true',
         help='Post without any confirmings.')
@@ -114,10 +114,10 @@ if args.message == '':
     with tempfile.NamedTemporaryFile() as tmp:
         subprocess.call([os.environ['EDITOR'], tmp.name])
         args.message = tmp.read().rsplit("\n", 1)[0]
-if args.to is None:
+if len(args.target) == 0:
     raise ValueError('the target is empty.')
 try:
-    urlconv('tsv', args.to)
+    urlconv('tsv', args.target)
 except subprocess.CalledProcessError:
     raise
 
@@ -129,7 +129,7 @@ for key in res:
 user = { 'user_agent': args.user_agent , 'cookie': {'mozilla': cookielib.MozillaCookieJar , 'lwp': cookielib.LWPCookieJar}[args.cookielib_cookie_type](args.cookie) }
 if os.path.isfile(user['cookie'].filename):
     user['cookie'].load()
-result = (autopost if args.force else post)(args.to, res, user)
+result = (autopost if args.force else post)(args.target, res, user)
 user['cookie'].save()
 
 if args.print_body or not result[0] == 'true':

@@ -1,0 +1,59 @@
+#!/bin/bash
+
+format='<blue>%l</blue>: <bold>%n</bold> <mail>%M</mail> %d %t %i %b<br>%m<br>'
+regexp="`cat <<'EOS'
+s!\(>>[[:digit:]]\+\)!<blue>\1</blue>!g ;
+s!\(h\?ttps\?://[^[:space:]]\+\)!<underscore>\1</underscore>!g ;
+s!<\(/\?\)b>!<\1bold>!ig ;
+s!<mail>sage</mail>!<blue>[sage]</blue>! ;
+s!<mail>\(.*\)</mail>!<red>[\1]</red>! ;
+EOS
+`"
+getoptions=()
+
+args=()
+while [ "$1" ] ; do
+    case "$1" in
+        -h | --help )
+            echo `basename "$0"`\ $command': [-r|--reload] [-n|--no-download] [-f|--format FORMAT] [-e|--regexp EXPR] [--regexp-clear]TARGET'
+            exit
+            ;;
+        -r | --reload )
+            getoptions=("{$getoptions[@]}" -r)
+            shift
+            ;;
+        -n | --no-download )
+            getoptions=("{$getoptions[@]}" -n)
+            shift
+            ;;
+        -f | --format )
+            format="$2"
+            shift 2
+            ;;
+        -e | --regexp )
+            regexp="$regexp"\;"$2"
+            shift 2
+            ;;
+        --regexp-clear )
+            regexp=''
+            shift
+            ;;
+        -- )
+            shift
+            args=("${args[@]}" "$@")
+            break
+            ;;
+        -* )
+            echo `basename "$0"`': unknown option: '\`"$1"\' 1>&2
+            exit 1
+            ;;
+        * )
+            args=("${args[@]}" "$1")
+            shift
+            break
+            ;;
+    esac
+done
+
+last_line=`2ch-get -n "${args[@]}" 2>/dev/null | wc -l`
+2ch-get "${getoptions[@]}" -- "${args[@]}" | 2ch-utils decode | 2ch-format -f "$format" | 2ch-utils rmanchor stripbreak unescapegt | sed -e "$regexp" | colorml --html | less '+/'"$last_line"

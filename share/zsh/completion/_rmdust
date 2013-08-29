@@ -12,7 +12,7 @@ _rmdust() {
 
 __rmdust_arguments() {
     _files
-    _values 'ypes' \
+    _values 'types' \
         'backup[dufault]' \
         'haskell' \
         'html' \

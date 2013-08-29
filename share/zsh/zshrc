@@ -52,8 +52,14 @@ fi
 ZSH_USER_FPATH=$HOME/local/share/zsh/completion
 fpath=($ZSH_USER_FPATH $fpath)
 autoload -U $ZSH_USER_FPATH/*(:t)
-
 autoload -U compinit ; compinit -u
+
+function compreload() {
+    local f
+    f=("$ZSH_USER_FPATH"/*(.))
+    unfunction $f:t 2> /dev/null
+    autoload -U $f:t
+}
 
 
 # verbose completion message

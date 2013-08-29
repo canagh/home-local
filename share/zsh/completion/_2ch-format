@@ -1,0 +1,31 @@
+#compdef 2ch-format
+
+typeset -A opt_args
+local context state line
+
+__2ch_format() {
+    _values 'dat' \
+        '%l[line]'\
+        '%n[name]' \
+        '%M[mail]' \
+        '%d[date]' \
+        '%t[time]' \
+        '%i[id]' \
+        '%b[be]' \
+        '%m[message]' \
+        '%T[title]'
+    _values 'subject' \
+        '%l[line]' \
+        '%t[thread]' \
+        '%T[title]' \
+        '%r[res]'
+        # '%s[speed]'
+}
+
+_arguments -s -S \
+    '(- *)'{-h,--help}'[show help]' \
+    '(-f,--format)'{-f,--format}'[specify format]: :__2ch_format' \
+    '(-F,--force)'{-F,--force}'[ignore lack of info]' \
+    '(-t,--type)'{-t,--type}'[]:(dat,subject)' \
+    '--'
+

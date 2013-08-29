@@ -1,0 +1,83 @@
+#!/bin/sh
+
+[ "$CH2_DIR" ] || CH2_DIR=$HOME/.2ch
+
+recur() {
+    if [ "$*" ]; then
+        "$0" "$@"
+    else
+        cat
+    fi
+}
+
+if [ $# -eq 0 ]; then
+    echo `basename "$0"`': missing arguments' 1>&2
+    exit 1
+fi
+command="$1"
+shift
+case "$command" in
+    help | -h | --help )
+        echo 'Usage: '`basename "$0"`' COMMAND [ARGS..]'
+        ;;
+
+    list | -l | --list )
+        list='help list decode encode bbslist rmanchor flipbold stripbreak unescapegt'
+        if [ -t 1 ]; then
+            echo $list
+        else
+            for item in $list; do echo $item ; done
+        fi
+        ;;
+
+    decode )
+        iconv -f Shift_JIS -t `echo $LANG | cut -d. -f2` | recur "$@"
+        ;;
+
+    encode )
+        iconv -t Shift_JIS -f `echo $LANG | cut -d. -f2` | recur "$@"
+        ;;
+
+    bbslist )
+        bbsmenu='http://menu.2ch.net/bbsmenu.html'
+        categories="$CH2_DIR"/2ch.net/categories
+        hosts="$CH2_DIR"/hosts
+        wget -O - "$bbsmenu" | perl -e "`cat <<'EOS'
+use feature 'say';
+use feature 'switch';
+my $cat = '';
+while (<>) {
+    given( $_ ) {
+        when ( /^<BR><BR><B>(.*)<\/B><BR>/ ) {
+            $cat = $1;
+        }
+        when ( /<A HREF=(http:\/\/[^\/]+\/\w+\/)>(.*)<\/A><br>/ ) {
+            say join "\t", ($cat, $2, $1);
+        }
+    }
+}
+EOS
+`" >"$categories"
+        cat "$categories" | cut -f3 | 2ch-urlconv -f tsv | awk 'BEGIN { OFS = "\t" } { print $2, $1 }' | sort >"$hosts"
+        ;;
+
+    stripbreak )
+        sed -e 's/ \?<br> \?/<br>/g' | recur "$@"
+        ;;
+
+    rmanchor )
+        sed -e 's!<a[^>]*>\([^<]*\)</a>!\1!g' | recur "$@"
+        ;;
+
+    flipbold )
+        sed -e 's!<b>!<CLOSEb>!ig ; s!</b>!<b>!ig ; s!<CLOSEb>!</b>!ig' | recur "$@"
+        ;;
+
+    unescapegt )
+        sed -e 's/&gt;/>/g' | recur "$@"
+        ;;
+
+    * )
+        echo `basename "$0"`': unknown command: '\`"$command"\' 1>&2
+        ;;
+esac

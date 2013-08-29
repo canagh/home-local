@@ -1,0 +1,17 @@
+#compdef 2ch-urlconv
+
+typeset -A opt_args
+local context state line
+
+__2ch_boards() {
+    local -a boards
+    boards=($(_call_program path cut -f1 "${CH2_DIR:-$HOME/.2ch}"/hosts))
+    _values 'board' "${boards[@]}"
+}
+
+_arguments -s -S \
+    '(- *)'{-h,--help}'[show help]' \
+    '(-f,--force)'{-f,--force}'[ignore lack of info]' \
+    '(-H,--hosts)'{-H,--hosts}'[set hosts file]:hosts file:_files' \
+    '--' \
+    '*: :__2ch_boards'
