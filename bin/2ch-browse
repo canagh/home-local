@@ -10,6 +10,7 @@ s!<mail>\(.*\)</mail>!<red>[\1]</red>! ;
 EOS
 `"
 getoptions=()
+tdiff=3
 
 args=()
 while [ "$1" ] ; do
@@ -20,6 +21,7 @@ while [ "$1" ] ; do
             ;;
         -r | --reload )
             getoptions=("{$getoptions[@]}" -r)
+            tdiff=0
             shift
             ;;
         -n | --no-download )
@@ -32,6 +34,10 @@ while [ "$1" ] ; do
             ;;
         -e | --regexp )
             regexp="$regexp"\;"$2"
+            shift 2
+            ;;
+        -d | --time-difference )
+            tdiff="$2"
             shift 2
             ;;
         --regexp-clear )
@@ -50,10 +56,16 @@ while [ "$1" ] ; do
         * )
             args=("${args[@]}" "$1")
             shift
-            break
             ;;
     esac
 done
 
-last_line=`2ch-get -n "${args[@]}" 2>/dev/null | wc -l`
-2ch-get "${getoptions[@]}" -- "${args[@]}" | 2ch-utils decode | 2ch-format -f "$format" | 2ch-utils rmanchor stripbreak unescapegt | sed -e "$regexp" | colorml --html | less '+/'"$last_line"
+path=$(2ch-get --print-path "${args[@]}")
+if [ -f "$path" ]; then
+    last_line=`2ch-get -n "${args[@]}" 2>/dev/null | wc -l`
+    find "$path" -mmin +"$tdiff" -exec 2ch-get "${getoptions[@]}" -- "${args[@]}" \; # >/dev/null
+else
+    last_line=1
+    2ch-get "${getoptions[@]}" -- "${args[@]}" >/dev/null
+fi
+2ch-get -n "${getoptions[@]}" -- "${args[@]}" | 2ch-utils decode | 2ch-format -f "$format" | 2ch-utils rmanchor stripbreak unescapegt | sed -e "$regexp" | colorml --html | less '+/'"$last_line"

@@ -5,6 +5,7 @@ reload=
 simulate=
 no_download=
 discard=
+print_path=
 user_agent='Monazilla 1.00'
 directory_format=o2on
 file_format=raw
@@ -12,7 +13,7 @@ file_format=raw
 while [ "$1" ] ; do
     case "$1" in
         -h | --help )
-            echo 'Usage: '$(basename "$0")' [-s|--simulate] [-r|--reload] [-n|--no-download] [-d|--discard] [MORE_OPTIONS..] TARGET'
+            echo 'Usage: '$(basename "$0")' [-s|--simulate] [-r|--reload] [-n|--no-download] [-d|--discard] [-p|--print-path] [-U|--user-agent STRING] [-{D,F}|--{directory,file}-format STRING] TARGET..'
             echo 'Download and cache dat/subject from 2ch-like BBS.'
             exit
             ;;
@@ -30,6 +31,10 @@ while [ "$1" ] ; do
             ;;
         -d | --discard )
             discard=t
+            shift
+            ;;
+        -p | --print-path )
+            print_path=t
             shift
             ;;
         -U | --user-agent )
@@ -109,6 +114,10 @@ else
     type=subject
 fi
 path="$CH2_DIR/$(local_path "$@")"
+if [ "$print_path" ]; then
+    echo "$path"
+    exit
+fi
 
 if [ "$simulate" ]; then
     simulate=(echo)

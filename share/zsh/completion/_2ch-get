@@ -11,9 +11,10 @@ __2ch_boards() {
 
 _arguments -s -S \
     '(- *)'{-h,--help}'[show help]' \
-    '(-s,--simulate)'{-s,--simulate}'[dont execute]' \
-    '(-n,--no-download)'{-n,--no-download}'[only read cache]' \
-    '(-d,--discard)'{-d,--discard}'[dont write cache]' \
+    '(-s,--simulate,-p)'{-s,--simulate}'[dont execute]' \
+    '(-n,--no-download,-p)'{-n,--no-download}'[only read cache]' \
+    '(-d,--discard,-p)'{-d,--discard}'[dont write cache]' \
+    '(-p,--print-path,-s,--simulate,-n,--no-download,-d,--discard)'{-p,--print-path}'[print cache path]' \
     '(-U,--user-agent)'{-U,--user-agent}'[]' \
     '(-D,--directory-format)'{-D,--directory-format}'[]' \
     '(-F,--file-format)'{-F,--file-format}'[]' \
