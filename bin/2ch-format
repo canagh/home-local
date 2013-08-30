@@ -56,7 +56,7 @@ def parse_dat_line(line):
            , 'title'   : items[4]
            }
 
-subject_line_re = re.compile(r'^(\d+)\.dat<>(.+) \((\d+)\)$')
+subject_line_re = re.compile(r'^(\d+)\.dat<>(.*) \((\d+)\)$')
 def parse_subject_line(line):
     # "THREAD.dat<>TITLE (RESNUM)"
     m = subject_line_re.match(line)
