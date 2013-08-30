@@ -51,6 +51,8 @@ alias fx='firefox -new-tab'
 alias tls=trash-list
 alias nau='nautilus .'
 alias open=gnome-open
+alias ch=2ch-browse
+alias chn='2ch-browse -n'
 
 
 # configurations

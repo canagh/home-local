@@ -30,12 +30,15 @@ case "$command" in
         fi
         ;;
 
-    decode )
-        iconv -f Shift_JIS -t `echo $LANG | cut -d. -f2` | recur "$@"
+    encode )
+        iconv -t CP932 -f `echo $LANG | cut -d. -f2` | recur "$@"
         ;;
 
-    encode )
-        iconv -t Shift_JIS -f `echo $LANG | cut -d. -f2` | recur "$@"
+    decode )
+        read line
+        encoding=CP932
+        echo "$line" | iconv -f CP932 -t UTF-8 >/dev/null 2>&1 || encoding=EUC-JP-MS # for jbbs.livedoor.jp
+        (echo "$line" ; cat) | iconv -c -f $encoding -t `echo $LANG | cut -d. -f2` | recur "$@"
         ;;
 
     bbslist )

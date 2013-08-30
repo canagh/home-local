@@ -4,8 +4,9 @@ typeset -A opt_args
 local context state line
 
 __2ch_format() {
+    # FIXME:
     _values 'dat' \
-        '%l[line]'\
+        '%l[line]' \
         '%n[name]' \
         '%M[mail]' \
         '%d[date]' \

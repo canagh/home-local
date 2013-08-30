@@ -3,27 +3,47 @@
 import re
 import copy
 
-def parse(lines, typ=None, count=1):
+def parse(lines, count=1):
     title = None
+    typ = None
+    site = None
     for line in lines:
-        if typ is None:
-            typ = detect(line)
-        result = { 'dat': parse_dat_line, 'subject': parse_subject_line }[typ](line)
+        line = line.rstrip("\n")
+        if typ is None or site is None:
+            [site, typ] = detect(line)
+        result = \
+            { '2ch.net' :
+                { 'dat': parse_dat_line
+                , 'subject': parse_subject_line }
+            , 'jbbs.livedoor.jp' :
+                { 'dat': parse_dat_line_sitaraba
+                , 'subject': parse_subject_line_sitaraba }
+            }[site][typ](line)
         if typ == 'dat':
             if 'title' in result:
                 title = result['title']
             elif title is not None:
                 result['title'] = title
-        result['line'] = str(count)
+        if 'line' not in result:
+            result['line'] = str(count)
         result['type'] = typ
         yield result
         count += 1
 
 def detect(line):
-    return { 5: 'dat', 2: 'subject' }[ len(line.split('<>')) ]
+    return \
+        { 5: ['2ch.net', 'dat']
+        , 2: ['2ch.net', 'subject']
+        , 7: ['jbbs.livedoor.jp', 'dat']
+        , 1: ['jbbs.livedoor.jp', 'subject']
+        } [ len(line.split('<>')) ]
+
+def lrchomp1(string):
+    l = len(string)
+    return string[ (1 if string[0] == ' ' else 0) : (l-1 if string[l-1] == ' ' else l) ]
 
 def parse_dat_line(line):
-    # NAME<>MAIL<>DATE TIME ID BE<> MESSAGE <>TITLE
+    # "NAME<>MAIL<>DATE TIME ID BE<> MESSAGE <>TITLE"
     items = line[:len(line)].split('<>')
     info = items[2].split() + ['', '', '', '']
     return { 'name'    : items[0]
@@ -32,17 +52,41 @@ def parse_dat_line(line):
            , 'time'    : info[1] # hh:mm:ss:cc
            , 'id'      : info[2] and info[2][4:] # ID:wwwwwwww
            , 'be'      : info[3] and info[3][4:] # BE:dddddddddd-www(dddd)
-           , 'message' : items[3][1:len(items[3])-1]
+           , 'message' : lrchomp1(items[3])
            , 'title'   : items[4]
            }
 
 subject_line_re = re.compile(r'^(\d+)\.dat<>(.+) \((\d+)\)$')
 def parse_subject_line(line):
-    # THREADID.dat<>TITLE (RESNUM)
+    # "THREAD.dat<>TITLE (RESNUM)"
     m = subject_line_re.match(line)
     return { 'thread' : m.group(1)
            , 'title'  : m.group(2)
-           , 'res' : m.group(3)
+           , 'res'    : m.group(3)
+           }
+
+def parse_dat_line_sitaraba(line):
+    # "LINE<>NAME<>MAIL<>DATE TIME<>MESSAGE<>TITLE<>ID"
+    items = line[:len(line)].split('<>')
+    info = items[3].split()
+    return { 'num'     : items[0]
+           , 'name'    : items[1]
+           , 'mail'    : items[2]
+           , 'date'    : info[0] # yyyy/mm/dd(D)
+           , 'time'    : info[1] # hh:mm:ss
+           , 'message' : items[4]
+           , 'title'   : items[5]
+           , 'id'      : items[6]
+           , 'be'      : ''
+           }
+
+subject_line_sitaraba_re = re.compile(r'^(\d+)\.cgi,(.+)\((\d+)\)$')
+def parse_subject_line_sitaraba(line):
+    # "THREAD.cgi,TITLE(RESNUM)"
+    m = subject_line_sitaraba_re.match(line)
+    return { 'thread' : m.group(1)
+           , 'title'  : m.group(2)
+           , 'res'    : m.group(3)
            }
 
 
@@ -107,7 +151,6 @@ default format strings:
 parser.add_argument('files', metavar='FILE', nargs='*')
 parser.add_argument('-f', '--format', metavar='FORMAT')
 parser.add_argument('-F', '--force', action='store_true')
-parser.add_argument('-t', '--type', metavar='TYPE')
 args = parser.parse_args()
 
 if len(args.files) == 0:

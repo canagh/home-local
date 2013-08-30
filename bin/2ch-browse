@@ -1,6 +1,6 @@
 #!/bin/bash
 
-format='<blue>%l</blue>: <bold>%n</bold> <mail>%M</mail> %d %t %i %b<br>%m<br>'
+format='%l <bold>%n</bold> <mail>%M</mail> %d %t %i %b<br>%m<br>'
 regexp="`cat <<'EOS'
 s!\(>>[[:digit:]]\+\)!<blue>\1</blue>!g ;
 s!\(h\?ttps\?://[^[:space:]]\+\)!<underscore>\1</underscore>!g ;
@@ -9,23 +9,25 @@ s!<mail>sage</mail>!<blue>[sage]</blue>! ;
 s!<mail>\(.*\)</mail>!<red>[\1]</red>! ;
 EOS
 `"
-getoptions=()
+nodownload=
+reload=
 tdiff=3
 
 args=()
 while [ "$1" ] ; do
     case "$1" in
         -h | --help )
-            echo `basename "$0"`\ $command': [-r|--reload] [-n|--no-download] [-f|--format FORMAT] [-e|--regexp EXPR] [--regexp-clear]TARGET'
+            echo `basename "$0"`': [-r|--reload] [-n|--no-download] [-f|--format FORMAT] [-e|--regexp EXPR] [--regexp-clear]TARGET'
             exit
             ;;
         -r | --reload )
-            getoptions=("{$getoptions[@]}" -r)
-            tdiff=0
+            [ "$nodownload" ] && echo `basename "$0"`': -r(--reload) option conflicts with -n(--no-download)' 1>&2 && exit 1
+            reload=t
             shift
             ;;
         -n | --no-download )
-            getoptions=("{$getoptions[@]}" -n)
+            [ "$reload" ] && echo `basename "$0"`': -n(--no-download) option conflicts with -r(--reload)' 1>&2 && exit 1
+            nodownload=t
             shift
             ;;
         -f | --format )
@@ -61,11 +63,14 @@ while [ "$1" ] ; do
 done
 
 path=$(2ch-get --print-path "${args[@]}")
-if [ -f "$path" ]; then
-    last_line=`2ch-get -n "${args[@]}" 2>/dev/null | wc -l`
-    find "$path" -mmin +"$tdiff" -exec 2ch-get "${getoptions[@]}" -- "${args[@]}" \; # >/dev/null
+last_line=1
+[ -f "$path" ] && last_line=`wc -l < "$path"`
+if [ "$nodownload" ]; then
+    :
+elif [ -n "$reload" -o ! -f "$path" ]; then
+    2ch-get -r -- "${args[@]}" >/dev/null
 else
-    last_line=1
-    2ch-get "${getoptions[@]}" -- "${args[@]}" >/dev/null
+    find "$path" -mmin +"$tdiff" -exec 2ch-get -- "${args[@]}" \; >/dev/null
 fi
-2ch-get -n "${getoptions[@]}" -- "${args[@]}" | 2ch-utils decode | 2ch-format -f "$format" | 2ch-utils rmanchor stripbreak unescapegt | sed -e "$regexp" | colorml --html | less '+/'"$last_line"
+
+cat "$path" | 2ch-utils decode | 2ch-format -f "$format" | 2ch-utils rmanchor stripbreak unescapegt | sed -e "$regexp" | colorml --html | less '+/^'"$last_line"' '

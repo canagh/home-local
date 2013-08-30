@@ -3,15 +3,17 @@
 typeset -A opt_args
 local context state line
 
-__2ch_boards() {
-    local -a boards
-    boards=($(_call_program path cut -f1 "${CH2_DIR:-$HOME/.2ch}"/hosts))
-    _values 'board' "${boards[@]}"
-}
-
 _arguments -s -S \
     '(- *)'{-h,--help}'[show help]' \
     '(-f,--force)'{-f,--force}'[ignore lack of info]' \
     '(-H,--hosts)'{-H,--hosts}'[set hosts file]:hosts file:_files' \
-    '--' \
-    '*: :__2ch_boards'
+    '(- *)'{-l,--list}'[show types]' \
+    '(- *)'--list-hosts'[show hosts]' \
+    '1: :->type' \
+    '2: :->board' \
+    '3:thread:'
+
+case $state in
+    type  ) _values type  $(_call_program 2ch-urlconv_type  2ch-urlconv --list) ;;
+    board ) _values board $(_call_program 2ch-urlconv_board cut -f1 $(2ch-urlconv --list-hosts)) ;;
+esac
