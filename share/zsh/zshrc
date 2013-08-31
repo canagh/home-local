@@ -49,16 +49,20 @@ fi
 
 # set my completion files dir
 # does this need to exec before "autoload -U compinit"?
-ZSH_USER_FPATH=$HOME/local/share/zsh/completion
+ZSH_USER_FPATH=($HOME/local/share/zsh/completion $HOME/local/lib/2ch-tools/completion)
 fpath=($ZSH_USER_FPATH $fpath)
-autoload -U $ZSH_USER_FPATH/*(:t)
+for f in $ZSH_USER_FPATH; do
+    autoload -U $f/*(:t)
+done
 autoload -U compinit ; compinit -u
 
 function compreload() {
     local f
-    f=("$ZSH_USER_FPATH"/*(.))
-    unfunction $f:t 2> /dev/null
-    autoload -U $f:t
+    for f in $ZSH_USER_FPATH; do
+        f=("$f"/*(.))
+        unfunction $f:t 2> /dev/null
+        autoload -U $f:t
+    done
 }
 
 
