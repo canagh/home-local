@@ -1,0 +1,3 @@
+[submodule "lib/2ch-tools"]
+	path = lib/2ch-tools
+	url = git@github.com:canagh/2ch-tools.git
