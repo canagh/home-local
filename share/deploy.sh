@@ -22,7 +22,9 @@ dot_mkdir ghc ; dot-link -p ghc/*
 dot_mkdir xmonad ; dot-link -p xmonad/*
 
 dot-link git/gitconfig gitconfig
-ln -siT $(realpath icon/icon48.png) ~/.face
-ln -siT $(realpath X11/xsession) ~/.xinitrc
+ln -siT `realpath icon/icon48.png` ~/.face
+ln -siT `realpath X11/xsession` ~/.xinitrc
+
+ln -siT `realpath 2ch` ~/.2ch/user
 
 [ -d ~/.vim/bundle/neobundle.vim ] || git clone git@github.com:Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim

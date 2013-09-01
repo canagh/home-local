@@ -1,0 +1,20 @@
+#!/bin/sh
+
+thread_from_id() {
+    for i in "$@" ; do
+        board=`2ch-urlconv board $i`
+        thread=`2ch-urlconv thread $i`
+        title="`2ch-get -n -d $board | 2ch-format -f '%t	%T' | grep ^$thread'	' | cut -f2`"
+        echo "$board"/"$thread":"$title"
+    done
+}
+
+thread_from_title() {
+    board="$1"
+    shift
+    for i in "$@" ; do
+        2ch-get -n -d "$board" | 2ch-format -f '%t	%T' | grep "$i" | awk 'BEGIN{FS="	";} {printf("'"$board"'/%s:%s\n", $1, $2);}'
+    done
+}
+
+. ~/var/2ch/bookmark
