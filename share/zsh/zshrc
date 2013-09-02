@@ -1,9 +1,5 @@
 #!/usr/bin/zsh
 
-##
-## history
-##______________________________________________________________
-
 # 保存する量
 HISTSIZE=100000000
 SAVEHIST=100000000
@@ -20,69 +16,8 @@ setopt hist_ignore_all_dups
 # シェルのプロセスごとに履歴を共有
 setopt share_history
 
-
-##
-## key bindings
-##______________________________________________________________
 # keybinding is emacs-like
 bindkey -e
-
-
-
-
-
-
-##
-## complement
-##______________________________________________________________
-
-# user completions
-ZSH_USER_FPATH=($HOME/local/share/zsh/completion $HOME/local/lib/2ch-tools/completion)
-fpath=($ZSH_USER_FPATH $fpath)
-local f
-for f in $ZSH_USER_FPATH; do
-    autoload -U $f/*(:t)
-done
-
-# zsh-completions.git
-[ -d ~/local/share/zsh/zsh-completions/src ] && fpath=(~/local/share/zsh/zsh-completions/src $fpath)
-
-# init
-autoload -U compinit ; compinit -u
-
-
-# utility functions
-function compreload() {
-    local f
-    for f in $ZSH_USER_FPATH; do
-        f=("$f"/*(.))
-        unfunction $f:t 2> /dev/null
-        autoload -U $f:t
-    done
-}
-function compdelcache() {
-    del ~/.zcompcache/*
-}
-
-zstyle ':completion:*' use-cache yes
-zstyle ':completion:*' verbose yes
-
-# 以下よく分からない
-
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:messages' format '%d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*' group-name ''
-
-# color possible completions
-eval `dircolors`
-export ZLS_COLORS=$LS_COLORS
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*:default' menu select=1 # select completion by arrow-keys
-
-# sudo cmd で補完したいけど補完が効かない…、という場合
-zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
-                             /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 
 # 補完候補リストを詰めて表示
 setopt list_packed
@@ -119,13 +54,6 @@ setopt auto_menu
 # コマンドラインの引数で --prefix=/usr などの = 以降でも補完できる
 setopt magic_equal_subst
 
-
-
-
-##
-## misc
-##______________________________________________________________
-
 # 戻り値が 0 以外の場合終了コードを表示する
 setopt print_exit_value
 
@@ -146,26 +74,25 @@ setopt short_loops
 # cd -[tab] でpushd
 setopt autopushd
 
+if [ -z "$ZSH_PROMRT_INITED" ] ; then
+    export ZSH_PROMRT_INITED=t
+    export PROMPT=$'%{\e[34m%}%n%# %{\e[m%}'
+    export PS2=$'%{\e[34m%}%_> %{\e[m%}'
+    export RPROMPT=$'%{\e[34m%}%~%{\e[m%}' # right
+fi
 
 
 ##
-## more
+## load
 ##______________________________________________________________
 
-# load alias
-. ~/local/share/sh/aliases
-. ~/local/share/zsh/zshrc.antigen
-
-function zshrc() { $EDITOR ~/.zshrc && . ~/.zshrc }
-
-# http://qiita.com/mollifier/items/14bbea7503910300b3ba
-function zman() {
-    PAGER="less -g -s '+/^       "$1"'" man zshall
-}
-
-# ^Dでexitをcommand化
-# shでもokだったが念の為ここ
-alias ''=exit
+source ~/local/share/sh/aliases
+source ~/local/share/zsh/zshrc.alias
+source ~/local/share/zsh/zshrc.antigen
+source ~/local/share/zsh/zshrc.completion
+source ~/local/share/zsh/zshrc.auto-fu
+source ~/local/share/zsh/zaw/zaw.zsh
+bindkey '^G^U' zaw
 
 # 初期位置は~/tmp
 if [ -z "$ZSH_MOVED_TO_TMP" ] ; then

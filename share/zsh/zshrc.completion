@@ -1,0 +1,51 @@
+#!/usr/bin/zsh
+
+# user completions
+ZSH_USER_FPATH=($HOME/local/share/zsh/completion $HOME/local/lib/2ch-tools/completion)
+fpath=($ZSH_USER_FPATH $fpath)
+local f
+for f in $ZSH_USER_FPATH; do
+    autoload -U $f/*(:t)
+done
+
+# zsh-completions.git
+[ -d ~/local/share/zsh/zsh-completions/src ] && fpath=(~/local/share/zsh/zsh-completions/src $fpath)
+
+# init
+autoload -U compinit ; compinit -u
+
+
+# utility functions
+function compreload() {
+    local f
+    for f in $ZSH_USER_FPATH; do
+        f=("$f"/*(.))
+        unfunction $f:t 2> /dev/null
+        autoload -U $f:t
+    done
+}
+function compdelcache() {
+    del ~/.zcompcache/*
+    del ~/.zcompdump
+    compinit
+}
+
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' verbose yes
+
+# 以下よく分からない
+
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*' group-name ''
+
+# color possible completions
+eval `dircolors`
+export ZLS_COLORS=$LS_COLORS
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:default' menu select=1 # select completion by arrow-keys
+
+# sudo cmd で補完したいけど補完が効かない…、という場合
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
+                             /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin

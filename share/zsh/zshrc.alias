@@ -1,0 +1,12 @@
+#!/usr/bin/zsh
+
+function zshrc() { $EDITOR ~/.zshrc && . ~/.zshrc }
+
+# http://qiita.com/mollifier/items/14bbea7503910300b3ba
+function zman() {
+    PAGER="less -g -s '+/^       "$1"'" man zshall
+}
+
+# ^Dでexitをcommand化
+# shでもokだったが念の為ここ
+alias ''=exit
