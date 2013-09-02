@@ -301,9 +301,7 @@ autocmd FileType c,cpp source $HOME/.vim/bundle/opengl.vim/syntax/opengl.vim
 " A. This is the default setting of |laststatus|.  If you want it to appear all the time, add the following to your vimrc: >
 set laststatus=2
 " to avoid an error on the anzu.vim's extension
-if ! exists('g:airline_section_z')
-    let g:airline_section_z = ''
-endif
+let g:airline_section_z = '%3p%% %{g:airline_symbols.linenr} %3l:%3c'
 " }}}
 
 " anzu.vim {{{

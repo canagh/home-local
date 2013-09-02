@@ -29,17 +29,6 @@ bindkey -e
 
 
 
-##
-## prompt
-##______________________________________________________________
-# color = 34 = front/blue
-if [ -z "$ZSH_PROMRT_INITED" ] ; then
-    export ZSH_PROMRT_INITED=t
-    export PROMPT=$'%{\e[34m%}%n%# %{\e[m%}'
-    export PS2=$'%{\e[34m%}%_> %{\e[m%}'
-    export RPROMPT=$'%{\e[34m%}%~%{\e[m%}' # right
-fi
-
 
 
 
@@ -47,16 +36,22 @@ fi
 ## complement
 ##______________________________________________________________
 
-# set my completion files dir
-# does this need to exec before "autoload -U compinit"?
+# user completions
 ZSH_USER_FPATH=($HOME/local/share/zsh/completion $HOME/local/lib/2ch-tools/completion)
 fpath=($ZSH_USER_FPATH $fpath)
 local f
 for f in $ZSH_USER_FPATH; do
     autoload -U $f/*(:t)
 done
+
+# zsh-completions.git
+[ -d ~/local/share/zsh/zsh-completions/src ] && fpath=(~/local/share/zsh/zsh-completions/src $fpath)
+
+# init
 autoload -U compinit ; compinit -u
 
+
+# utility functions
 function compreload() {
     local f
     for f in $ZSH_USER_FPATH; do
@@ -65,15 +60,15 @@ function compreload() {
         autoload -U $f:t
     done
 }
-
 function compdelcache() {
     del ~/.zcompcache/*
 }
 
-
-# verbose completion message
-zstyle ':completion:*' verbose yes
 zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' verbose yes
+
+# 以下よく分からない
+
 zstyle ':completion:*:descriptions' format '%B%d%b'
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
@@ -159,6 +154,7 @@ setopt autopushd
 
 # load alias
 . ~/local/share/sh/aliases
+. ~/local/share/zsh/zshrc.antigen
 
 function zshrc() { $EDITOR ~/.zshrc && . ~/.zshrc }
 
