@@ -1,4 +1,5 @@
 #!/usr/bin/zsh
 . ~/local/share/sh/environment
 
+~/local/lib/2ch-tools/tools/donichi.odai.bot
 cat ~/todo

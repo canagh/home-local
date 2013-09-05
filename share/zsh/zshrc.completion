@@ -8,9 +8,6 @@ for f in $ZSH_USER_FPATH; do
     autoload -U $f/*(:t)
 done
 
-# zsh-completions.git
-[ -d ~/local/share/zsh/zsh-completions/src ] && fpath=(~/local/share/zsh/zsh-completions/src $fpath)
-
 # init
 autoload -U compinit ; compinit -u
 

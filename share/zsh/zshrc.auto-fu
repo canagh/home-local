@@ -1,7 +1,6 @@
 #!/usr/bin/zsh
 
 if [ -f ~/local/share/zsh/auto-fu.zsh/auto-fu.zsh ] ; then
-    echo TODO: fix auto-fu
     source ~/local/share/zsh/auto-fu.zsh/auto-fu.zsh
     function zle-line-init () {
         auto-fu-init

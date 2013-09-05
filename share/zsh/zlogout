@@ -2,6 +2,6 @@
 
 ( cd ~/local ; git add . ; git commit --all --message commit )
 
-echo 'You should move ~/.zlogout ~/.logout'
+~/local/lib/2ch-tools/tools/donichi.odai.bot
 
-sleep 1
+sleep 4

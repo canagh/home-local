@@ -74,13 +74,6 @@ setopt short_loops
 # cd -[tab] でpushd
 setopt autopushd
 
-if [ -z "$ZSH_PROMRT_INITED" ] ; then
-    export ZSH_PROMRT_INITED=t
-    export PROMPT=$'%{\e[34m%}%n%# %{\e[m%}'
-    export PS2=$'%{\e[34m%}%_> %{\e[m%}'
-    export RPROMPT=$'%{\e[34m%}%~%{\e[m%}' # right
-fi
-
 
 ##
 ## load
@@ -88,11 +81,9 @@ fi
 
 source ~/local/share/sh/aliases
 source ~/local/share/zsh/zshrc.alias
-source ~/local/share/zsh/zshrc.antigen
 source ~/local/share/zsh/zshrc.completion
 source ~/local/share/zsh/zshrc.auto-fu
-source ~/local/share/zsh/zaw/zaw.zsh
-bindkey '^G^U' zaw
+source ~/local/share/zsh/zshrc.antigen
 
 # 初期位置は~/tmp
 if [ -z "$ZSH_MOVED_TO_TMP" ] ; then
