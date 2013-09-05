@@ -1,0 +1,6 @@
+#!/bin/sh
+# show the return
+"$@"
+ret=$?
+echo $ret
+exit $ret
