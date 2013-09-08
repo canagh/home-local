@@ -3,10 +3,12 @@
 # user completions
 ZSH_USER_FPATH=($HOME/local/share/zsh/completion $HOME/local/lib/2ch-tools/completion)
 fpath=($ZSH_USER_FPATH $fpath)
-local f
-for f in $ZSH_USER_FPATH; do
-    autoload -U $f/*(:t)
-done
+function() {
+    local f
+    for f in $ZSH_USER_FPATH; do
+        autoload -U $f/*(:t)
+    done
+}
 
 # init
 autoload -U compinit ; compinit -u

@@ -20,6 +20,7 @@ alias ag=apt-get
 alias ac=apt-cache
 alias del=trash-put
 alias gd=goldendict
+alias ca=canything
 
 ## with options
 ### basic commands

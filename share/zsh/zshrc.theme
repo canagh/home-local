@@ -9,4 +9,4 @@ PROMPT="%{%(?.${fg[blue]}.${fg[red]})%}%(!.#.$)%{$reset_color%} "
 PROMPT2="%{%(?.${fg[blue]}.${fg[red]})%}%>%{$reset_color%} "
 
 # right prompt
-RPROMPT="%{$fg[black]%}%~%{$reset_color%}"
+RPROMPT="%{$fg[green]%}%~%{$reset_color%}"

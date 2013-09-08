@@ -92,6 +92,11 @@ case "$type" in
         echo http://www.haskell.org/hoogle/\?hoogle="$*"
         ;;
 
+    github )
+        argc 1
+        echo git@github.com:"$1".git
+        ;;
+
     * ) error 'unknown type: '"$type" ;;
 esac
 
