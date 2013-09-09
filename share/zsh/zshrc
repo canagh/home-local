@@ -10,6 +10,9 @@ HISTFILE=$HOME/var/zsh/history
 # 複数の zsh を同時に使う時など history ファイルに上書きせず追加する
 setopt append_history
 
+# スペースから始まる行は追加しない
+setopt hist_ignore_space
+
 # 同じコマンドラインはヒストリに追加しない
 setopt hist_ignore_all_dups
 
