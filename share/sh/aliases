@@ -57,6 +57,9 @@ alias chn='2ch-browse -n'
 alias chg='2ch-get -d'
 alias chgn='2ch-get -d -n'
 alias chgq='2ch-get -q'
+alias chf=2ch-format
+alias chp=2ch-post
+alias chu=2ch-utils
 
 
 # configurations
