@@ -48,7 +48,6 @@ alias py27=python2.7
 alias pyc=pycompile
 alias py3c=py3compile
 alias doxy='doxygen Doxyfile'
-alias fx='firefox -new-tab'
 alias tls=trash-list
 alias nau='nautilus .'
 alias open=gnome-open
@@ -109,6 +108,8 @@ else
     alias egrep='grep --extended-regexp' # -E
 fi
 alias vgrep='grep --invert-match' # -v
+
+fx() { firefox -new-tab "$@" } # -new-tabでzshの補完候補が_filesから`URL to load'になるの回避のためaliasでなくfunction
 
 caw() { cat `which $@` }
 mdcd() { mkdir "$@" && cd "$@" }
