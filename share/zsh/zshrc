@@ -82,6 +82,7 @@ setopt autopushd
 ## load
 ##______________________________________________________________
 
+source ~/local/share/sh/environment
 source ~/local/share/sh/aliases
 source ~/local/share/zsh/zshrc.alias
 source ~/local/share/zsh/zshrc.completion

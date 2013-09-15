@@ -1,4 +1,5 @@
 #!/bin/sh
+echo [ called ] $0 >> ~/tmp/log
 
 ibus-daemon -d -x # for urxvt: if it were not for -x, you could not input in Japanese
 goldendict &

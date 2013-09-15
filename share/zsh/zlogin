@@ -1,5 +1,4 @@
 #!/usr/bin/zsh
-. ~/local/share/sh/environment
-
+echo [ called ] $0 >> ~/tmp/log
 ~/local/lib/2ch-tools/tools/donichi.odai.bot
 cat ~/todo

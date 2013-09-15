@@ -1,0 +1,8 @@
+#compdef xmonad
+
+_arguments \
+    --help'[Print this message]' \
+    --version'[Print the version number]' \
+    --recompile'[Recompile your ~/.xmonad/xmonad.hs]' \
+    --replace'[Replace the running window manager with xmonad]' \
+    --restart'[Request a running xmonad process to restart]'

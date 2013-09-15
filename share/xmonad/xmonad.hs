@@ -11,6 +11,7 @@ import XMonad.Config.Gnome (gnomeConfig)
 import XMonad.Actions.NoBorders (toggleBorder)
 import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Util.EZConfig (additionalKeys)
+import XMonad.Util.Run(spawnPipe)
 
 configKeys :: XConfig l -> XConfig l
 configKeys x =

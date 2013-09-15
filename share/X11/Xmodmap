@@ -1,6 +1,3 @@
-! for xmonad
-add mod3 = Muhenkan
-
 ! swap esc and grave/tilde
 !keycode  9 = Zenkaku_Hankaku Kanji grave asciitilde dead_grave dead_tilde grave asciitilde dollar asciitilde dead_tilde dead_tilde
 !keycode 49 = Escape NoSymbol Escape NoSymbol Escape Escape
