@@ -53,6 +53,7 @@ NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'thinca/vim-quickrun'
 
 " markdown
+NeoBundle 'tpope/vim-markdown'
 "NeoBundle 'plasticboy/vim-markdown'
 "NeoBundle 'suan/vim-instant-markdown'
 

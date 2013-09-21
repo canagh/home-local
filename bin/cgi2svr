@@ -1,0 +1,211 @@
+#!/usr/bin/python3
+
+import http.server
+import http.client
+import os
+import select
+import sys
+import urllib.parse
+import copy
+
+
+nobody = None
+
+def nobody_uid():
+    """Internal routine to get nobody's uid"""
+    global nobody
+    if nobody:
+        return nobody
+    try:
+        import pwd
+    except ImportError:
+        return -1
+    try:
+        nobody = pwd.getpwnam('nobody')[2]
+    except KeyError:
+        nobody = 1 + max(x[2] for x in pwd.getpwall())
+    return nobody
+
+def executable(path):
+    """Test for executable file."""
+    return os.access(path, os.X_OK)
+
+class CGIRequestHandler(http.server.SimpleHTTPRequestHandler):
+    # Determine platform specifics
+    have_fork = hasattr(os, 'fork')
+
+    # Make rfile unbuffered -- we need to read one line and then pass
+    # the rest to a subprocess, so we can't use buffered input.
+    rbufsize = 0
+
+    def do_GET(self):
+        self.run_cgi()
+    def do_POST(self):
+        self.run_cgi()
+
+    def run_cgi(self):
+        # find an explicit query string, if present.
+        dirs = self.path.split('/')
+        i = self.path.rfind('?')
+        if i >= 0:
+            dirs, query = dirs[:i], dirs[i+1:]
+        else:
+            query = ''
+
+        # Reference: http://hoohoo.ncsa.uiuc.edu/cgi/env.html
+        # XXX Much of the following could be prepared ahead of time!
+        env = copy.deepcopy(os.environ)
+        env['SERVER_SOFTWARE'] = self.version_string()
+        env['SERVER_NAME'] = self.server.server_name
+        env['GATEWAY_INTERFACE'] = 'CGI/1.1'
+        env['SERVER_PROTOCOL'] = self.protocol_version
+        env['SERVER_PORT'] = str(self.server.server_port)
+        env['REQUEST_METHOD'] = self.command
+        uqrest = urllib.parse.unquote(self.path)
+        env['PATH_INFO'] = uqrest
+        env['PATH_TRANSLATED'] = self.translate_path(uqrest)
+        env['SCRIPT_NAME'] = self.server.scriptname
+        if query:
+            env['QUERY_STRING'] = query
+        env['REMOTE_ADDR'] = self.client_address[0]
+        authorization = self.headers.get("authorization")
+        if authorization:
+            authorization = authorization.split()
+            if len(authorization) == 2:
+                import base64, binascii
+                env['AUTH_TYPE'] = authorization[0]
+                if authorization[0].lower() == "basic":
+                    try:
+                        authorization = authorization[1].encode('ascii')
+                        authorization = base64.decodebytes(authorization).\
+                                        decode('ascii')
+                    except (binascii.Error, UnicodeError):
+                        pass
+                    else:
+                        authorization = authorization.split(':')
+                        if len(authorization) == 2:
+                            env['REMOTE_USER'] = authorization[0]
+        # XXX REMOTE_IDENT
+        if self.headers.get('content-type') is None:
+            env['CONTENT_TYPE'] = self.headers.get_content_type()
+        else:
+            env['CONTENT_TYPE'] = self.headers['content-type']
+        length = self.headers.get('content-length')
+        if length:
+            env['CONTENT_LENGTH'] = length
+        referer = self.headers.get('referer')
+        if referer:
+            env['HTTP_REFERER'] = referer
+        accept = []
+        for line in self.headers.getallmatchingheaders('accept'):
+            if line[:1] in "\t\n\r ":
+                accept.append(line.strip())
+            else:
+                accept = accept + line[7:].split(',')
+        env['HTTP_ACCEPT'] = ','.join(accept)
+        ua = self.headers.get('user-agent')
+        if ua:
+            env['HTTP_USER_AGENT'] = ua
+        co = filter(None, self.headers.get_all('cookie', []))
+        cookie_str = ', '.join(co)
+        if cookie_str:
+            env['HTTP_COOKIE'] = cookie_str
+        # XXX Other HTTP_* headers
+        # Since we're setting the env in the parent, provide empty
+        # values to override previously set values
+        for k in ('QUERY_STRING', 'REMOTE_HOST', 'CONTENT_LENGTH',
+                  'HTTP_USER_AGENT', 'HTTP_COOKIE', 'HTTP_REFERER'):
+            env.setdefault(k, "")
+
+        self.send_response(200, "Script output follows")
+        self.flush_headers()
+
+        decoded_query = query.replace('+', ' ')
+
+        if self.have_fork:
+            # Unix -- fork as we should
+            args = [self.server.script]
+            if '=' not in decoded_query:
+                args.append(decoded_query)
+            nobody = nobody_uid()
+            self.wfile.flush() # Always flush before forking
+            pid = os.fork()
+            if pid != 0:
+                # Parent
+                pid, sts = os.waitpid(pid, 0)
+                # throw away additional data [see bug #427345]
+                while select.select([self.rfile], [], [], 0)[0]:
+                    if not self.rfile.read(1):
+                        break
+                if sts:
+                    self.log_error("CGI script exit status %#x", sts)
+                return
+            # Child
+            try:
+                try:
+                    os.setuid(nobody)
+                except os.error:
+                    pass
+                os.dup2(self.rfile.fileno(), 0)
+                os.dup2(self.wfile.fileno(), 1)
+                os.execve(self.server.scriptfile, args, env)
+            except:
+                self.server.handle_error(self.request, self.client_address)
+                os._exit(127)
+
+        else:
+            # Non-Unix -- use subprocess
+            import subprocess
+            cmdline = [self.server.scriptfile]
+            if self.is_python(self.server.scriptfile):
+                interp = sys.executable
+                if interp.lower().endswith("w.exe"):
+                    # On Windows, use python.exe, not pythonw.exe
+                    interp = interp[:-5] + interp[-4:]
+                cmdline = [interp, '-u'] + cmdline
+            if '=' not in query:
+                cmdline.append(query)
+            self.log_message("command: %s", subprocess.list2cmdline(cmdline))
+            try:
+                nbytes = int(length)
+            except (TypeError, ValueError):
+                nbytes = 0
+            p = subprocess.Popen(cmdline,
+                                 stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
+                                 env = env
+                                 )
+            if self.command.lower() == "post" and nbytes > 0:
+                data = self.rfile.read(nbytes)
+            else:
+                data = None
+            # throw away additional data [see bug #427345]
+            while select.select([self.rfile._sock], [], [], 0)[0]:
+                if not self.rfile._sock.recv(1):
+                    break
+            stdout, stderr = p.communicate(data)
+            self.wfile.write(stdout)
+            if stderr:
+                self.log_error('%s', stderr)
+            p.stderr.close()
+            p.stdout.close()
+            status = p.returncode
+            if status:
+                self.log_error("CGI script exit status %#x", status)
+            else:
+                self.log_message("CGI script exited OK")
+
+import argparse
+parser = argparse.ArgumentParser(
+        description="Start a server associated with a CGI script, without directories like `/cgi-bin' or `/htbin'.")
+parser.add_argument('script', metavar='PATH')
+parser.add_argument('-p', '--port', metavar='PORT', type=int, default=80, help='default: 80')
+args = parser.parse_args()
+
+server_address = ('', args.port)
+httpd = http.server.HTTPServer(server_address, CGIRequestHandler)
+httpd.script = args.script
+httpd.scriptfile = args.script
+httpd.scriptname = os.path.basename(args.script)
+httpd.serve_forever()
