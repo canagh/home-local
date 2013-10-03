@@ -41,11 +41,11 @@ configApps x =
     }
     `additionalKeys`
     -- [ ((modm, xK_y), runOrRaise "v2c"     (className =? "V2C"))
-    [ ((modm, xK_y), runOrRaise "jd"     (className =? "Jd"))
-    , ((modm, xK_u), runOrRaise "firefox" (className =? "Firefox"))
+    -- [ ((modm, xK_y), runOrRaise "jd"     (className =? "Jd"))
+    [ ((modm, xK_u), runOrRaise "firefox" (className =? "Firefox"))
     -- , ((modm, xK_i), runOrRaise "gnome-terminal" (className =? "Gnome-terminal"))
     , ((modm, xK_i), runOrRaise "urxvt"   (className =? "URxvt"))
-    , ((modm, xK_o), runOrRaise "mikutter" (className =? "Mikutter.rb"))
+    -- , ((modm, xK_o), runOrRaise "mikutter" (className =? "Mikutter.rb"))
     -- , ((modm, xK_o), runOrRaise "emacsclient-x" (className =? "Emacs23"))
     ]
 

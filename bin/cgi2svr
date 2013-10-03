@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# forked from python3.3/http/server.py, CGIRequestHandler
 
 import http.server
 import http.client

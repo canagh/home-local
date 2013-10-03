@@ -51,6 +51,19 @@ alias doxy='doxygen Doxyfile'
 alias tls=trash-list
 alias nau='nautilus .'
 alias open=gnome-open
+
+via-o2on() {
+    o2on_port=8020
+    command="$1"
+    shift
+    if lsof -i:$o2on_port | grep -iq 'o\(py\)\?2on' ; then
+        env http_proxy=http://localhost:$o2on_port "$command" "$@"
+    else
+        "$command" "$@"
+    fi
+}
+2ch-get(){ via-o2on `which -p 2ch-get` "$@" }
+2ch-browse(){ via-o2on `which -p 2ch-browse` "$@" }
 alias ch=2ch-browse
 alias chn='2ch-browse -n'
 alias chg='2ch-get -d'
@@ -88,13 +101,7 @@ alias talk-happy='ojtalk -vname mei_happy'
 alias talk-sad='ojtalk -vname mei_sad'
 
 
-# lightweight functions
-
-## encoding
-alias sjis='iconv -f utf8 -t sjis'
-alias unsjis='iconv -f sjis -t utf8'
-alias euc='iconv -f utf8 -t eucjp'
-alias uneuc='iconv -f eucjp -t utf8'
+alias 'w3m-Thtml'='w3m -T text/html'
 
 ## grep
 if which fgrep >/dev/null ; then
@@ -113,6 +120,16 @@ fx() { firefox -new-tab "$@" } # -new-tabでzshの補完候補が_filesから`UR
 
 caw() { cat `which $@` }
 mdcd() { mkdir "$@" && cd "$@" }
+
+gosh() {
+    if [ $# -eq 0 ] && which gosh-rl >/dev/null ; then
+        gosh-rl "$@" # gosh-rl do not recognize the options
+    elif which rlwrap >/dev/null ; then
+        rlwrap -pBLUE gosh "$@"
+    else
+        gosh "$@"
+    fi
+}
 
 ## ps
 psh()  { ps   | head -n 1 } # ps  のheaderを表示

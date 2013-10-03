@@ -1,3 +1,17 @@
+logBase 0.999 3
+log 0.999 3
+iterate sqrt 2
+iterate (+ 0.01)
+:t iterate
+:t iter
+logBase 1.1 3
+logBase 2 3
+logBase 1 3
+logBase q 3
+logBase 3 3
+:t logBase
+:t log
+log
 chr 49
 chr 32
 ord 32
