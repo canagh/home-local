@@ -1,26 +1,46 @@
 #!/bin/bash
 
 # options
-depth=(-maxdepth 1)
-symlink=(-H)
-actions=(-print -delete)
-while [ -n "$1" ] ; do
+recursive=
+simulate=
+method=find
+
+OPTS=$(getopt -n "$(basename $0)" -o h\?rsm:o: -l help,recursive,simulate,method:,option: -- "$@")
+[ $? -ne 0 ] && exit 1
+eval set -- "$OPTS"
+
+while [ "$1" != -- ] ; do
     case "$1" in
-        -h | -\? | --help ) echo $(basename "$0")' [-r|--recursively] [-s|--simulate] [-p|--print-command] [-P|-L|-H] [--] [DIRECTORY]...' ; exit ;;
-        -r | --recursively ) depth=() ; shift ;; # recursively search directories
-        -s | --simulate ) actions=(-print) ; shift ;; # don't delete
-        -p | --print-command ) print_command=t ; shift ;; # print a command, but exec it
-        -P | -L | -H ) symlink=("$1") ; shift ;; # options about symlink to give to find(1)
-        --) shift ; break ;;
-        -*) echo 'rmdust: unknown option: '"$1" >&2 ; exit -1 ;;
-        *) break ;;
+        -h | -\? | --help )
+            echo $(basename "$0")' [-r|--recursive] [-s|--simulate] [-m|--method METHOD] [--] [DIRECTORY]...'
+            exit
+            ;;
+        -r | --recursive ) recursive=t ;;
+        -s | --simulate ) simulate=t ;;
+        -m | --method ) method="$2" ; shift ;;
+        -- ) break ;;
+        * ) echo $(basename "$0")': unknown argument: '"$1" >&2 ; exit 1 ;;
     esac
+    shift
 done
+shift
 
 # exec
-command=(find "${symlink[@]}" "${@:-$PWD}" "${depth[@]}" \( -name '*~' -or -name '#*#' -or -name '.\#*' \) "${actions[@]}")
-if [ -n "$print_command" ] ; then
-    echo "${command[@]}"
-else
-    "${command[@]}"
-fi
+case "$method" in
+    find )
+        if [ "$recursive" ] ; then depth=() ; else depth=(-maxdepth 1) ; fi
+        if [ "$simulate" ] ; then actions=(-print) ; else actions=(-print -delete) ; fi
+        find -H "${@:-$PWD}" "${depth[@]}" \( -name '*~' -or -name '#*#' -or -name '.\#*' \) "${actions[@]}"
+        ;;
+    locate )
+        if [ "$recursive" ] ; then depth='\(/[^/]*\)*' ; else depth='' ; fi
+        if [ "$simulate" ] ; then action(){ cat ; } ; else action(){ tee /dev/stdout | xargs rm -f ; } ; fi
+        for i in "${@:-$PWD}" ; do
+            locate -r \^"$(cd "$i" ; pwd)""$depth"/'\(#[^/]*#\|[^/]*~\)'\$ | action
+        done
+        ;;
+    * )
+        echo $(basename "$0")': unknown method: '"$method" >&2
+        exit 1
+        ;;
+esac

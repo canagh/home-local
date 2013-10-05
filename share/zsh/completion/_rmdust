@@ -1,20 +1,8 @@
 #compdef rmdust
 
-_rmdust() {
-    _arguments \
-        {-h,--help} \
-        {-r,--recursively} \
-        {-s,--simulate} \
-        {-p,--print} \
-        '--' \
-        '*: :__rmdust_arguments'
-}
-
-__rmdust_arguments() {
-    _files
-    _values 'types' \
-        'backup[dufault]' \
-        'haskell' \
-        'html' \
-        'gnome'
-}
+_arguments \
+    '(- *)'{-h,--help}'[show help]' \
+    '(-r,--recursive)'{-r,--recursive}'[recursively remove]' \
+    '(-s,--simulate)'{-s,--simulate}'[do not remove]' \
+    '(-m,--method)'{-m,--method}'[specify method]: :(find locate)' \
+    '*: :_dirs'
