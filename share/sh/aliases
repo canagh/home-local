@@ -1,45 +1,68 @@
 #!/bin/sh
-# This can be used by both zsh and bash.
 
+alias e=echo
+alias en='echo -n'
 
-# shortcuts
+alias x=exec
 
-## basic commands
-alias s=sudo
-alias xx=exec
-alias md=mkdir
-alias loc=locate
-alias mk=make
-alias j=jobs
-alias g=grep
-alias killa=killall
+alias c=cat
 
-## additional commands
-alias cmk=cmake
-alias ag=apt-get
-alias ac=apt-cache
-alias del=trash-put
-alias gd=goldendict
-alias ca=canything
+alias cd..='cd ..'
 
-## with options
-### basic commands
+alias ls='ls --color=auto'
+alias l=ls
 alias la='ls -A'
 alias ll='ls -alF'
-alias kill9='kill -KILL'
-alias killall9='killall -KILL'
-alias psa='ps a'
-alias psx='ps x'
-alias psax='ps ax'
-alias psaux='ps aux'
-alias cd..='cd ..'
+
+alias jobs='jobs -l'
+alias j=jobs
+
 alias fg1='fg %1'
 alias fg2='fg %2'
 alias fg3='fg %3'
 alias fg4='fg %4'
 fg-() { fg %- }
 
-### additional aliases
+alias grep='grep --color=auto'
+alias g=grep
+if which fgrep >/dev/null ; then alias fgrep='fgrep --color=auto' ; else alias fgrep='grep --fixed-strings' ; fi
+if which egrep >/dev/null ; then alias egrep='egrep --color=auto' ; else alias egrep='grep --extended-regexp' ; fi
+alias vgrep='grep --invert-match'
+
+alias md=mkdir
+alias loc=locate
+
+alias psa='ps a'
+alias psx='ps x'
+alias psax='ps ax'
+alias psaux='ps aux'
+psh()  { ps   | head -n 1 } # ps  のheaderを表示
+pshu() { ps u | head -n 1 } # ps uのheaderを表示
+pst() { pshu ; ps aux | sort -r -n +2 | grep -v 'ps aux' | grep -v grep | head -n 8 } ### CPU 使用率の高い方から8つ
+psm() { pshu ; ps aux | sort -r -n +3 | grep -v 'ps aux' | grep -v grep | head -n 8 } ### メモリ占有率の高い方から8つ
+psg() { pshu ; ps aux | grep $* | grep -v 'ps aux' | grep -v grep }
+
+alias killa=killall
+alias kill9='kill -KILL'
+alias killall9='killall -KILL'
+
+alias sudo='sudo -E '
+
+alias ag=apt-get
+alias ac=apt-cache
+
+s() {
+    x=
+    while [ $# != 0 ] ; do
+        x="$x"s/`echo -E "$1" | sed -e 's!/!\\/!g'`/"$2"/"$3"\;
+        if [ $# -lt 3 ] ; then shift $# ; else shift 3 ; fi
+    done
+    sed -e "$x"
+}
+
+alias del=trash-put
+alias open=gnome-open
+
 alias py=python
 alias py3=python3
 alias py32=python3.2
@@ -47,10 +70,17 @@ alias py2=python2
 alias py27=python2.7
 alias pyc=pycompile
 alias py3c=py3compile
-alias doxy='doxygen Doxyfile'
-alias tls=trash-list
-alias nau='nautilus .'
-alias open=gnome-open
+export PYTHONSTARTUP=~/local/share/python/startup.py
+virtualenv.activate() { . ${@:-$PWD}/.virtualenv/bin/activate }
+
+export RUBYLIB=$HOME/lib/site_ruby${RUBYLIB:-:}
+
+alias cmk=cmake
+alias mk=make
+doxygen() { if [ $# = 0 ] ; then doxygen Doxyfile ; else doxygen "$@" ; fi }
+
+alias rmd=rmdust
+alias rmdr='rmdust -r'
 
 via-o2on() {
     o2on_port=8020
@@ -73,91 +103,19 @@ alias chf=2ch-format
 alias chp=2ch-post
 alias chu=2ch-utils
 
-
-# configurations
-
-alias grep='grep --color=auto'
-alias ls='ls --color=auto'
-alias jobs='jobs -l'
-alias wc='env POSIXLY_CORRECT= wc'
-alias sudo='sudo -E '
-alias fd="env ANSICOLOR=1 fd"
-vf() {
-    vim -c 'au FileType vimfiler nnoremap <buffer> q :<C-u>quit<CR>' \
-        -c 'au FileType vimfiler nnoremap <buffer> Q :<C-u>quit<CR>' \
-        -c ':VimFiler -status '"$*"
-}
-
-export PYTHONSTARTUP=~/local/share/python/startup.py
-export RUBYLIB=$HOME/lib/site_ruby${RUBYLIB:-:}
-
 ## the prompt is same to the man's one
 export LESS='-r -j10 -P \ ?f%f:Standerd Input\.. ?lmline %lm:.?L/%L. ?PB%PB\%:. (press h for help or q to quit)\ \'
 
-alias talk='ojtalk -vname mei_normal'
-alias talk-angry='ojtalk -vname mei_angry'
-alias talk-bashful='ojtalk -vname mei_bashful'
-alias talk-happy='ojtalk -vname mei_happy'
-alias talk-sad='ojtalk -vname mei_sad'
-
-
-alias 'w3m-Thtml'='w3m -T text/html'
-
-## grep
-if which fgrep >/dev/null ; then
-    alias fgrep='fgrep --color=auto'
-else
-    alias fgrep='grep --fixed-strings' # -F
-fi
-if which egrep >/dev/null ; then
-    alias egrep='egrep --color=auto'
-else
-    alias egrep='grep --extended-regexp' # -E
-fi
-alias vgrep='grep --invert-match' # -v
-
 fx() { firefox -new-tab "$@" } # -new-tabでzshの補完候補が_filesから`URL to load'になるの回避のためaliasでなくfunction
 
-caw() { cat `which $@` }
-mdcd() { mkdir "$@" && cd "$@" }
-
-gosh() {
-    if [ $# -eq 0 ] && which gosh-rl >/dev/null ; then
-        gosh-rl "$@" # gosh-rl do not recognize the options
-    elif which rlwrap >/dev/null ; then
-        rlwrap -pBLUE gosh "$@"
-    else
-        gosh "$@"
-    fi
-}
-
-## ps
-psh()  { ps   | head -n 1 } # ps  のheaderを表示
-pshu() { ps u | head -n 1 } # ps uのheaderを表示
-### CPU 使用率の高い方から8つ
-pst() { pshu ; ps aux | sort -r -n +2 | grep -v 'ps aux' | grep -v grep | head -n 8 }
-### メモリ占有率の高い方から8つ
-psm() { pshu ; ps aux | sort -r -n +3 | grep -v 'ps aux' | grep -v grep | head -n 8 }
-psg() { pshu ; ps aux | grep $* | grep -v 'ps aux' | grep -v grep }
-
-alias gitignored='git ls-files -o -i --exclude-standard'
-
-alias notify='notify-send -i terminal'
-
-vimrc() { vim ~/.vimrc }
-shrc() { $EDITOR ~/local/share/sh/aliases && . ~/local/share/sh/aliases }
-shcmd() { $EDITOR ~/local/share/sh/commands && . ~/local/share/sh/commands }
-shenv() { $EDITOR ~/local/share/sh/environment && . ~/local/share/sh/environment }
 alias tmp='cd ~/tmp'
 
-## virtual environment
-### python
-virtualenv.activate() { . ${@:-$PWD}/.virtualenv/bin/activate }
-### haskell
-virthualenv.activate() { . ${@:-$PWD}/.virthualenv/bin/activate }
+vimrc() { vim ~/.vimrc }
+aliases() { $EDITOR ~/local/share/sh/aliases && . ~/local/share/sh/aliases }
+commands() { $EDITOR ~/local/share/sh/commands && . ~/local/share/sh/commands }
+environment() { $EDITOR ~/local/share/sh/environment && . ~/local/share/sh/environment }
+zshrc() { $EDITOR ~/local/share/zsh/zshrc && source ~/local/share/zsh/zshrc }
 
 
-##
-## more commands
 ##
 . ~/local/share/sh/commands

@@ -19,7 +19,7 @@ done
 
 while true ; do
     echo -e '\e[34m'"$ fortune"'\e[0m' # show the command which makes the message
-    message=`fortune`
+    message=`fortune` || exit 1
     echo "$message" # show the player the whole message
     for word in $message ; do # split it into words: lines are too long
         while true ; do

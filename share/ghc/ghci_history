@@ -1,3 +1,24 @@
+data a :, b = a :, b
+data a , b = a , b
+:t (0 :. 'a' :. ())
+data a :. b = a :. b
+:set -XTypeOperators 
+data a :+ b = a :. b
+data a :- b = a :. b
+data a :. b = a :. b
+data :. a b = a :. b
+data Tuple a b = Tuple a b
+data Tuple a = Tuple a (Tuple b) | Nil
+data Tuple a b = Tuple a (Tuple b) | Nil
+data Tuple a = Tuple a (Tuple b) | Nil
+class Tuple a
+let x = newIORef [] in (,,,) <$> x <*> x <*> x <*> x
+:t let x = newIORef [] in (,,,) <$> x <*> x <*> x <*> x
+let x = newIORef [] in (,,,) <$> x <*> x <*> x <*> x
+let x = newIORef [] in (,,,) <$> x <*> x <*> x <*>
+fg
+(,,,) newIORef []
+newIORef []
 logBase 0.999 3
 log 0.999 3
 iterate sqrt 2

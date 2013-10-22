@@ -11,11 +11,14 @@ export PATH="$HOME/.cabal/bin":"$PATH"
 export PATH="$HOME/bin":"$PATH"
 export PATH="$HOME/local/bin":"$PATH"
 export PATH="$HOME/var/bin":"$PATH"
-export PATH="$HOME/local/lib/2ch-tools/bin":"$PATH"
 
 export PATH="$HOME/.rbenv/bin":"$PATH"
 if which rbenv > /dev/null ; then
-    eval "$(rbenv init -)"
+    eval "`rbenv init -`"
+fi
+if [ -f "$HOME"/lib/nvm/nvm.sh ] ; then
+    . "$HOME"/lib/nvm/nvm.sh
+    nvm use v0.10.21 >/dev/null
 fi
 
-export PATH="$(echo $PATH | trimpath)"
+export PATH="`echo $PATH | trimpath`"

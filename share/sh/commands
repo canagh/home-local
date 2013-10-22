@@ -17,6 +17,35 @@ work() {
     ls
 }
 
+alias fd="env ANSICOLOR=1 fd"
+virthualenv.activate() { . ${@:-$PWD}/.virthualenv/bin/activate }
+
+alias talk='ojtalk -vname mei_normal'
+alias talk-angry='ojtalk -vname mei_angry'
+alias talk-bashful='ojtalk -vname mei_bashful'
+alias talk-happy='ojtalk -vname mei_happy'
+alias talk-sad='ojtalk -vname mei_sad'
+
+alias notify='notify-send -i terminal'
+
+alias gitignored='git ls-files -o -i --exclude-standard'
+
+gosh() {
+    if [ $# -eq 0 ] && which gosh-rl >/dev/null ; then
+        gosh-rl "$@" # gosh-rl do not recognize the options
+    elif which rlwrap >/dev/null ; then
+        rlwrap -pBLUE gosh "$@"
+    else
+        gosh "$@"
+    fi
+}
+
+vf() {
+    vim -c 'au FileType vimfiler nnoremap <buffer> q :<C-u>quit<CR>' \
+        -c 'au FileType vimfiler nnoremap <buffer> Q :<C-u>quit<CR>' \
+        -c ':VimFiler -status '"$*"
+}
+
 grep_unite() {
     grep "$@" ~/.vim/bundle/unite.vim/**/*.vim
 }
@@ -34,10 +63,13 @@ locate.home() {
 	locate --database $MLOCATE_HOME_DB $@
 }
 
+'date+%s'() { date +%s "$@" }
+'w3m-Ttex/thtml'() { w3m -T text/html "$@" }
+
 
 ## logout for gnome
 if ps ax | grep -v grep | grep gnome-session > /dev/null ; then
-	alias logout='gnome-session-quit --no-prompt'
+    alias logout='gnome-session-quit --no-prompt'
 fi
 
 

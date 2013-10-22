@@ -15,7 +15,7 @@ autoload -U compinit ; compinit -u
 
 
 # utility functions
-function compreload() {
+function 'reload/c'() {
     local f
     for f in $ZSH_USER_FPATH; do
         f=("$f"/*(.))
@@ -23,7 +23,7 @@ function compreload() {
         autoload -U $f:t
     done
 }
-function compdelcache() {
+function 'del/cc'() {
     del ~/.zcompcache/*
     del ~/.zcompdump
     compinit

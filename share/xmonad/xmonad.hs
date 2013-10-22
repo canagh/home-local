@@ -45,6 +45,7 @@ configApps x =
     [ ((modm, xK_u), runOrRaise "firefox" (className =? "Firefox"))
     -- , ((modm, xK_i), runOrRaise "gnome-terminal" (className =? "Gnome-terminal"))
     , ((modm, xK_i), runOrRaise "urxvt"   (className =? "URxvt"))
+    , ((modm, xK_o), runOrRaise "opera" (className =? "Opera"))
     -- , ((modm, xK_o), runOrRaise "mikutter" (className =? "Mikutter.rb"))
     -- , ((modm, xK_o), runOrRaise "emacsclient-x" (className =? "Emacs23"))
     ]
