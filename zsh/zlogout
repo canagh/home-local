@@ -1,0 +1,3 @@
+#!/usr/bin/zsh
+( cd ~/share ; git add . ; git commit --all --message commit )
+sleep 4

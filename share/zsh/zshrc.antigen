@@ -1,9 +1,0 @@
-#!/usr/bin/zsh
-
-source ~/local/share/zsh/antigen/antigen.zsh clone/antigen.zsh
-antigen bundle zsh-users/zsh-completions
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle ~/local/share/zsh/completion
-antigen bundle ~/local/lib/2ch-tools --no-local-clone
-antigen theme ~/local/share/zsh/zshrc.theme
-antigen apply

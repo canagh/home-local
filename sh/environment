@@ -1,0 +1,47 @@
+#!/bin/bash
+
+export LANG=en_US.UTF-8
+
+export EDITOR=vim
+export VISUAL=vim
+export PAGER=less
+
+
+export PATH="$HOME"/share/bin:"$PATH"
+export PATH="$HOME"/bin:"$PATH"
+
+# python
+export PYTHONSTARTUP=~/share/python/startup.py
+## virtualenv
+for f in /usr/local/bin/virtualenvwrapper_lazy.sh /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper_lazy.sh /usr/bin/virtualenvwrapper.sh ; do
+    if [ -f "$f" ] ; then
+        source "$f"
+        break
+    fi
+done
+
+# ruby
+## rbenv
+for f in "$HOME"/lib/rbenv/bin ; do
+    if [ -x "$f"/rbenv ] ; then
+        export PATH="$f":"$PATH"
+        export PATH="$HOME"/.rbenv/bin:"$PATH"
+        eval "`rbenv init -`"
+    fi
+done
+
+# haskell
+export PATH="$HOME/.cabal/bin":"$PATH"
+
+# javascript
+## nvm
+for f in "$HOME"/lib/nvm/nvm.sh ; do
+    if [ -f "$f" ] ; then
+        NVM_DIR=`dirname "$f"`
+        source "$f"
+        nvm use v0.10.21 >/dev/null
+        break
+    fi
+done
+
+export PATH="`echo $PATH | trimpath`"

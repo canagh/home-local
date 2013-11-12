@@ -1,5 +1,12 @@
-# ~/local
-My files in home to upload and backup on github.com.
+# ~/share
+$HOME の内容物で share できるもの
+
+## how to use
+```shellscript
+    git clone git@github.com:solorab/home.git ~/share
+    cd ~/share
+    ./deploy.sh
+```
 
 ## license
 *MIT License*

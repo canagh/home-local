@@ -1,7 +1,0 @@
-#!/usr/bin/zsh
-
-( cd ~/local ; git add . ; git commit --all --message commit )
-
-~/local/lib/2ch-tools/tools/donichi.odai.bot
-
-sleep 4

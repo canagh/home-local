@@ -1,5 +1,0 @@
-#!/usr/bin/zsh
-echo [`date +%D\ %T`] [ called ] zlogin $0 >> ~/tmp/log
-echo [ called ] $0 >> ~/tmp/log
-~/local/lib/2ch-tools/tools/donichi.odai.bot
-cat ~/todo

@@ -1,0 +1,9 @@
+[user]
+	name = solorabbit
+	email = cn_amb@yahoo.co.jp
+[color]
+	ui = auto
+[core]
+	excludesfile = ~/share/git/gitignore
+[push]
+	default = simple
