@@ -27,10 +27,6 @@ def nobody_uid():
         nobody = 1 + max(x[2] for x in pwd.getpwall())
     return nobody
 
-def executable(path):
-    """Test for executable file."""
-    return os.access(path, os.X_OK)
-
 class CGIRequestHandler(http.server.SimpleHTTPRequestHandler):
     # Determine platform specifics
     have_fork = hasattr(os, 'fork')
@@ -197,16 +193,18 @@ class CGIRequestHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 self.log_message("CGI script exited OK")
 
-import argparse
-parser = argparse.ArgumentParser(
-        description="Start a server associated with a CGI script, without directories like `/cgi-bin' or `/htbin'.")
-parser.add_argument('script', metavar='PATH')
-parser.add_argument('-p', '--port', metavar='PORT', type=int, default=80, help='default: 80')
-args = parser.parse_args()
 
-server_address = ('', args.port)
-httpd = http.server.HTTPServer(server_address, CGIRequestHandler)
-httpd.script = args.script
-httpd.scriptfile = args.script
-httpd.scriptname = os.path.basename(args.script)
-httpd.serve_forever()
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(
+            description="Start a server associated with a CGI script, without directories like `/cgi-bin' or `/htbin'.")
+    parser.add_argument('script', metavar='PATH')
+    parser.add_argument('-p', '--port', metavar='PORT', type=int, default=80, help='default: 80')
+    args = parser.parse_args()
+
+    server_address = ('', args.port)
+    httpd = http.server.HTTPServer(server_address, CGIRequestHandler)
+    httpd.script = args.script
+    httpd.scriptfile = args.script
+    httpd.scriptname = os.path.basename(args.script)
+    httpd.serve_forever()

@@ -1,4 +1,4 @@
-#!/user/bin/env python
+#!/usr/bin/env python
 
 import os
 import sys
@@ -10,10 +10,12 @@ except ImportError:
 else:
     import rlcompleter
     readline.parse_and_bind("tab: complete")
-
-histfile = os.path.join(
-        os.path.dirname(os.environ['PYTHONSTARTUP']), 'histfile')
-try:
-    readline.read_history_file(histfile)
-except IOError:
-    pass
+    # histfile
+    histfile = os.path.join(os.environ['HOME'], 'var', 'history', 'python')
+    try:
+        readline.read_history_file(histfile)
+    except IOError:
+        pass
+    import atexit
+    atexit.register(readline.write_history_file, histfile)
+    del histfile

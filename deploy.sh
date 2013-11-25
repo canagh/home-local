@@ -41,7 +41,7 @@ dot_mkdir xmonad ; dot_link_path xmonad/*
 dot_link_base irbrc
 
 dot_link_base git/gitconfig
-dot_link icon/icon.svg face
+dot_link icon.svg face
 
 dot_mkdir 2ch-tools
 dot_link 2ch 2ch-tools/user

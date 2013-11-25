@@ -12,13 +12,17 @@ export PATH="$HOME"/bin:"$PATH"
 
 # python
 export PYTHONSTARTUP=~/share/python/startup.py
-## virtualenv
-for f in /usr/local/bin/virtualenvwrapper_lazy.sh /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper_lazy.sh /usr/bin/virtualenvwrapper.sh ; do
-    if [ -f "$f" ] ; then
-        source "$f"
-        break
-    fi
-done
+## virtualenvwrapper
+#for f in /usr/local/bin/virtualenvwrapper_lazy.sh /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper_lazy.sh /usr/bin/virtualenvwrapper.sh ; do
+#    if [ -f "$f" ] ; then
+#        source "$f"
+#        break
+#    fi
+#done
+## pythonbrew
+#[[ -s "$HOME/.pythonbrew/etc/bashrc" ]] && source "$HOME/.pythonbrew/etc/bashrc"
+## pythonz
+#[[ -s "$HOME/.pythonz/etc/bashrc" ]] && source "$HOME/.pythonz/etc/bashrc"
 
 # ruby
 ## rbenv
@@ -37,7 +41,7 @@ export PATH="$HOME/.cabal/bin":"$PATH"
 ## nvm
 for f in "$HOME"/lib/nvm/nvm.sh ; do
     if [ -f "$f" ] ; then
-        NVM_DIR=`dirname "$f"`
+        NVM_DIR="$HOME/.nvm"
         source "$f"
         nvm use v0.10.21 >/dev/null
         break
