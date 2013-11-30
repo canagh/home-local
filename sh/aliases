@@ -31,6 +31,8 @@ if which fgrep >/dev/null ; then alias fgrep='fgrep --color=auto' ; else alias f
 if which egrep >/dev/null ; then alias egrep='egrep --color=auto' ; else alias egrep='grep --extended-regexp' ; fi
 alias vgrep='grep --invert-match'
 
+alias cpr='cp -r'
+
 alias md=mkdir
 alias loc=locate
 

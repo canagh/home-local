@@ -29,7 +29,6 @@ vf() {
         -c ':VimFiler -status '"$*"
 }
 
-
 MLOCATE_HOME_DB=$HOME/var/home.mlocate.db
 updatedb.home() {
 	updatedb --database-root $HOME --output $MLOCATE_HOME_DB --require-visibility 0 $@
