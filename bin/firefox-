@@ -15,12 +15,9 @@ do
 	esac
 done
 
-TEMPFILE=`mktemp -t XXXXXX.$ext` || exit 1
-trap "rm -f -- '$TEMPFILE'" EXIT
+TEMPFILE=`mktemp -t XXXXXX.$ext` || exit 1 ; trap "rm -f -- '$TEMPFILE'" EXIT
 
 cat > $TEMPFILE
 firefox -- $TEMPFILE
 
-rm -f -- "$TEMPFILE"
-trap - EXIT
-exit
+rm -f -- "$TEMPFILE" ; trap - EXIT

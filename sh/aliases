@@ -1,5 +1,7 @@
 #!/bin/sh
 
+alias rm='rm -i'
+
 alias e=echo
 alias en='echo -n'
 
