@@ -1,10 +1,23 @@
 #!/bin/bash
 
 export LANG=en_US.UTF-8
+#export LANG=C
 
-export EDITOR=vim
-export VISUAL=vim
+inpath() {
+    case $# in
+        1 ) which $1 >/dev/null 2>&1 ;;
+        * ) false ;;
+    esac
+}
+
+if inpath vim ; then
+    export VISUAL=vim
+    export EDITOR=vim
+fi
 export PAGER=less
+if inpath w3m ; then
+    export BROWSER=w3m
+fi
 
 
 export PATH="$HOME"/share/bin:"$PATH"

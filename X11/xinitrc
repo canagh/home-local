@@ -1,0 +1,5 @@
+#!/bin/sh
+# run window-mgr
+#exec gnome-session
+xmodmap -e 'add mod3 = Muhenkan'
+exec gnome-session --session=xmonad

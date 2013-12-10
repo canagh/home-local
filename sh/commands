@@ -1,5 +1,13 @@
 #!/bin/sh
 
+alias tmp='cd ~/tmp'
+
+vimrc()       { $EDITOR ~/.vimrc }
+alias     aliases='$EDITOR ~/share/sh/aliases     && . ~/share/sh/aliases'
+alias    commands='$EDITOR ~/share/sh/commands    && . ~/share/sh/commands'
+alias environment='$EDITOR ~/share/sh/environment && . ~/share/sh/environment'
+zshrc()       { $EDITOR ~/share/zsh/zshrc }
+
 alias fd="env ANSICOLOR=1 fd"
 virthualenv.activate() { . ${@:-$PWD}/.virthualenv/bin/activate }
 
@@ -58,7 +66,6 @@ alias hibernate=pm-hibernate
 alias powersave=pm-powersave
 alias suspend-hybrid=pmsuspend-hybrid
 
-
 apt-add-japanese-repository() {
     # https://ubuntulinux.jp/japanese
     wget -q https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg -O- | apt-key add -
@@ -68,3 +75,67 @@ apt-add-japanese-repository() {
     apt-get upgrade
     apt-get install ubuntu-desktop-ja
 }
+
+url_quote() {
+    if [ $# = 0 ]
+    then echo -n "`cat`"
+    else echo -n "$@"
+    fi | python3 -c 'import sys, urllib.parse as url ; print(url.quote(sys.stdin.read()))'
+}
+duckduckgo() { echo http://duckduckgo.com/\?q=`echo $@ | url_quote` }
+alias ddg=duckduckgo
+wikipedia() {
+    lang=en
+    case "$1" in
+        ja | japan | jp ) lang=ja ; shift ;;
+        -- | en | english ) shift ;;
+    esac
+    echo http://${lang}.wikipedia.org/wiki/`echo $@ | url_quote`
+}
+alias wikip=wikipedia
+alias wkp=wikipedia
+google() {
+    lang=com
+    case "$1" in
+        jp | co.jp | japan | ja ) lang=co.jp ; shift ;;
+        -- | en | com | english ) shift ;;
+    esac
+    echo http://www.google.$lang/search\?q=`echo $@ | url_quote`
+}
+alias ggl=google
+bing() { echo http://www.bing.com/search\?q=`echo $@ | url_quote` }
+weblio() {
+    type=ejje
+    case "$1" in
+        ejje ) type=$1 ; shift ;;
+    esac
+    echo http://${type}.weblio.jp/content/`echo $@ | url_quote`\#main
+}
+hoogle() { echo http://www.haskell.org/hoogle/\?hoogle=`echo $@ | url_quote` }
+github() { echo git@github.com:"$1".git }
+axfc() {
+    case "$#" in
+        1 )
+            elem=`echo $1 | sed -e 's/_.*//'`
+            num=`echo $1 | sed -e 's/.*_//'`
+            ;;
+        2 )
+            elem=$1
+            num=$2
+            ;;
+    esac
+    [ -n "$elem" -a -n "`echo "$num" | grep '^[[:digit:]]\+$'`" ] || error "$type"': wrong format argument: '"$*"
+    echo http://www1.axfc.net/uploader/"$elem"/so/"$num"
+}
+nicovideo() {
+    num=`echo "$1" | grep '^\(sm\)\?[[:digit:]]\+$'`
+    [ "$num" ] || error "$type"': wrong format argument: '"$1"
+    echo http://www.nicovideo.jp/watch/sm"$num"
+}
+
+bddg() { $BROWSER `duckduckgo "$@"` }
+bwkp() { $BROWSER `wikipedia  "$@"` }
+bggl() { $BROWSER `google     "$@"` }
+
+hide()   { for i in "$@" ; do mv "$i" "$i".hidden ; done }
+unhide() { for i in "$@" ; do mv "$i".hidden "$i" ; done }

@@ -1,6 +1,26 @@
 #!/bin/sh
 
-alias rm='rm -i'
+inpath() {
+    case $# in
+        1 ) which -p $1 >/dev/null 2>&1 ;;
+        * ) false ;;
+    esac
+}
+not() { "$@" ; [ $? != 0 ] }
+
+rm() {
+    echo rm\(1\) is dengerous >&2
+    echo sure you want to discard: >&2
+    for i in "$@" ; do
+        echo \	"$i" >&2
+    done
+    echo you can stop with ^C >&2
+    for i in `seq 8 -1 1` ; do
+        echo "$i"
+        sleep 1
+    done
+    /usr/bin/rm "$@"
+}
 
 alias e=echo
 alias en='echo -n'
@@ -17,20 +37,22 @@ alias la='ls -a'
 alias lA='ls -A'
 alias ll='ls -l'
 alias lalF='ls -alF'
+alias lclr='ls --color=always'
 
-alias jobs='jobs -l'
-alias j=jobs
+alias j='jobs -l'
 
 alias fg1='fg %1'
 alias fg2='fg %2'
 alias fg3='fg %3'
 alias fg4='fg %4'
+alias fg5='fg %5'
+alias fg6='fg %6'
 fg-() { fg %- }
 
 alias grep='grep --color=auto'
 alias g=grep
-if which fgrep >/dev/null ; then alias fgrep='fgrep --color=auto' ; else alias fgrep='grep --fixed-strings' ; fi
-if which egrep >/dev/null ; then alias egrep='egrep --color=auto' ; else alias egrep='grep --extended-regexp' ; fi
+if inpath fgrep ; then alias fgrep='fgrep --color=auto' ; else alias fgrep='grep --fixed-strings'   ; fi
+if inpath egrep ; then alias egrep='egrep --color=auto' ; else alias egrep='grep --extended-regexp' ; fi
 alias vgrep='grep --invert-match'
 
 alias cpr='cp -r'
@@ -56,6 +78,7 @@ alias sudo='sudo -E '
 
 alias ag=apt-get
 alias ac=apt-cache
+alias pm=pacman
 
 s() {
     x=
@@ -110,12 +133,4 @@ alias chu=2ch-utils
 ## the prompt is same to the man's one
 export LESS='-r -j10 -P \ ?f%f:Standerd Input\.. ?lmline %lm:.?L/%L. ?PB%PB\%:. (press h for help or q to quit)\ \'
 
-fx() { firefox -new-tab "$@" } # -new-tabでzshの補完候補が_filesから`URL to load'になるの回避のためaliasでなくfunction
-
-alias tmp='cd ~/tmp'
-
-vimrc()       { $EDITOR ~/.vimrc }
-aliases()     { $EDITOR ~/share/sh/aliases     && . ~/share/sh/aliases }
-commands()    { $EDITOR ~/share/sh/commands    && . ~/share/sh/commands }
-environment() { $EDITOR ~/share/sh/environment && . ~/share/sh/environment }
-zshrc()       { $EDITOR ~/share/zsh/zshrc }
+fx() { firefox -new-tab "$@" } # why this is a function is to avoid zsh's complementing -new-tab

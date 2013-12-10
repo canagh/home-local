@@ -32,7 +32,7 @@ dot_mkdir vim/after
 dot_link_path vim/after/ftplugin
 
 dot_link_base X11/*
-dot_link X11/xsession xinitrc
+# dot_link X11/xinitrc xsession
 
 dot_mkdir cabal  ; dot_link_path cabal/*
 dot_mkdir ghc    ; dot_link_path ghc/*
