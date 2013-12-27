@@ -69,10 +69,12 @@ configureKeys =
         , (xK_y, runOrRaise "mikutter" (className =? "Mikutter.rb"))
         , (xK_g, sendMessage ToggleStruts) -- Mod-b: toggle XFCE panel
         , (xK_b, withFocused toggleBorder)
+        , (xK_h, prevWS) -- override
+        , (xK_l, nextWS) -- override
         ]
     . flip additionalKeysModShift
-        [ (xK_h, prevWS)
-        , (xK_l, nextWS)
+        [ (xK_h, sendMessage Shrink) -- escape
+        , (xK_l, sendMessage Expand) -- escape
         ]
 
 
