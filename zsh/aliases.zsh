@@ -174,22 +174,23 @@ edit-post() {
 }
 
 diary() {
-    local prefix run
+    local run prefix name
     prefix=~/var/diary
     run=$VISUAL
     case "$1" in -p | --path ) run=echo ; shift ;; esac
     if [[ $# == 0 ]] ; then
-        $VISUAL $prefix/`date +%Y/%m/%d`.md
+        name=`date +%Y/%m/%d`.md
     elif [[ $# == 1 ]] ; then
         [[ "$1" =~ [^a-z/] ]] && return 1
         case "$1" in
-            ????/??/?? ) $run $prefix/$1.md ;;
-                 ??/?? ) $run $prefix/`date +%Y`/$1.md ;;
-                    ?? ) $run $prefix/`date +%Y/%m`/$1.md ;;
+            ????/??/?? ) name=$1.md ;;
+                 ??/?? ) name=`date +%Y`/$1.md ;;
+                    ?? ) name=`date +%Y/%m`/$1.md ;;
             * ) return 1 ;;
         esac
     else
         return 1
     fi
+    $run $prefix/$name
 }
 
