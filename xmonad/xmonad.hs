@@ -11,7 +11,7 @@ import Data.Tuple.HT (mapFst)
 import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Actions.NoBorders (toggleBorder)
 import XMonad.Actions.WindowGo (runOrRaise)
-import XMonad.Actions.CycleWS (nextWS, prevWS)
+import XMonad.Actions.CycleWS (nextWS, prevWS, shiftToNext, shiftToPrev)
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, ppOutput, ppVisible, wrap)
 import XMonad.Hooks.ManageDocks (manageDocks, AvoidStruts, ToggleStruts(ToggleStruts))
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
@@ -73,8 +73,10 @@ configureKeys =
         , (xK_l, nextWS) -- override
         ]
     . flip additionalKeysModShift
-        [ (xK_h, sendMessage Shrink) -- escape
-        , (xK_l, sendMessage Expand) -- escape
+        [ (xK_h, shiftToPrev)
+        , (xK_l, shiftToNext)
+        , (xK_comma,  sendMessage Shrink) -- escape
+        , (xK_period, sendMessage Expand) -- escape
         ]
 
 
