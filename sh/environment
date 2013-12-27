@@ -3,28 +3,24 @@
 export LANG=en_US.UTF-8
 #export LANG=C
 
-inpath() {
-    case $# in
-        1 ) which $1 >/dev/null 2>&1 ;;
-        * ) false ;;
-    esac
-}
+inpath() { which "$@" >/dev/null 2>&1 ; }
+not() { "$@" ; [ $? != 0 ] ; }
 
-if inpath vim ; then
-    export VISUAL=vim
-    export EDITOR=vim
+if   inpath vim  ; then export VISUAL=vim
+elif inpath vi   ; then export VISUAL=vi
+elif inpath nano ; then export VISUAL=nano
 fi
+export EDITOR=$VISUAL
 export PAGER=less
-if inpath w3m ; then
-    export BROWSER=w3m
+if   inpath w3m  ; then export BROWSER=w3m
+elif inpath lynx ; then export BROWSER=lynx
 fi
-
 
 export PATH="$HOME"/share/bin:"$PATH"
 export PATH="$HOME"/bin:"$PATH"
 
 # python
-export PYTHONSTARTUP=~/share/python/startup.py
+export PYTHONSTARTUP="$HOME"/share/python/startup.py
 ## virtualenvwrapper
 #for f in /usr/local/bin/virtualenvwrapper_lazy.sh /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper_lazy.sh /usr/bin/virtualenvwrapper.sh ; do
 #    if [ -f "$f" ] ; then
@@ -39,26 +35,31 @@ export PYTHONSTARTUP=~/share/python/startup.py
 
 # ruby
 ## rbenv
-for f in "$HOME"/lib/rbenv/bin ; do
+if not inpath rbenv ; then
+    f="$HOME"/lib/rbenv/bin
     if [ -x "$f"/rbenv ] ; then
-        export PATH="$f":"$PATH"
-        export PATH="$HOME"/.rbenv/bin:"$PATH"
+        export PATH="$f":"$HOME"/.rbenv/bin:"$PATH"
         eval "`rbenv init -`"
     fi
-done
+    unset f
+fi
 
 # haskell
 export PATH="$HOME/.cabal/bin":"$PATH"
 
 # javascript
 ## nvm
-for f in "$HOME"/lib/nvm/nvm.sh ; do
+if [ ! "$NVM_DIR" ] ; then
+    f="$HOME"/lib/nvm/nvm.sh
     if [ -f "$f" ] ; then
         NVM_DIR="$HOME/.nvm"
         source "$f"
         nvm use v0.10.21 >/dev/null
-        break
     fi
-done
+    unset f
+fi
 
-export PATH="`echo $PATH | trimpath`"
+# make PATH unique
+if inpath zsh ; then
+    export PATH="`zsh -fc 'typeset -U path ; echo $PATH'`"
+fi

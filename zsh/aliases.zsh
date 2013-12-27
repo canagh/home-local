@@ -1,15 +1,47 @@
-#!/bin/sh
+#!/usr/bin/zsh
 
-alias tmp='cd ~/tmp'
+# http://qiita.com/mollifier/items/14bbea7503910300b3ba
+function zman() {
+    PAGER="less -g -s '+/^       "$1"'" man zshall
+}
 
-vimrc()       { $EDITOR ~/.vimrc }
-alias     aliases='$EDITOR ~/share/sh/aliases     && . ~/share/sh/aliases'
-alias    commands='$EDITOR ~/share/sh/commands    && . ~/share/sh/commands'
-alias environment='$EDITOR ~/share/sh/environment && . ~/share/sh/environment'
-zshrc()       { $EDITOR ~/share/zsh/zshrc }
+function zcompile-all() {
+    rmdust -r ~/.antigen ~/share/{z,}sh
+    for f in ~/.zsh{env,rc} ~/.z{profile,log{in,out}} ~/.antigen/**/* ~/share/{z,}sh/**/* ; do
+        zcompile "$f" && echo zcompile \""$f"\"
+    done
+}
+
+function zcompile-all-del() {
+    updatedb.home
+    locate.home .zwc | grep \\.zwc$ | xargs -d \\n del
+}
+
+via-o2on() {
+    o2on_port=8020
+    command="$1"
+    shift
+    if lsof -i:$o2on_port | grep -iq 'o\(py\)\?2on' ; then
+        env http_proxy=http://localhost:$o2on_port "$command" "$@"
+    else
+        "$command" "$@"
+    fi
+}
+alias    '2ch-get'='via-o2on `which -p 2ch-get`'
+alias '2ch-browse'='via-o2on `which -p 2ch-browse`'
+alias ch=2ch-browse
+alias chn='2ch-browse -n'
+alias chg='2ch-get -d'
+alias chgn='2ch-get -d -n'
+alias chgq='2ch-get -q'
+alias chf=2ch-format
+alias chp=2ch-post
+alias chu=2ch-utils
+
+vimrc() { $VISUAL ~/.vimrc ; }
 
 alias fd="env ANSICOLOR=1 fd"
-virthualenv.activate() { . ${@:-$PWD}/.virthualenv/bin/activate }
+hsenv-activate() { . ${@:-$PWD}/.hsenv/bin/activate }
 
 alias talk='ojtalk -vname mei_normal'
 alias talk-angry='ojtalk -vname mei_angry'
@@ -38,26 +70,14 @@ vf() {
 }
 
 MLOCATE_HOME_DB=$HOME/var/home.mlocate.db
-updatedb.home() {
+updatedb-home() {
 	updatedb --database-root $HOME --output $MLOCATE_HOME_DB --require-visibility 0 $@
 }
-locate.home() {
+locate-home() {
 	locate --database $MLOCATE_HOME_DB $@
 }
 
-'date+%s'() { date +%s "$@" }
-'w3m-Ttex/thtml'() { w3m -T text/html "$@" }
-
-
-## logout for gnome
-if ps ax | grep -v grep | grep gnome-session > /dev/null ; then
-    alias logout='gnome-session-quit --no-prompt'
-fi
-
-# http://qiita.com/mollifier/items/14bbea7503910300b3ba
-function zman() {
-    PAGER="less -g -s '+/^       "$1"'" man zshall
-}
+w3m-Thtml() { w3m -T text/html "$@" }
 
 
 ## power management
@@ -85,6 +105,7 @@ url_quote() {
 duckduckgo() { echo http://duckduckgo.com/\?q=`echo $@ | url_quote` }
 alias ddg=duckduckgo
 wikipedia() {
+    local lang
     lang=en
     case "$1" in
         ja | japan | jp ) lang=ja ; shift ;;
@@ -95,6 +116,7 @@ wikipedia() {
 alias wikip=wikipedia
 alias wkp=wikipedia
 google() {
+    local lang
     lang=com
     case "$1" in
         jp | co.jp | japan | ja ) lang=co.jp ; shift ;;
@@ -105,6 +127,7 @@ google() {
 alias ggl=google
 bing() { echo http://www.bing.com/search\?q=`echo $@ | url_quote` }
 weblio() {
+    local type
     type=ejje
     case "$1" in
         ejje ) type=$1 ; shift ;;
@@ -114,6 +137,7 @@ weblio() {
 hoogle() { echo http://www.haskell.org/hoogle/\?hoogle=`echo $@ | url_quote` }
 github() { echo git@github.com:"$1".git }
 axfc() {
+    local elem num
     case "$#" in
         1 )
             elem=`echo $1 | sed -e 's/_.*//'`
@@ -128,6 +152,7 @@ axfc() {
     echo http://www1.axfc.net/uploader/"$elem"/so/"$num"
 }
 nicovideo() {
+    local num
     num=`echo "$1" | grep '^\(sm\)\?[[:digit:]]\+$'`
     [ "$num" ] || error "$type"': wrong format argument: '"$1"
     echo http://www.nicovideo.jp/watch/sm"$num"
@@ -137,5 +162,32 @@ bddg() { $BROWSER `duckduckgo "$@"` }
 bwkp() { $BROWSER `wikipedia  "$@"` }
 bggl() { $BROWSER `google     "$@"` }
 
-hide()   { for i in "$@" ; do mv "$i" "$i".hidden ; done }
-unhide() { for i in "$@" ; do mv "$i".hidden "$i" ; done }
+hide()   { local i ; for i in "$@" ; do mv "$i" "$i".hidden ; done }
+unhide() { local i ; for i in "$@" ; do mv "$i".hidden "$i" ; done }
+
+new-post()  { (cd ~/work/public/blog ; rake new_post) }
+edit-post() {
+    local prefix file
+    prefix=~/work/public/blog/source/_posts
+    file="`ls $prefix | canything`"
+    [ "$file" ] && $VISUAL $prefix/$file
+}
+
+diary() {
+    local prefix
+    prefix=~/var/diary
+    if [[ $# == 0 ]] ; then
+        $VISUAL $prefix/`date +%Y/%m/%d`.md
+    elif [[ $# == 1 ]] ; then
+        [[ "$1" =~ [^a-z/] ]] && return 1
+        case "$1" in
+            ????/??/?? ) $VISUAL $prefix/$1.md ;;
+                 ??/?? ) $VISUAL $prefix/`date +%Y`/$1.md ;;
+                    ?? ) $VISUAL $prefix/`date +%Y/%m`/$1.md ;;
+            * ) return 1 ;;
+        esac
+    else
+        return 1
+    fi
+}
+

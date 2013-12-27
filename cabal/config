@@ -9,19 +9,19 @@
 
 
 remote-repo: hackage.haskell.org:http://hackage.haskell.org/packages/archive
-remote-repo-cache: /home/cana/.cabal/packages
+remote-repo-cache: /home/solorabbit/.cabal/packages
 -- local-repo:
 -- logs-dir:
-world-file: /home/cana/.cabal/world
+world-file: /home/solorabbit/.cabal/world
 -- verbose: 1
 -- compiler: ghc
 -- with-compiler:
 -- with-hc-pkg:
 -- scratchdir:
--- program-prefix:
--- program-suffix:
+-- program-prefix: 
+-- program-suffix: 
 -- library-vanilla: True
-library-profiling: True
+-- library-profiling: False
 -- shared: False
 -- executable-dynamic: False
 -- executable-profiling: False
@@ -29,7 +29,7 @@ library-profiling: True
 -- library-for-ghci: True
 -- split-objs: False
 -- executable-stripping: True
-user-install: True
+-- user-install: True
 -- package-db:
 -- flags:
 -- extra-include-dirs:
@@ -41,7 +41,7 @@ user-install: True
 -- constraint:
 -- preference:
 -- solver: choose
-documentation: True
+-- documentation: False
 -- doc-index-file: $datadir/doc/index.html
 -- max-backjumps: 200
 -- reorder-goals: False
@@ -53,15 +53,16 @@ documentation: True
 -- only-dependencies: False
 -- root-cmd:
 -- symlink-bindir:
-build-summary: /home/cana/.cabal/logs/build.log
+build-summary: /home/solorabbit/.cabal/logs/build.log
 -- build-log:
 remote-build-reporting: anonymous
 -- one-shot: False
+-- jobs:
 -- username:
 -- password:
 
 install-dirs user
-  -- prefix: /home/cana/.cabal
+  -- prefix: /home/solorabbit/.cabal
   -- bindir: $prefix/bin
   -- libdir: $prefix/lib
   -- libsubdir: $pkgid/$compiler

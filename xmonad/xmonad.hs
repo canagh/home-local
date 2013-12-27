@@ -1,27 +1,32 @@
+{-# LANGUAGE FlexibleContexts #-}
 import XMonad
-import XMonad (defaultConfig)
--- import XMonad.Config.Gnome (gnomeConfig)
 
-
-import XMonad.Layout.Gaps (GapMessage(ToggleGaps), Direction2D(U), gaps)
-import XMonad.Layout.ResizableTile (MirrorResize(MirrorShrink, MirrorExpand), ResizableTall(ResizableTall))
-import XMonad.Layout.MultiToggle (Toggle(Toggle), mkToggle1)
-import XMonad.Layout.MultiToggle.Instances (StdTransformers(FULL))
-import qualified XMonad.StackSet as W
+import Data.Monoid (Monoid)
 import System.IO (hPutStrLn)
-import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, ppOutput, ppVisible, wrap)
+import Control.Applicative ((<$>))
+
+import Safe (initSafe)
+import Data.Tuple.HT (mapFst)
+
+import XMonad.Config.Desktop (desktopConfig)
 import XMonad.Actions.NoBorders (toggleBorder)
-import XMonad.Layout.NoBorders (smartBorders)
 import XMonad.Actions.WindowGo (runOrRaise)
+import XMonad.Actions.CycleWS (nextWS, prevWS)
+import XMonad.Hooks.DynamicLog (dynamicLogWithPP, defaultPP, ppOutput, ppVisible, wrap)
+import XMonad.Hooks.ManageDocks (manageDocks, AvoidStruts, ToggleStruts(ToggleStruts))
+import XMonad.Layout.LayoutModifier (ModifiedLayout)
+import XMonad.Layout.NoBorders (smartBorders, SmartBorder)
 import XMonad.Util.EZConfig (additionalKeys)
-import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.Run(spawnPipe, runProcessWithInput)
 
 mapManageHook :: (ManageHook -> ManageHook) -> XConfig l -> XConfig l
-mapManageHook f config = config { manageHook = f (manageHook config) }
+mapManageHook f conf = conf { manageHook = f (manageHook conf) }
+addManageHook :: XConfig l -> ManageHook -> XConfig l
 addManageHook x y = mapManageHook (<+> y) x
 
-mapLayoutHook :: (l Window -> l Window) -> XConfig l -> XConfig l
-mapLayoutHook f config = config { layoutHook = f (layoutHook config) }
+mapLayoutHook :: (l0 Window -> l1 Window) -> XConfig l0 -> XConfig l1
+mapLayoutHook f conf = conf { layoutHook = f (layoutHook conf) }
+addLayoutHook :: Monoid (l Window) => XConfig l -> l Window -> XConfig l
 addLayoutHook x y = mapLayoutHook (<+> y) x
 
 addXMobar :: XConfig l -> IO (XConfig l)
@@ -41,34 +46,49 @@ configureBorder x = x
     , focusedBorderColor = "#0033dd"
     }
 
--- configureLayoutHook :: XConfig (Choose Tall (Choose (Mirror Tall) Full))
---                     -> XConfig (Choose Tall (Choose (Mirror Tall) Full))
--- configureLayoutHook =
---     flip addLayoutHook
---         (let tall = ResizableTall 1 (3/100) (1/2) []
---             in smartBorders $ mkToggle1 FULL $ gaps [(U, 24)] $ tall ||| Mirror tall)
+configureLayoutHook
+    :: XConfig (ModifiedLayout AvoidStruts (Choose Tall (Choose (Mirror Tall) Full)))
+    -> XConfig (ModifiedLayout SmartBorder
+               (ModifiedLayout AvoidStruts (Choose Tall (Choose (Mirror Tall) Full))))
+configureLayoutHook = mapLayoutHook smartBorders
+
+configureManageHook :: XConfig l -> XConfig l
+configureManageHook = flip addManageHook manageDocks
+
+additionalKeysMod :: XConfig l -> [(KeySym, X ())] -> XConfig l
+additionalKeysMod x = additionalKeys x . map (mapFst ((,) $ modMask x))
+
+additionalKeysModShift :: XConfig l -> [(KeySym, X ())] -> XConfig l
+additionalKeysModShift x = additionalKeys x . map (mapFst ((,) $ (modMask x .|. shiftMask)))
+
+configureKeys :: XConfig l -> XConfig l
+configureKeys =
+    flip additionalKeysMod
+        [ (xK_u, runOrRaise "firefox"  (className =? "Firefox"))
+        , (xK_o, runOrRaise "opera"    (className =? "Opera"))
+        , (xK_y, runOrRaise "mikutter" (className =? "Mikutter.rb"))
+        , (xK_g, sendMessage ToggleStruts) -- Mod-b: toggle XFCE panel
+        , (xK_b, withFocused toggleBorder)
+        ]
+    . flip additionalKeysModShift
+        [ (xK_h, prevWS)
+        , (xK_l, nextWS)
+        ]
+
+
+configureTerminal :: XConfig l -> IO (XConfig l)
+configureTerminal x = do
+    termname  <- initSafe <$> runProcessWithInput "term" [     "--name"] ""
+    termclass <- initSafe <$> runProcessWithInput "term" ["--classname"] ""
+    return $ x { terminal = termname }
+        `additionalKeysMod` [(xK_i, runOrRaise termname (className =? termclass))]
 
 main :: IO ()
-main = do
-    let modm = mod3Mask
-    let config = defaultConfig
-            { modMask = modm
-            , terminal = "gnome-terminal"
-            }
-            `additionalKeys`
-                [ ((modm, xK_u), runOrRaise "firefox" (className =? "Firefox"))
-                , ((modm, xK_i), runOrRaise "gnome-terminal" (className =? "Gnome-terminal"))
-                , ((modm, xK_o), runOrRaise "opera" (className =? "Opera"))
-                , ((modm, xK_y), runOrRaise "mikutter" (className =? "Mikutter.rb"))
-                , ((modm, xK_f), sendMessage (Toggle FULL))
-                , ((modm, xK_g), sendMessage ToggleGaps)
-                , ((modm, xK_b), withFocused toggleBorder)
-                , ((modm, xK_j), sendMessage MirrorShrink)
-                , ((modm, xK_k), sendMessage MirrorExpand)
-                , ((modm, xK_period), windows W.focusDown)
-                , ((modm, xK_comma), windows W.focusUp)
-                , ((modm .|. shiftMask, xK_period), windows W.swapDown)
-                , ((modm .|. shiftMask, xK_comma), windows W.swapUp)
-                -- , ((modm .|. shiftMask, xK_q), spawn "gnome-session-quit")
-                ]
-    xmonad =<< addXMobar (configureBorder $ config)
+main = (xmonad =<<)
+    . configureTerminal
+    . configureManageHook
+    . configureLayoutHook
+    . configureBorder
+    . configureKeys
+    $ desktopConfig
+    { modMask = mod3Mask }

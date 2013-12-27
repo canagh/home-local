@@ -1,26 +1,9 @@
 #!/bin/sh
 
-inpath() {
-    case $# in
-        1 ) which -p $1 >/dev/null 2>&1 ;;
-        * ) false ;;
-    esac
-}
-not() { "$@" ; [ $? != 0 ] }
-
-rm() {
-    echo rm\(1\) is dengerous >&2
-    echo sure you want to discard: >&2
-    for i in "$@" ; do
-        echo \	"$i" >&2
-    done
-    echo you can stop with ^C >&2
-    for i in `seq 8 -1 1` ; do
-        echo "$i"
-        sleep 1
-    done
-    /usr/bin/rm "$@"
-}
+not() { if "$@" ; then false ; else true ; fi }
+q()  { "$@"  >/dev/null }
+qe() { "$@" 2>/dev/null }
+qq() { "$@"  >/dev/null 2>&1 }
 
 alias e=echo
 alias en='echo -n'
@@ -51,24 +34,24 @@ fg-() { fg %- }
 
 alias grep='grep --color=auto'
 alias g=grep
-if inpath fgrep ; then alias fgrep='fgrep --color=auto' ; else alias fgrep='grep --fixed-strings'   ; fi
-if inpath egrep ; then alias egrep='egrep --color=auto' ; else alias egrep='grep --extended-regexp' ; fi
-alias vgrep='grep --invert-match'
+alias gv='grep -v'
+alias gi='grep -i'
+alias ge='grep -e'
+alias gf='grep -f'
 
 alias cpr='cp -r'
 
 alias md=mkdir
 alias loc=locate
+alias sq=seq
+
+alias t=tmux
 
 alias psa='ps a'
 alias psx='ps x'
 alias psax='ps ax'
 alias psaux='ps aux'
-psh()  { ps   | head -n 1 } # ps  のheaderを表示
-pshu() { ps u | head -n 1 } # ps uのheaderを表示
-pst() { pshu ; ps aux | sort -r -n +2 | grep -v 'ps aux' | grep -v grep | head -n 8 } ### CPU 使用率の高い方から8つ
-psm() { pshu ; ps aux | sort -r -n +3 | grep -v 'ps aux' | grep -v grep | head -n 8 } ### メモリ占有率の高い方から8つ
-psg() { pshu ; ps aux | grep $* | grep -v 'ps aux' | grep -v grep }
+psg() { ps u | head -n 1 ; ps aux | grep "$*" | grep -v -e 'ps aux' -e grep }
 
 alias killa=killall
 alias kill9='kill -KILL'
@@ -76,21 +59,23 @@ alias killall9='killall -KILL'
 
 alias sudo='sudo -E '
 
+alias pe='perl -pe'
+
 alias ag=apt-get
 alias ac=apt-cache
 alias pm=pacman
 
 s() {
-    x=
     while [ $# != 0 ] ; do
-        x="$x"s/`echo -E "$1" | sed -e 's!/!\\/!g'`/"$2"/"$3"\;
+        src="$src"s/`echo -E "$1" | sed -e 's!/!\\/!g'`/"$2"/"$3"\;
         if [ $# -lt 3 ] ; then shift $# ; else shift 3 ; fi
     done
-    sed -e "$x"
+    sed -e "$src"
 }
 
 alias del=trash-put
-alias open=gnome-open
+alias open=xdg-open
+alias o=open
 
 alias py=python
 alias py3=python3
@@ -109,26 +94,9 @@ doxygen() { if [ $# = 0 ] ; then doxygen Doxyfile ; else doxygen "$@" ; fi }
 alias rmd=rmdust
 alias rmdr='rmdust -r'
 
-via-o2on() {
-    o2on_port=8020
-    command="$1"
-    shift
-    if lsof -i:$o2on_port | grep -iq 'o\(py\)\?2on' ; then
-        env http_proxy=http://localhost:$o2on_port "$command" "$@"
-    else
-        "$command" "$@"
-    fi
-}
-2ch-get(){ via-o2on `which -p 2ch-get` "$@" }
-2ch-browse(){ via-o2on `which -p 2ch-browse` "$@" }
-alias ch=2ch-browse
-alias chn='2ch-browse -n'
-alias chg='2ch-get -d'
-alias chgn='2ch-get -d -n'
-alias chgq='2ch-get -q'
-alias chf=2ch-format
-alias chp=2ch-post
-alias chu=2ch-utils
+firefox-() { tof "$@" firefox -- {} ; }
+vim-()     { tof "$@" vim     -- {} ; }
+view-()    { tof "$@" view    -- {} ; }
 
 ## the prompt is same to the man's one
 export LESS='-r -j10 -P \ ?f%f:Standerd Input\.. ?lmline %lm:.?L/%L. ?PB%PB\%:. (press h for help or q to quit)\ \'

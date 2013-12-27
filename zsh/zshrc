@@ -1,10 +1,13 @@
 #!/usr/bin/zsh
 
-HISTSIZE=100000000 # 保存する量
+HISTSIZE=100000000
 SAVEHIST=100000000
-HISTFILE=$HOME/var/history/zsh # 保存先の指定(必須,しなければ履歴は遺棄)
+HISTFILE=$HOME/var/history/zsh # if not specified, histories are discarded
 
 bindkey -e # keybinding is emacs-like
+bindkey '^R' history-incremental-pattern-search-backward
+bindkey '^S' history-incremental-pattern-search-forward
+
 setopt append_history # 複数の zsh を同時に使う時など history ファイルに上書きせず追加する
 setopt hist_ignore_space # スペースから始まる行は追加しない
 setopt hist_ignore_all_dups # 同じコマンドラインはヒストリに追加しない
@@ -34,16 +37,12 @@ TIMEFMT="\
     The  CPU percentage.              :%P"
 
 
-source ~/share/sh/environment
 source ~/share/sh/aliases
-source ~/share/sh/commands
-source ~/share/zsh/completion.zsh
+source ~/share/zsh/aliases.zsh
+source ~/share/zsh/completion.zsh # slow (2nd)
 source ~/share/zsh/auto-fu.zsh
-source ~/share/zsh/antigen.zsh
+source ~/share/zsh/antigen.zsh # slow (1st)
 
-
-# 初期位置は~/tmp
-if [ -z "$ZSH_MOVED_TO_TMP" ] ; then
-    export ZSH_MOVED_TO_TMP=t
-    [ -e ~/tmp ] && [ `pwd` = `cd && pwd` ] && cd ~/tmp
-fi
+# start at ~/tmp
+[ "$PWD" = "$HOME" -a -e ~/tmp ] && cd ~/tmp
+tmp() { cd ~/tmp ; }

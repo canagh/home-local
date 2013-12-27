@@ -1,6 +1,7 @@
 #!/usr/bin/zsh
 
 # user completions
+local ZSH_USER_FPATH
 ZSH_USER_FPATH=($HOME/share/zsh/completion $HOME/lib/2ch-tools/completion)
 fpath=($ZSH_USER_FPATH $fpath)
 function() {
@@ -12,7 +13,6 @@ function() {
 
 # init
 autoload -U compinit ; compinit -u
-
 
 # utility functions
 function 'reload/c'() {
@@ -28,6 +28,8 @@ function 'del/cc'() {
     del ~/.zcompdump
     compinit
 }
+
+# styles
 
 zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' verbose yes

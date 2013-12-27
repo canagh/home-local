@@ -1,11 +1,13 @@
 #!/bin/sh
 
+error() { echo `basename "$0"`: error: "$@" >&2 ; }
+abort() { error "$@" && exit 1 ; }
 with_log() { echo "$@" ; "$@" ; }
 link() {
     if echo $1 | grep -q '~$' ; then return ; fi
     if [ -e $2 ] ; then
         if [ `realpath $1` != `realpath $2` ] ; then
-            echo `basename $0`: error: link $1 $2: file $2 exists \(and it isnt $1\) 1>&2
+            error `basename $0`: error: link $1 $2: file $2 exists \(and it isnt $1\)
         fi
     else
         with_log ln -sT `realpath $1` $2
@@ -17,13 +19,12 @@ dot_link_base() { for f in $@ ; do link $f ~/.`basename $f` ; done ; }
 dot_mkdir()     { for f in $@ ; do [ -d ~/.$f ] || with_log mkdir ~/.$f ; done ; }
 
 cd $(dirname "$0")
+which realpath >/dev/null || abort realpath\(1\) not found
 
+dot_link sh/environment zshenv
 dot_link_base zsh/zshrc
 dot_link_base zsh/zlogin
 dot_link_base zsh/zlogout
-
-dot_link_base profile
-dot_link_base gnomerc
 
 dot_mkdir vim
 dot_link_base vim/vimrc
