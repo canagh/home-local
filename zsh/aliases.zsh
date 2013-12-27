@@ -181,7 +181,7 @@ diary() {
     if [[ $# == 0 ]] ; then
         name=`date +%Y/%m/%d`.md
     elif [[ $# == 1 ]] ; then
-        [[ "$1" =~ [^a-z/] ]] && return 1
+        [[ "$1" =~ [^0-9/] ]] && return 1
         case "$1" in
             ????/??/?? ) name=$1.md ;;
                  ??/?? ) name=`date +%Y`/$1.md ;;
