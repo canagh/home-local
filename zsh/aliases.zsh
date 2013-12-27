@@ -194,3 +194,10 @@ diary() {
     $run $prefix/$name
 }
 
+cabal-run() {
+    local name
+    name="`basename "$PWD"`"
+    # check
+    [[ "$name".cabal == "`echo *.cabal`" ]] || exit 1
+    ./dist/build/"$name"/"$name" "$@"
+}
