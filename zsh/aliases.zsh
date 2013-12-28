@@ -179,19 +179,16 @@ diary() {
     run=$VISUAL
     case "$1" in -p | --path ) run=echo ; shift ;; esac
     if [[ $# == 0 ]] ; then
-        name=`date +%Y/%m/%d`.md
-    elif [[ $# == 1 ]] ; then
-        [[ "$1" =~ [^0-9/] ]] && return 1
+        name=`date +%Y/%m/%d`
+    elif [[ $# == 1 ]] && [[ "$1" =~ [^0-9/] ]] ; then
         case "$1" in
-            ????/??/?? ) name=$1.md ;;
-                 ??/?? ) name=`date +%Y`/$1.md ;;
-                    ?? ) name=`date +%Y/%m`/$1.md ;;
-            * ) return 1 ;;
+            ????/??/?? ) name=$1 ;;
+                 ??/?? ) name=`date +%Y`/$1 ;;
+                    ?? ) name=`date +%Y/%m`/$1 ;;
         esac
-    else
-        return 1
     fi
-    $run $prefix/$name
+    [ ! "$name" ] && name=`date +%Y/%m/%d -d "$*"`
+    $run $prefix/$name.md
 }
 
 cabal-run() {

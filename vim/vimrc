@@ -176,7 +176,9 @@ NeoBundleLazy 'kana/vim-smartchr',      { "autoload" : { "filetypes" : [ "cpp", 
 
 " haskell
 NeoBundleLazy 'ujihisa/neco-ghc',            { "autoload" : { "filetypes" : [ "haskell" ] } }
-NeoBundleLazy 'lukerandall/haskellmode-vim', { "autoload" : { "filetypes" : [ "haskell" ] } }
+NeoBundleLazy 'lukerandall/haskellmode-vim', { "autoload" : { "filetypes" : [ "haskell" ] } } " {{{
+let g:haddock_browser='firefox'
+" }}}
 NeoBundleLazy 'eagletmt/ghcmod-vim',         { "autoload" : { "filetypes" : [ "haskell" ] } }
 NeoBundleLazy 'bitc/vim-hdevtools',          { "autoload" : { "filetypes" : [ "haskell" ] } }
 NeoBundleLazy 'eagletmt/unite-haddock',      { "autoload" : { "filetypes" : [ "haskell" ] } }

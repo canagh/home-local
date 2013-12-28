@@ -12,8 +12,6 @@ setl autoindent
 setl nosmartindent
 setl cindent
 
-" haskellmode-vim
-let g:haddock_browser='firefox'
 " neco-ghc
 let g:necoghc_enable_detailed_browse = 1
 " unite-haddock
