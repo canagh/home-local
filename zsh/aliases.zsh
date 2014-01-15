@@ -165,28 +165,16 @@ bggl() { $BROWSER `google     "$@"` }
 hide()   { local i ; for i in "$@" ; do mv "$i" "$i".hidden ; done }
 unhide() { local i ; for i in "$@" ; do mv "$i".hidden "$i" ; done }
 
-new-post()  { (cd ~/work/public/blog ; rake new_post) }
-edit-post() {
+BLOG_DIR=$HOME/work/public/blog
+blog-do() { (cd $BLOG_DIR ; "$@" ) }
+new-post()  { blog-do rake new_post }
+edit-post() { (
+    cd $BLOG_DIR
     local prefix file
-    prefix=~/work/public/blog/source/_posts
+    prefix=source/_posts
     file="`ls $prefix | canything`"
-    [ "$file" ] && $VISUAL $prefix/$file
-}
+    [ -f "$prefix/$file" ] && $VISUAL $prefix/$file
+) }
+blog-preview() { blog-do rake preview }
 
-diary() {
-    local run prefix name
-    prefix=~/var/diary
-    run=$VISUAL
-    case "$1" in -p | --path ) run=echo ; shift ;; esac
-    if [[ $# == 0 ]] ; then
-        name=`date +%Y/%m/%d`
-    elif [[ $# == 1 ]] && [[ "$1" =~ [^0-9/] ]] ; then
-        case "$1" in
-            ????/??/?? ) name=$1 ;;
-                 ??/?? ) name=`date +%Y`/$1 ;;
-                    ?? ) name=`date +%Y/%m`/$1 ;;
-        esac
-    fi
-    [ ! "$name" ] && name=`date +%Y/%m/%d -d "$*"`
-    $run $prefix/$name.md
-}
+export DIAR_DIR=$HOME/var/diary
