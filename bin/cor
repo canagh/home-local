@@ -1,0 +1,130 @@
+#!/usr/bin/python3
+
+import os
+
+def backup(dirpath, filename):
+    return filename.endswith('~')
+def empty_file(dirpath, filename):
+    return os.path.getsize(os.path.join(dirpath, filename)) == 0
+def vim_swap(dirpath, filename):
+    return (filename.endswith('.swp') or
+            filename.endswith('.swo') or
+            filename.endswith('.swn'))
+def emacs_swap(dirpath, filename):
+    return filename.startswith('#') and filename.endswith('#')
+def python_compiled(dirpath, filename):
+    return filename.endswith('.pyc')
+
+def find_string(dirpath, filename, arg):
+    return filename.find(arg) != -1
+def start_with(dirpath, filename, arg):
+    return filename.startswith(arg)
+def end_with(dirpath, filename, arg):
+    return filename.endswith(arg)
+def const_false(dirpath, filename):
+    return False
+
+def default(object, name, value):
+    # if you set it None, overwritten with the value
+    if getattr(object, name) is None:
+        setattr(object, name, value)
+def last(x):
+    return x[len(x) - 1]
+
+import argparse
+class PredAction(argparse.Action):
+    def __init__(self, option_strings, dest, strong=True,
+            nargs=0, required=False, help=None, metavar=None):
+        super().__init__(
+                option_strings=option_strings,
+                dest='predss',
+                const=(globals()[dest] if isinstance(dest, str) else dest),
+                nargs=nargs,
+                required=required,
+                help=help,
+                metavar=metavar)
+        self.strong = strong
+    def __call__(self, parser, namespace, values, option_string=None):
+        default(namespace, self.dest, [[]])
+        last(getattr(namespace, self.dest)).append(
+                lambda a, b : self.const(a, b, *values))
+        namespace.strong = getattr(namespace, 'strong', False) or self.strong
+
+class OrAction(argparse.Action):
+    def __init__(self, option_strings, dest=None,
+            required=False, help=None, metavar=None):
+        super().__init__(
+                option_strings=option_strings,
+                dest='predss',
+                nargs=0,
+                required=required,
+                help=help,
+                metavar=metavar)
+    def __call__(self, parser, namespace, values, option_string=None):
+        default(namespace, self.dest, [[]])
+        predss = getattr(namespace, self.dest)
+        if len(last(predss)) == 0 or not getattr(namespace, 'strong'):
+            raise argparse.ArgumentError(self, "invalid position")
+        predss.append([])
+
+
+parser = argparse.ArgumentParser(description='remove some files safely')
+# arguments
+parser.add_argument('dirs', nargs='*')
+# predicates
+parser.add_argument('-b', '--backup', action=PredAction)
+parser.add_argument('-e', '--empty-file', action=PredAction)
+parser.add_argument('-V', '--vim-swap', action=PredAction)
+parser.add_argument('-E', '--emacs-swap', action=PredAction)
+parser.add_argument('--python-compiled', '--pyc', action=PredAction)
+parser.add_argument('--find-string', '--fs', nargs=1, metavar='STRING', action=PredAction, strong=False)
+parser.add_argument('--start-with', '--sw', nargs=1, metavar='STRING', action=PredAction, strong=False)
+parser.add_argument('--end-with', '--ew', nargs=1, metavar='STRING', action=PredAction, strong=False)
+# operators
+parser.add_argument('-o', '--or', action=OrAction, dest='preds')
+# options
+parser.add_argument('-r', '--recursive', action='store_const', const=True)
+parser.add_argument('-s', '--simulate', action='store_const', const=True)
+
+args = parser.parse_args()
+if len(args.dirs) == 0: args.dirs = ['.']
+if args.predss is None:
+    args.predss = [[backup]]
+else:
+    if len(last(args.predss)) == 0 or not getattr(args, 'strong', False):
+        parser.error('invalid predicates')
+
+
+def test_file(dirpath, filename):
+    for preds in args.predss:
+        for pred in preds:
+            try:
+                if not pred(dirpath, filename): break
+            except: break
+        else: return True
+    else: return False
+def action_file(dirpath, filename):
+    p = os.path.join(dirpath, filename)
+    print(p)
+    if not args.simulate:
+        trash = os.environ.get('TRASH_COMMAND')
+        if trash == '':
+            os.remove(p)
+        elif trash is None:
+            # TODO: find 'trash-put' or 'rmtrash', and use them
+            os.remove(p)
+        else:
+            import subprocess
+            subprocess.check_call([trash, p])
+
+for d in args.dirs:
+    if args.recursive:
+        for dirpath, dirnames, filenames in os.walk(d, topdown=False):
+            for filename in filenames:
+                if test_file(dirpath, filename):
+                    action_file(dirpath, filename)
+    else:
+        for item in os.listdir(d):
+            if not os.path.isdir(item):
+                if test_file(d, item):
+                    action_file(d, item)
