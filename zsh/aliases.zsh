@@ -178,3 +178,11 @@ edit-post() { (
 blog-preview() { blog-do rake preview }
 
 export DIAR_DIR=$HOME/var/diary
+
+fgl() {
+    ghc -e 'import Data.Graph.Inductive' \
+        -e 'import Data.Graph.Inductive.Example' \
+        -e 'import Data.Graph.Inductive.Graphviz' \
+        -e "let graphviz'' :: (Graph g, Show a, Show b) => g a b -> IO () ; graphviz'' = putStrLn . (\ x -> graphviz x \"\" (0,0) (0,0) Portrait) in graphviz'' (""$*"\) \
+    | dot -Tpng | tof -epng qiv
+}
