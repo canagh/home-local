@@ -1,37 +1,20 @@
-#!/bin/sh
+#!/usr/bin/python3
 
-help() {
-    echo Usage: `basename "$0"` SOURCE DEST...
-}
-error() {
-    echo `basename "$0"`: $@ >&2
-}
+import argparse
 
-OPTS=$(getopt -n "$(basename $0)" -o h\? -l help -- "$@")
-[ $? -ne 0 ] && exit 1
-eval set -- "$OPTS"
+parser = argparse.ArgumentParser()
+parser.add_argument('files', metavar='FILE', nargs='+')
+parser.add_argument('format', metavar='FORMAT')
+args = parser.parse_args()
 
-while [ "$1" != -- ] ; do
-    case "$1" in
-        -h | -\? | --help ) help ; exit ;;
-        -- ) break ;;
-        * ) error unknown argument: "$1" ; exit 1 ;;
-    esac
-    shift
-done
-shift
+import os
 
-if [ $# -lt 2 ] ; then
-    help >&2
-    exit 1
-fi
-src="$1"
-shift
+def aformat(fmt, x):
+    if fmt.find('{}') != -1:
+        fmt.replace('{}',x)
+    if fmt.startswith('.'):
+        return x + fmt
 
-dir="`dirname "$src"`"
-
-# -T, --no-target-directory -- treat DEST as a normal file
-while [ $# != 1 ] ; do
-    cp -T "$src" "$dir"/"$1"
-done
-mv -T "$src" "$dir"/"$1"
+for fileh in args.files:
+    dirn, basen = os.path.split(fileh)
+    os.rename(fileh, os.path.join(dirn, aformat(args.format, basen)))
