@@ -143,6 +143,11 @@ nnoremap <Leader>y/ :YRSearch<Space>
 "NeoBundle 'desert256.vim'
 NeoBundle 'w0ng/vim-hybrid'
 
+NeoBundleLazy 'tyru/open-browser.vim', { 'autoload': { 'mappings': '<Plug>(openbrowser-' } } " {{{
+let g:netrw_nogx = 1 " disable netrw's gx mapping.
+nmap gx <Plug>(openbrowser-smart-search)
+vmap gx <Plug>(openbrowser-smart-search)
+" }}}
 NeoBundle 'sudo.vim'
 NeoBundle 'tyru/autochmodx.vim' " {{{
 let g:autochmodx_scriptish_file_patterns = [ '\c.*\.sh$' ]
