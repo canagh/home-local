@@ -11,9 +11,10 @@ import os
 
 def aformat(fmt, x):
     if fmt.find('{}') != -1:
-        fmt.replace('{}',x)
+        return fmt.replace('{}',x)
     if fmt.startswith('.'):
         return x + fmt
+    return fmt
 
 for fileh in args.files:
     dirn, basen = os.path.split(fileh)
