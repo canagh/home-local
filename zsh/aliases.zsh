@@ -186,3 +186,5 @@ fgl() {
         -e "let graphviz'' :: (Graph g, Show a, Show b) => g a b -> IO () ; graphviz'' = putStrLn . (\ x -> graphviz x \"\" (0,0) (0,0) Portrait) in graphviz'' (""$*"\) \
     | dot -Tpng | tof -epng qiv
 }
+
+locu() { locate "$@" | grep --color=never ^/usr/ ; }
