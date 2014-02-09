@@ -188,3 +188,7 @@ fgl() {
 }
 
 locu() { locate "$@" | grep --color=never ^/usr/ ; }
+
+# to develop
+cabal-configure() { cabal configure --enable-test --disable-library-prof --disable-executable-prof "$@" }
+cabal-rebuild() { cabal clean ; cabal-configure "$@" ; cabal build }
