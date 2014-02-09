@@ -130,7 +130,10 @@ let g:indent_guides_guide_size=1
 "NeoBundle 'cohama/vim-insert-linenr'
 
 NeoBundle 'thinca/vim-quickrun' " {{{
-let g:quickrun_config={}
+let g:quickrun_config = {}
+NeoBundle "osyo-manga/shabadou.vim"
+NeoBundle "jceb/vim-hier"
+NeoBundle "dannyob/quickfixstatus"
 " }}}
 
 NeoBundle 'YankRing.vim' " {{{
@@ -156,12 +159,16 @@ let g:autochmodx_no_CursorHold_autocmd = 1
 
 NeoBundle 'rkitover/vimpager'
 
+" syntax checker
 " syntastic {{{
 NeoBundle "scrooloose/syntastic", {
 \   "build": {
 \       "mac" : ["pip install flake8", "npm -g install coffeelint"],
 \       "unix": ["pip install flake8", "npm -g install coffeelint"],
 \   },
+\ }
+let g:syntastic_mode_map = { 'mode': 'active',
+\    'passive_filetypes': ['haskell'],
 \ }
 " }}}
 

@@ -13,8 +13,12 @@ setl nosmartindent
 setl cindent
 
 " neco-ghc
-let g:necoghc_enable_detailed_browse = 1
+let b:necoghc_enable_detailed_browse = 1
 " unite-haddock
-let g:unite_source_haddock_browser = 'firefox'
+let b:unite_source_haddock_browser = 'firefox'
 " vim2hs
-let g:haskell_conceal_enumerations = 0
+let b:haskell_conceal_enumerations = 0
+
+" ghc-mod
+nmap <buffer> <Leader>ff :<C-u>GhcModType<CR>
+autocmd BufWritePost *.hs GhcModCheckAndLintAsync
