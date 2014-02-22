@@ -1,74 +1,23 @@
 #!/usr/bin/zsh
 
-# http://qiita.com/mollifier/items/14bbea7503910300b3ba
-function zman() {
+ zman() {
+    # http://qiita.com/mollifier/items/14bbea7503910300b3ba
     PAGER="less -g -s '+/^       "$1"'" man zshall
 }
-
-function zcompile-all() {
-    rmdust -r ~/.antigen ~/share/{z,}sh
-    for f in ~/.zsh{env,rc} ~/.z{profile,log{in,out}} ~/.antigen/**/* ~/share/{z,}sh/**/* ; do
-        zcompile "$f" && echo zcompile \""$f"\"
-    done
-}
-
-function zcompile-all-del() {
-    updatedb.home
-    locate.home .zwc | grep \\.zwc$ | xargs -d \\n del
-}
-
-via-o2on() {
-    o2on_port=8020
-    command="$1"
-    shift
-    if lsof -i:$o2on_port | grep -iq 'o\(py\)\?2on' ; then
-        env http_proxy=http://localhost:$o2on_port "$command" "$@"
-    else
-        "$command" "$@"
-    fi
-}
-alias    '2ch-get'='via-o2on `which -p 2ch-get`'
-alias '2ch-browse'='via-o2on `which -p 2ch-browse`'
-alias ch=2ch-browse
-alias chn='2ch-browse -n'
-alias chg='2ch-get -d'
-alias chgn='2ch-get -d -n'
-alias chgq='2ch-get -q'
-alias chf=2ch-format
-alias chp=2ch-post
-alias chu=2ch-utils
-
-vimrc() { $VISUAL ~/.vimrc ; }
-
-alias fd="env ANSICOLOR=1 fd"
-hsenv-activate() { . ${@:-$PWD}/.hsenv/bin/activate }
-
-alias talk='ojtalk -vname mei_normal'
-alias talk-angry='ojtalk -vname mei_angry'
-alias talk-bashful='ojtalk -vname mei_bashful'
-alias talk-happy='ojtalk -vname mei_happy'
-alias talk-sad='ojtalk -vname mei_sad'
 
 alias notify='notify-send -i terminal'
 
 alias gitignored='git ls-files -o -i --exclude-standard'
 
-gosh() {
-    if [ $# -eq 0 ] && which gosh-rl >/dev/null ; then
-        gosh-rl "$@" # gosh-rl do not recognize the options
-    elif which rlwrap >/dev/null ; then
-        rlwrap -pBLUE gosh "$@"
-    else
-        gosh "$@"
-    fi
-}
-
+# vim
+vimrc() { $VISUAL ~/.vimrc ; }
 vf() {
     vim -c 'au FileType vimfiler nnoremap <buffer> q :<C-u>quit<CR>' \
         -c 'au FileType vimfiler nnoremap <buffer> Q :<C-u>quit<CR>' \
         -c ':VimFiler -status '"$*"
 }
 
+# locate(1)
 MLOCATE_HOME_DB=$HOME/var/home.mlocate.db
 updatedb-home() {
 	updatedb --database-root $HOME --output $MLOCATE_HOME_DB --require-visibility 0 $@
@@ -76,26 +25,9 @@ updatedb-home() {
 locate-home() {
 	locate --database $MLOCATE_HOME_DB $@
 }
+locu() { locate "$@" | grep --color=never ^/usr/ ; }
 
-w3m-Thtml() { w3m -T text/html "$@" }
-
-
-## power management
-alias suspend=pm-suspend
-alias hibernate=pm-hibernate
-alias powersave=pm-powersave
-alias suspend-hybrid=pmsuspend-hybrid
-
-apt-add-japanese-repository() {
-    # https://ubuntulinux.jp/japanese
-    wget -q https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg -O- | apt-key add -
-    wget -q https://www.ubuntulinux.jp/ubuntu-jp-ppa-keyring.gpg -O- | apt-key add -
-    wget https://www.ubuntulinux.jp/sources.list.d/oneiric.list -O /etc/apt/sources.list.d/ubuntu-ja.list
-    apt-get update
-    apt-get upgrade
-    apt-get install ubuntu-desktop-ja
-}
-
+# url
 url_quote() {
     if [ $# = 0 ]
     then echo -n "`cat`"
@@ -157,14 +89,11 @@ nicovideo() {
     [ "$num" ] || error "$type"': wrong format argument: '"$1"
     echo http://www.nicovideo.jp/watch/sm"$num"
 }
-
 bddg() { $BROWSER `duckduckgo "$@"` }
 bwkp() { $BROWSER `wikipedia  "$@"` }
 bggl() { $BROWSER `google     "$@"` }
 
-hide()   { local i ; for i in "$@" ; do mv "$i" "$i".hidden ; done }
-unhide() { local i ; for i in "$@" ; do mv "$i".hidden "$i" ; done }
-
+# blog
 BLOG_DIR=$HOME/work/public/blog
 blog-do() { (cd $BLOG_DIR ; "$@" ) }
 new-post()  { blog-do rake new_post }
@@ -177,6 +106,7 @@ edit-post() { (
 ) }
 blog-preview() { blog-do rake preview }
 
+# diar(1)
 export DIAR_DIR=$HOME/var/diary
 export DIAR_DEFAULT_FILE=a.md
 diar-grep() { grep "$@" $DIAR_DIR/**/*.md ; }
@@ -187,16 +117,7 @@ diar-show() { (
     | tof --html -l opera
 ) ; }
 
-fgl() {
-    ghc -e 'import Data.Graph.Inductive' \
-        -e 'import Data.Graph.Inductive.Example' \
-        -e 'import Data.Graph.Inductive.Graphviz' \
-        -e "let graphviz'' :: (Graph g, Show a, Show b) => g a b -> IO () ; graphviz'' = putStrLn . (\ x -> graphviz x \"\" (0,0) (0,0) Portrait) in graphviz'' (""$*"\) \
-    | dot -Tpng | tof -epng qiv
-}
-
-locu() { locate "$@" | grep --color=never ^/usr/ ; }
-
-# to develop
+# haskell
 cabal-configure() { cabal configure --enable-test --disable-library-prof --disable-executable-prof "$@" }
 cabal-rebuild() { cabal clean ; cabal-configure "$@" ; cabal build }
+alias hs=ghci
