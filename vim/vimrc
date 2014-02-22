@@ -188,13 +188,15 @@ NeoBundleLazy 'kana/vim-smartchr',      { "autoload" : { "filetypes" : [ "cpp", 
 
 " haskell
 NeoBundleLazy 'ujihisa/neco-ghc',            { "autoload" : { "filetypes" : [ "haskell" ] } }
-NeoBundleLazy 'lukerandall/haskellmode-vim', { "autoload" : { "filetypes" : [ "haskell" ] } } " {{{
-let g:haddock_browser='firefox'
+"NeoBundleLazy 'lukerandall/haskellmode-vim', { "autoload" : { "filetypes" : [ "haskell" ] } } " {{{
+"let g:haddock_browser='firefox' " this must be here, not after/
 " }}}
 NeoBundleLazy 'eagletmt/ghcmod-vim',         { "autoload" : { "filetypes" : [ "haskell" ] } }
 NeoBundleLazy 'bitc/vim-hdevtools',          { "autoload" : { "filetypes" : [ "haskell" ] } }
 NeoBundleLazy 'eagletmt/unite-haddock',      { "autoload" : { "filetypes" : [ "haskell" ] } }
 NeoBundleLazy 'dag/vim2hs',                  { "autoload" : { "filetypes" : [ "haskell" ] } }
+"NeoBundleLazy 'dan-t/vim-hsimport',          { "autoload" : { "filetypes" : [ "haskell" ] } }
+NeoBundleLazy 'Twinside/vim-haskellFold',    { "autoload" : { "filetypes" : [ "haskell" ] } }
 
 " python
 NeoBundleLazy 'mitechie/pyflakes-pathogen',     { "autoload" : { "filetypes" : [ "python" ] } }

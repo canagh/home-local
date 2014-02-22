@@ -14,11 +14,14 @@ setl cindent
 
 " neco-ghc
 let b:necoghc_enable_detailed_browse = 1
-" unite-haddock
-let b:unite_source_haddock_browser = 'firefox'
 " vim2hs
 let b:haskell_conceal_enumerations = 0
+" unite-haddock
+let b:unite_source_haddock_browser = 'firefox'
+nmap <silent> [unite]d :Unite haddock<CR>
 
 " ghc-mod
-nmap <buffer> <Leader>ff :<C-u>GhcModType<CR>
+nmap <buffer> <Leader>ft :GhcModType<CR>
+nmap <buffer> <Leader>fu :HierUpdate<CR>
+nmap <buffer> <Leader>fc :HierClear<CR>
 autocmd BufWritePost *.hs GhcModCheckAndLintAsync
