@@ -178,6 +178,14 @@ edit-post() { (
 blog-preview() { blog-do rake preview }
 
 export DIAR_DIR=$HOME/var/diary
+export DIAR_DEFAULT_FILE=a.md
+diar-grep() { grep "$@" $DIAR_DIR/**/*.md ; }
+diar-show() { (
+    file="$(diar -pF "$@")"
+    cat "$file" \
+    | pandoc --mathjax --include-in-header=<(echo '<base href="'$(dirname "$file")'/">') \
+    | tof --html -l opera
+) ; }
 
 fgl() {
     ghc -e 'import Data.Graph.Inductive' \

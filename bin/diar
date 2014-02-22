@@ -1,5 +1,11 @@
 #!/usr/bin/python3
 
+import os
+def root_path():
+    return os.environ.get('DIAR_DIR', os.environ['HOME'] + '/.dair')
+def default_file():
+    return os.environ.get('DIAR_DEFAULT_FILE', 'a.txt')
+
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -8,8 +14,8 @@ parser.add_argument('args', metavar='ARG', nargs='*', help='DATE or FILE')
 parser.add_argument('-d', '--date', metavar='DATE')
 # target file
 parser.add_argument('-f', '--file', metavar='FILE')
-parser.add_argument('--diary',
-        action='store_const', const='diary.md', dest='file')
+parser.add_argument('-F', '--default-file',
+        action='store_const', const=default_file(), dest='file')
 # action
 parser.add_argument('-e', '--edit',
         action='store_const', const='edit', dest='action', default='edit')
@@ -49,9 +55,6 @@ for arg in args.args:
 if args.date is None:
     args.date = datetime.date.today()
 
-import os
-def root_path():
-    return os.environ.get('DIAR_DIR', os.environ['HOME'] + '/.dair')
 def day_path(date):
     return root_path() + date.strftime('/%Y/%m/%d')
 def edit_file(path, dir=False):
@@ -65,7 +68,8 @@ def target_path(default=''):
     return day_path(args.date) + '/' + (args.file or default)
 
 actions = {}
-def action_edit() : edit_file(target_path(default='diary.md'), dir=(args.file == ''))
+def action_edit() :
+    edit_file(target_path(default=default_file()), dir=bool(args.file))
 actions['edit'] = action_edit
 def action_print() : print(target_path(default=''))
 actions['print'] = action_print
