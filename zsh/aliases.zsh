@@ -113,7 +113,7 @@ diar-grep() { grep "$@" $DIAR_DIR/**/*.md ; }
 diar-show() { (
     file="$(diar -pF "$@")"
     cat "$file" \
-    | pandoc --mathjax --include-in-header=<(echo '<base href="'$(dirname "$file")'/">') \
+    | pandoc --mathjax --include-in-header=<(echo '<base href="'$file'">') \
     | tof --html -l opera
 ) ; }
 
