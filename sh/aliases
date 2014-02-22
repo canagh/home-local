@@ -53,7 +53,10 @@ alias psax='ps ax'
 alias psaux='ps aux'
 psg() { ps u | head -n 1 ; ps aux | grep "$*" | grep -v -e 'ps aux' -e grep }
 
-alias killa=killall
+alias kl=kill
+alias kl9=kill9
+alias kila=killall
+alias kila9=killall9
 alias kill9='kill -KILL'
 alias killall9='killall -KILL'
 
