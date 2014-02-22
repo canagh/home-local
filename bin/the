@@ -1,0 +1,66 @@
+#!/usr/bin/python3
+
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('name', metavar='NAME')
+parser.add_argument('command', metavar='COMMAND')
+parser.add_argument('args', metavar='ARG', nargs='*')
+# options
+parser.add_argument('-d', '--dir', metavar='PATH', default='.')
+args = parser.parse_args()
+
+import os
+
+import copy
+class Match:
+    def __init__(self, dirpath, filename, typ):
+        self._dir = dirpath
+        self._name = filename
+        self._type = typ
+    def __mul__(self, other):
+        if self._type < other._type:
+            return copy.copy(other)
+        elif self._type > other._type:
+            return copy.copy(self)
+        else:
+            return Match(None, None, self._type)
+
+    def type(self):
+        return self._type
+    def path(self):
+        if self._name is not None:
+            return os.path.join(self._dir, self._name)
+
+    never = 0
+    partial = 1
+    total = 2
+    def none():
+        return Match(None, None, Match.never)
+
+match = Match.none()
+for dirpath, dirnames, filenames in os.walk(args.dir):
+    for filename in filenames:
+        if filename == args.name:
+            typ = Match.total
+        elif filename.find(args.name) != -1:
+            typ = Match.partial
+        else:
+            continue
+        match = match * Match(dirpath, filename, typ)
+        if match.type() == Match.total and match.path() is None:
+            raise ValueError('cannot identify the: ' + args.name)
+
+path = match.path()
+if path is None:
+    raise ValueError('cannot identify the: ' + args.name)
+replaced = False
+for i in range(len(args.args)):
+    if args.args[i] == '{}':
+        args.args[i] = path
+        replaced = True
+else:
+    if not replaced:
+        args.args.append(path)
+
+args.args.insert(0, args.command) # set $0
+os.execvp(args.command, args.args)
