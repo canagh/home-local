@@ -1,2 +1,5 @@
+!keysym Super_L = Muhenkan
+keycode 133 = Muhenkan
+keysym Super_R = Henkan_Mode
 ! for xmonad
 add mod3 = Muhenkan

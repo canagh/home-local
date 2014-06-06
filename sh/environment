@@ -59,6 +59,12 @@ if [ ! "$NVM_DIR" ] ; then
     unset f
 fi
 
+# android
+export ANDROID_HOME=$HOME/lib/adt/sdk
+export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$PATH
+export ANDROID_NDK_HOME=$HOME/lib/adt/ndk
+export PATH=$ANDROID_NDK_HOME:$PATH
+
 # make PATH unique
 if inpath zsh ; then
     export PATH="`zsh -fc 'typeset -U path ; echo $PATH'`"

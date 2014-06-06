@@ -32,6 +32,8 @@ dot_link_path vim/ftplugin
 dot_mkdir vim/after
 dot_link_path vim/after/ftplugin
 
+dot_link emacs emacs.d
+
 dot_link_base X11/*
 # dot_link X11/xinitrc xsession
 

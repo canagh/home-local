@@ -95,15 +95,17 @@ bggl() { $BROWSER `google     "$@"` }
 
 # blog
 BLOG_DIR=$HOME/work/public/blog
-blog-do() { (cd $BLOG_DIR ; "$@" ) }
-new-post()  { blog-do rake new_post }
-edit-post() { (
-    cd $BLOG_DIR
+blog-cd() { cd $BLOG_DIR }
+blog-do() { (blog-cd ; "$@") }
+blog-post-new()  { blog-do rake new_post }
+blog-post-edit() { (
+    blog-cd
     local prefix file
     prefix=source/_posts
-    file="`ls $prefix | canything`"
+    file="`ls -r $prefix | canything`"
     [ -f "$prefix/$file" ] && $VISUAL $prefix/$file
 ) }
+blog-generate() { blog-do rake generate }
 blog-preview() { blog-do rake preview }
 
 # diar(1)
@@ -115,9 +117,41 @@ diar-show() { (
     cat "$file" \
     | pandoc --mathjax --include-in-header=<(echo '<base href="'$file'">') \
     | tof --html -l opera
-) ; }
+) }
+diar-cd() { cd $DIAR_DIR }
+diar-do() { (diar-cd ; "$@") }
+diar-git() { diar-do git "$@" }
+diar-commit() { (
+    diar-cd
+    git add --all .
+    git commit --message "commit via diar-commit(1)"
+) }
 
 # haskell
 cabal-configure() { cabal configure --enable-test --disable-library-prof --disable-executable-prof "$@" }
 cabal-rebuild() { cabal clean ; cabal-configure "$@" ; cabal build }
 alias hs=ghci
+
+# c
+if which ccache >/dev/null ; then
+    export CC='ccache gcc'
+    export CXX='ccache g++'
+fi
+
+# grep-source for c++
+grepp() { grep "$@" **/*.{hc}pp }
+cmake-clean() { rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake } # leave Makefile
+
+try() {
+    case $# in
+        0 ) ./a.out ;;
+        1 ) echo "$1" | ./a.out ;;
+        2 ) diff <(echo "$1" | ./a.out) <(echo "$2") ;;
+        * ) echo try: wrong number of arguments: $# 1>&2
+    esac
+}
+lmcompile() {
+    # compile the file which is modified last
+    # stat: %n filename, %Y modified epoch
+    stat -c '%n	%Y' *.cpp | sort -r -k 2 | head -n 1 | cut -f 1 | xargs g++
+}

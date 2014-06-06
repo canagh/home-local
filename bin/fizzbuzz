@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+
+import argparse
+parser = argparse.ArgumentParser(
+        description='a reference implemantation of fizzbuzz')
+parser.add_argument('-f', '--fizz', metavar='STRING', default='fizz',
+        help="default is `fizz'")
+parser.add_argument('-b', '--buzz', metavar='STRING', default='buzz',
+        help="default is `buzz'")
+parser.add_argument('--fizzbuzz', metavar='STRING')
+parser.add_argument('-l', '--limit', metavar='NUM', type=int)
+parser.add_argument('--100', action='store_const', const=100, dest='limit',
+        help="equivalent to `--limit 100'")
+args = parser.parse_args()
+if args.fizzbuzz is None:
+    args.fizzbuzz = args.fizz + args.buzz
+
+if args.limit is None:
+    import itertools
+    gen = itertools.count()
+else:
+    gen = range(1, args.limit + 1)
+
+for i in gen:
+    if i % 15 == 0:
+        print(args.fizzbuzz)
+    elif i % 5 == 0:
+        print(args.buzz)
+    elif i % 3 == 0:
+        print(args.fizz)
+    else:
+        print(i)

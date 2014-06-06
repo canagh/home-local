@@ -57,19 +57,22 @@ if args.date is None:
 
 def day_path(date):
     return root_path() + date.strftime('/%Y/%m/%d')
-def edit_file(path, dir=False):
+def edit_file(path):
     editor = os.environ.get('VISUAL', os.environ['EDITOR'])
-    dirname = path if dir else os.path.dirname(path)
+    dirname = os.path.dirname(path)
     if not os.path.exists(dirname):
         os.makedirs(dirname)
     import subprocess
     subprocess.call([editor, path])
 def target_path(default=''):
-    return day_path(args.date) + '/' + (args.file or default)
+    name = args.file or default
+    if not (name == '' or name == '/' or name.startswith('/')):
+        name = '/' + name
+    return day_path(args.date) + name
 
 actions = {}
 def action_edit() :
-    edit_file(target_path(default=default_file()), dir=bool(args.file))
+    edit_file(target_path(default=default_file()))
 actions['edit'] = action_edit
 def action_print() : print(target_path(default=''))
 actions['print'] = action_print

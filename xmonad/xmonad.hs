@@ -59,13 +59,14 @@ additionalKeysMod :: XConfig l -> [(KeySym, X ())] -> XConfig l
 additionalKeysMod x = additionalKeys x . map (mapFst ((,) $ modMask x))
 
 additionalKeysModShift :: XConfig l -> [(KeySym, X ())] -> XConfig l
-additionalKeysModShift x = additionalKeys x . map (mapFst ((,) $ (modMask x .|. shiftMask)))
+additionalKeysModShift x = additionalKeys x . map (mapFst ((,) (modMask x .|. shiftMask)))
 
 configureKeys :: XConfig l -> XConfig l
 configureKeys =
     flip additionalKeysMod
         [ (xK_u, runOrRaise "firefox"  (className =? "Firefox"))
-        , (xK_o, runOrRaise "opera"    (className =? "Opera"))
+        , (xK_o, runOrRaise "chromium-browser" (className =? "Chromium-browser"))
+        -- , (xK_o, runOrRaise "opera" (className =? "Opera"))
         , (xK_y, runOrRaise "mikutter" (className =? "Mikutter.rb"))
         , (xK_g, sendMessage ToggleStruts) -- Mod-b: toggle XFCE panel
         , (xK_b, withFocused toggleBorder)
@@ -95,4 +96,4 @@ main = (xmonad =<<)
     . configureBorder
     . configureKeys
     $ desktopConfig
-    { modMask = mod3Mask }
+    { modMask = mod4Mask }

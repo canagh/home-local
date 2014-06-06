@@ -2,6 +2,7 @@ aug vimrc " aug は 遅いらしいので ひとつに
     au!
 aug end
 let mapleader=" "
+let maplocalleader=" "
 
 " neobundle.vim {{{
 " initialize {{{
@@ -168,7 +169,7 @@ NeoBundle "scrooloose/syntastic", {
 \   },
 \ }
 let g:syntastic_mode_map = { 'mode': 'active',
-\    'passive_filetypes': ['haskell'],
+\    'passive_filetypes': ['haskell', 'cpp', 'java'],
 \ }
 " }}}
 
@@ -181,7 +182,9 @@ NeoBundleLazy 'tpope/vim-markdown', { "autoload" : { "filetypes" : [ "markdown" 
 
 " c++
 "NeoBundle 'Rip-Rip/clang_complete'
-NeoBundleLazy 'vim-jp/cpp-vim',         { "autoload" : { "filetypes" : [ "cpp" ] } }
+NeoBundleLazy 'octol/vim-cpp-enhanced-highlight', { "autoload" : { "filetypes" : [ "cpp" ] } } " for c++11
+NeoBundleLazy 'vim-jp/cpp-vim',         { "autoload" : { "filetypes" : [ "cpp" ] } } " for c++11
+" NeoBundleLazy 'cpp.vim',                { "autoload" : { "filetypes" : [ "cpp" ] } } " for stl
 NeoBundleLazy 'vim-scripts/opengl.vim', { "autoload" : { "filetypes" : [ "cpp", "c" ] } }
 NeoBundleLazy 'kana/vim-smartchr',      { "autoload" : { "filetypes" : [ "cpp", "c" ] } } " 現在 c,cpp でしか使ってない
 " NeoBundleLazy 'kana/vim-smartinput', { 'autoload' : {'insert' : '1'} } " 併用する? http://ac-mopp.blogspot.jp/2013/07/vim-smart-input.html
@@ -218,6 +221,15 @@ NeoBundleLazy 'kchmck/vim-coffee-script', { "autoload" : { "filetypes" : [ "coff
 " haxe
 NeoBundleLazy 'jdonaldson/vaxe', { "autoload" : { "filetypes" : [ "haxe" ] } }
 "NeoBundle 'MarcWeber/vim-haxe'
+
+" idris
+NeoBundleLazy 'idris-hackers/idris-vim', { "autoload" : { "filename_patterns" : "\.idr$" } }
+
+" coq
+NeoBundleLazy 'eagletmt/coqtop-vim', { 'autoload' : { 'commands' : 'CoqStart' }}
+
+" arduino
+NeoBundleLazy "sudar/vim-arduino-syntax", { 'autoload' : { 'filename_patterns' : '\.ino$' } }
 
 " }}}
 

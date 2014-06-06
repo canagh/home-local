@@ -76,6 +76,11 @@ s() {
     sed -e "$src"
 }
 
+alias emacs-nw='emacs -nw'
+alias em=emacs-nw
+alias emacs-x=emacs
+alias emx=emacs-x
+
 alias del=trash-put
 alias open=xdg-open
 alias o=open
@@ -90,9 +95,9 @@ alias py3c=py3compile
 virtualenv.activate() { . ${@:-$PWD}/.virtualenv/bin/activate }
 
 
-alias cmk=cmake
-alias mk=make
-doxygen() { if [ $# = 0 ] ; then doxygen Doxyfile ; else doxygen "$@" ; fi }
+alias cmk='cmake .'
+alias mk='make -j2'
+doxy() { if [ $# = 0 ] ; then doxygen Doxyfile ; else doxygen "$@" ; fi }
 
 alias corr='cor -r'
 
