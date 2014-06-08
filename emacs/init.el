@@ -1,4 +1,7 @@
 ;; package-el
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp"))
+
+;; for emacs 23 http://repo.or.cz/w/emacs.git/blob_plain/1a0a666f941c99882093d7bd08ced15033bc3f0c:/lisp/emacs-lisp/package.el
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))

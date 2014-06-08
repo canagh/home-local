@@ -2,7 +2,7 @@
 
 HISTSIZE=100000000
 SAVEHIST=100000000
-HISTFILE=$HOME/var/history/zsh # if not specified, histories are discarded
+HISTFILE=$HOME/.zsh_history # if not specified, histories are discarded
 
 bindkey -e # keybinding is emacs-like
 bindkey '^R' history-incremental-pattern-search-backward

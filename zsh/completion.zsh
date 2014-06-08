@@ -2,7 +2,7 @@
 
 # user completions
 local ZSH_USER_FPATH
-ZSH_USER_FPATH=($HOME/share/zsh/completion $HOME/lib/2ch-tools/completion)
+ZSH_USER_FPATH=$HOME/share/zsh/completion
 fpath=($ZSH_USER_FPATH $fpath)
 function() {
     local f

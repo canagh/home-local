@@ -10,6 +10,8 @@ alias notify='notify-send -i terminal'
 alias gitignored='git ls-files -o -i --exclude-standard'
 
 # vim
+alias vm=vim
+alias vw=view
 vimrc() { $VISUAL ~/.vimrc ; }
 vf() {
     vim -c 'au FileType vimfiler nnoremap <buffer> q :<C-u>quit<CR>' \

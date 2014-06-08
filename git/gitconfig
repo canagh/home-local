@@ -5,5 +5,3 @@
 	ui = auto
 [core]
 	excludesfile = ~/share/git/gitignore
-[push]
-	default = simple
