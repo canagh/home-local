@@ -134,12 +134,6 @@ cabal-configure() { cabal configure --enable-test --disable-library-prof --disab
 cabal-rebuild() { cabal clean ; cabal-configure "$@" ; cabal build }
 alias hs=ghci
 
-# c
-if which ccache >/dev/null ; then
-    export CC='ccache gcc'
-    export CXX='ccache g++'
-fi
-
 # grep-source for c++
 grepp() { grep "$@" **/*.{hc}pp }
 cmake-clean() { rm -rf CMakeCache.txt CMakeFiles cmake_install.cmake } # leave Makefile

@@ -15,6 +15,12 @@ export PAGER=less
 if   inpath w3m  ; then export BROWSER=w3m
 elif inpath lynx ; then export BROWSER=lynx
 fi
+export CC=gcc
+export CXX=g++
+if which ccache >/dev/null ; then
+    export CC=ccache' '$CC
+    export CXX=ccache' '$CXX
+fi
 
 export PATH="$HOME"/share/bin:"$PATH"
 export PATH="$HOME"/bin:"$PATH"
