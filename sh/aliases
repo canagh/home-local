@@ -42,6 +42,7 @@ alias gf='grep -f'
 alias cpr='cp -r'
 
 alias md=mkdir
+alias mp='mkdir -p'
 alias loc=locate
 alias sq=seq
 

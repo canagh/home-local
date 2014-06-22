@@ -104,7 +104,7 @@ blog-post-edit() { (
     blog-cd
     local prefix file
     prefix=source/_posts
-    file="`ls -r $prefix | canything`"
+    file="`ls -r $prefix | grep -v '~$' | canything`"
     [ -f "$prefix/$file" ] && $VISUAL $prefix/$file
 ) }
 blog-generate() { blog-do rake generate }
