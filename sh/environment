@@ -7,6 +7,7 @@ inpath() { which "$@" >/dev/null 2>&1 ; }
 not() { "$@" ; [ $? != 0 ] ; }
 
 if   inpath vim  ; then export VISUAL=vim
+elif inpath nvim ; then export VISUAL=nvim
 elif inpath vi   ; then export VISUAL=vi
 elif inpath nano ; then export VISUAL=nano
 fi
@@ -17,41 +18,17 @@ elif inpath lynx ; then export BROWSER=lynx
 fi
 export CC=gcc
 export CXX=g++
-if which ccache >/dev/null ; then
-    export CC=ccache' '$CC
-    export CXX=ccache' '$CXX
-fi
 
 export PATH="$HOME"/share/bin:"$PATH"
 export PATH="$HOME"/bin:"$PATH"
 
 # python
 export PYTHONSTARTUP="$HOME"/share/python/startup.py
-## virtualenvwrapper
-#for f in /usr/local/bin/virtualenvwrapper_lazy.sh /usr/local/bin/virtualenvwrapper.sh /usr/bin/virtualenvwrapper_lazy.sh /usr/bin/virtualenvwrapper.sh ; do
-#    if [ -f "$f" ] ; then
-#        source "$f"
-#        break
-#    fi
-#done
-## pythonbrew
-#[[ -s "$HOME/.pythonbrew/etc/bashrc" ]] && source "$HOME/.pythonbrew/etc/bashrc"
-## pythonz
-#[[ -s "$HOME/.pythonz/etc/bashrc" ]] && source "$HOME/.pythonz/etc/bashrc"
-
-# ruby
-## rbenv
-if not inpath rbenv ; then
-    f="$HOME"/lib/rbenv/bin
-    if [ -x "$f"/rbenv ] ; then
-        export PATH="$f":"$HOME"/.rbenv/bin:"$PATH"
-        eval "`rbenv init -`"
-    fi
-    unset f
-fi
 
 # haskell
 export PATH="$HOME/.cabal/bin":"$PATH"
+
+eval "$(direnv hook $0)"
 
 # javascript
 ## nvm

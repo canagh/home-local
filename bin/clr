@@ -12,8 +12,14 @@ def vim_swap(dirpath, filename):
             filename.endswith('.swn'))
 def emacs_swap(dirpath, filename):
     return filename.startswith('#') and filename.endswith('#')
+def object(dirpath, filename):
+    return filename.endswith('.o')
 def python_compiled(dirpath, filename):
     return filename.endswith('.pyc')
+def haskell_interface(dirpath, filename):
+    return filename.endswith('.hi')
+def haskell_middle(dirpath, filename):
+    return filename.endswith(('.hi', '.o', '.dyn_o', '.dyn_hi'))
 
 def find_string(dirpath, filename, arg):
     return filename.find(arg) != -1
@@ -76,7 +82,10 @@ parser.add_argument('-b', '--backup', action=PredAction)
 parser.add_argument('-e', '--empty-file', action=PredAction)
 parser.add_argument('-V', '--vim-swap', action=PredAction)
 parser.add_argument('-E', '--emacs-swap', action=PredAction)
+parser.add_argument('--object', '--obj', action=PredAction)
 parser.add_argument('--python-compiled', '--pyc', action=PredAction)
+parser.add_argument('--haskell-interface', '--hi', action=PredAction)
+parser.add_argument('--haskell-middle', '--hs', action=PredAction)
 parser.add_argument('--find-string', '--fs', nargs=1, metavar='STRING', action=PredAction, strong=False)
 parser.add_argument('--start-with', '--sw', nargs=1, metavar='STRING', action=PredAction, strong=False)
 parser.add_argument('--end-with', '--ew', nargs=1, metavar='STRING', action=PredAction, strong=False)

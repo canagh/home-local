@@ -84,3 +84,18 @@ install-dirs global
   -- docdir: $datadir/doc/$pkgid
   -- htmldir: $docdir/html
   -- haddockdir: $htmldir
+
+haddock
+  -- keep-temp-files: False
+  -- hoogle: False
+  -- html: False
+  -- html-location:
+  -- executables: False
+  -- tests: False
+  -- benchmarks: False
+  -- all:
+  -- internal: False
+  -- css:
+  hyperlink-source: True
+  -- hscolour-css:
+  -- contents-location:

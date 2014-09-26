@@ -5,11 +5,6 @@ q()  { "$@"  >/dev/null }
 qe() { "$@" 2>/dev/null }
 qq() { "$@"  >/dev/null 2>&1 }
 
-alias e=echo
-alias en='echo -n'
-
-alias x=exec
-
 alias c=cat
 
 alias cd..='cd ..'
@@ -39,43 +34,16 @@ alias gi='grep -i'
 alias ge='grep -e'
 alias gf='grep -f'
 
-alias cpr='cp -r'
-
 alias md=mkdir
 alias mp='mkdir -p'
 alias loc=locate
-alias sq=seq
-
-alias t=tmux
-
-alias psa='ps a'
-alias psx='ps x'
-alias psax='ps ax'
-alias psaux='ps aux'
-psg() { ps u | head -n 1 ; ps aux | grep "$*" | grep -v -e 'ps aux' -e grep }
-
-alias kl=kill
-alias kl9=kill9
-alias kila=killall
-alias kila9=killall9
-alias kill9='kill -KILL'
-alias killall9='killall -KILL'
-
-alias sudo='sudo -E '
-
-alias pe='perl -pe'
 
 alias ag=apt-get
 alias ac=apt-cache
-alias pm=pacman
 
-s() {
-    while [ $# != 0 ] ; do
-        src="$src"s/`echo -E "$1" | sed -e 's!/!\\/!g'`/"$2"/"$3"\;
-        if [ $# -lt 3 ] ; then shift $# ; else shift 3 ; fi
-    done
-    sed -e "$src"
-}
+alias e=$EDITOR
+alias p=$PAGER
+alias v=view
 
 alias emacs-nw='emacs -nw'
 alias em=emacs-nw
@@ -95,12 +63,44 @@ alias pyc=pycompile
 alias py3c=py3compile
 virtualenv.activate() { . ${@:-$PWD}/.virtualenv/bin/activate }
 
+alias sudo='sudo -E '
+
+alias cpr='cp -r'
+alias t=tmux
+
+alias psa='ps a'
+alias psx='ps x'
+alias psax='ps ax'
+alias psaux='ps aux'
+psg() { ps u | head -n 1 ; ps aux | grep "$*" | grep -v -e 'ps aux' -e grep }
+
+alias kl=kill
+alias kl9=kill9
+alias kila=killall
+alias killa=killall
+alias kila9=killall9
+alias killa9=killall9
+alias kill9='kill -KILL'
+alias killall9='killall -KILL'
+
+alias pe='perl -pe'
+alias pm=pacman
+
+s() {
+    while [ $# != 0 ] ; do
+        src="$src"s/`echo -E "$1" | sed -e 's!/!\\/!g'`/"$2"/"$3"\;
+        if [ $# -lt 3 ] ; then shift $# ; else shift 3 ; fi
+    done
+    sed -e "$src"
+}
+
+alias uzbl=uzbl-tabbed
 
 alias cmk='cmake .'
 alias mk='make -j2'
 doxy() { if [ $# = 0 ] ; then doxygen Doxyfile ; else doxygen "$@" ; fi }
 
-alias corr='cor -r'
+alias clrr='clr -r'
 
 firefox-() { tof "$@" firefox -- {} ; }
 vim-()     { tof "$@" vim     -- {} ; }

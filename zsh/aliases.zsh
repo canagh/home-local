@@ -98,7 +98,7 @@ bggl() { $BROWSER `google     "$@"` }
 # blog
 BLOG_DIR=$HOME/work/public/blog
 blog-cd() { cd $BLOG_DIR }
-blog-do() { (blog-cd ; "$@") }
+blog-do() { (blog-cd ; direnv exec $PWD "$@") }
 blog-post-new()  { blog-do rake new_post }
 blog-post-edit() { (
     blog-cd
@@ -121,12 +121,12 @@ diar-show() { (
     | tof --html -l opera
 ) }
 diar-cd() { cd $DIAR_DIR }
-diar-do() { (diar-cd ; "$@") }
+diar-do() { (diar-cd ; direnv exec $PWD "$@") }
 diar-git() { diar-do git "$@" }
 diar-commit() { (
     diar-cd
-    git add --all .
-    git commit --message "commit via diar-commit(1)"
+    direnv exec $PWD git add --all .
+    direnv exec $PWD git commit --message "commit via diar-commit(1)"
 ) }
 
 # haskell

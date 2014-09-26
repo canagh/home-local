@@ -5,3 +5,5 @@
 	ui = auto
 [core]
 	excludesfile = ~/share/git/gitignore
+[alias]
+	root = !pwd

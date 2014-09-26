@@ -1,7 +1,7 @@
 #!/usr/bin/zsh
 
-HISTSIZE=100000000
-SAVEHIST=100000000
+HISTSIZE=1000000000000
+SAVEHIST=1000000000000
 HISTFILE=$HOME/.zsh_history # if not specified, histories are discarded
 
 bindkey -e # keybinding is emacs-like
@@ -43,6 +43,6 @@ source ~/share/zsh/completion.zsh # slow (2nd)
 source ~/share/zsh/auto-fu.zsh
 source ~/share/zsh/antigen.zsh # slow (1st)
 
-# start at ~/tmp
-[ "$PWD" = "$HOME" -a -e ~/tmp ] && cd ~/tmp
-tmp() { cd ~/tmp ; }
+# start at ~/Desktop
+[ "$PWD" = "$HOME" -a -e ~/Desktop ] && cd ~/Desktop
+ret() { cd ~/Desktop ; }

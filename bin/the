@@ -3,7 +3,7 @@
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('name', metavar='NAME')
-parser.add_argument('command', metavar='COMMAND')
+parser.add_argument('command', metavar='COMMAND', nargs='?')
 parser.add_argument('args', metavar='ARG', nargs='*')
 # options
 parser.add_argument('-d', '--dir', metavar='PATH', default='.')
@@ -62,5 +62,8 @@ else:
     if not replaced:
         args.args.append(path)
 
-args.args.insert(0, args.command) # set $0
-os.execvp(args.command, args.args)
+if args.command is not None:
+    args.args.insert(0, args.command) # set $0
+    os.execvp(args.command, args.args)
+else:
+    print(*args.args)

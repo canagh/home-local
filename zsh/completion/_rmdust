@@ -1,8 +1,0 @@
-#compdef rmdust
-
-_arguments \
-    '(- *)'{-h,--help}'[show help]' \
-    '(-r,--recursive)'{-r,--recursive}'[recursively remove]' \
-    '(-s,--simulate)'{-s,--simulate}'[do not remove]' \
-    '(-m,--method)'{-m,--method}'[specify method]: :(find locate)' \
-    '*: :_dirs'

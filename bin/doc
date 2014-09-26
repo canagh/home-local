@@ -1,0 +1,45 @@
+#!/usr/bin/python3
+
+import os
+import argparse
+
+documents = {}
+
+def haddock(package, *rest):
+    if len(rest) != 0:
+        parser.error(args.kind + ': too many arguments: ' + str(args.args))
+    docdirs = [ os.environ['HOME'] + '/.cabal/share/doc/'
+            , '/usr/share/doc/ghc-doc/'
+            ]
+
+    docs = []
+    for docdir in docdirs:
+        for curdir, dirs, files in os.walk(docdir):
+            if os.path.basename(curdir).startswith(package + '-'):
+                # docs.append(curdir)
+                # TODO: make smart
+                for x in os.walk(curdir):
+                    if 'index.html' in x[2]:
+                        docs.append(x[0] + '/index.html')
+    if len(docs) == 0:
+        parser.error(args.kind + ': no such package: ' + package)
+    else:
+        docs.sort(reverse=True)
+        for doc in docs:
+            os.execlp(args.open, args.open, doc)
+    pass
+
+documents['haddock'] = haddock
+documents['haskell'] = haddock
+documents['cabal']   = haddock
+documents['hs']      = haddock
+
+parser = argparse.ArgumentParser()
+parser.add_argument('kind', choices=list(documents.keys()))
+parser.add_argument('args', nargs='+')
+parser.add_argument('-o', '--open', default='xdg-open')
+parser.add_argument('--echo', action='store_const', const='echo', dest='open')
+args = parser.parse_args()
+
+
+documents[args.kind](*args.args)

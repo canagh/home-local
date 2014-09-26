@@ -19,3 +19,8 @@ else:
     import atexit
     atexit.register(readline.write_history_file, histfile)
     del histfile
+
+import argparse
+import subprocess
+import re
+import random

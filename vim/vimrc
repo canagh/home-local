@@ -85,26 +85,51 @@ let g:airline_section_z = '%3p%% %{g:airline_symbols.linenr} %3l:%3c'
 " }}}
 
 " neocomplcache {{{
-
-NeoBundleLazy 'Shougo/neocomplcache', { 'autoload' : {'insert' : '1'} } " {{{
-let g:neocomplcache_enable_at_startup = 1
-" Enable omni completion. Not required if they are already set elsewhere in .vimrc
-au vimrc FileType css           setl omnifunc=csscomplete#CompleteCSS
-au vimrc FileType html,markdown setl omnifunc=htmlcomplete#CompleteTags
-au vimrc FileType javascript    setl omnifunc=javascriptcomplete#CompleteJS
+NeoBundleLazy (has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'), { 'autoload' : {'insert' : '1'} } " {{{
+if neobundle#is_installed('neocomplete')
+    " for neocomplete
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_ignore_case = 1
+    let g:neocomplete#enable_smart_case = 1
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns._ = '\h\w*'
+elseif neobundle#is_installed('neocomplcache')
+    " for neocomplcache
+    let g:neocomplcache_enable_at_startup = 1
+    let g:neocomplcache_enable_ignore_case = 1
+    let g:neocomplcache_enable_smart_case = 1
+    if !exists('g:neocomplcache_keyword_patterns')
+        let g:neocomplcache_keyword_patterns = {}
+    endif
+    let g:neocomplcache_keyword_patterns._ = '\h\w*'
+    let g:neocomplcache_enable_camel_case_completion = 1
+    let g:neocomplcache_enable_underbar_completion = 1
+endif
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 " }}}
 
 NeoBundleLazy 'Shougo/neosnippet',    { 'autoload' : {'insert' : '1'} } " {{{
+NeoBundleLazy 'Shougo/neosnippet-snippets', { 'autoload' : {'insert' : '1'} }
 " Plugin key-mappings.
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
 " SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible( ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
 " For snippet_complete marker.
 if has('conceal')
-    set conceallevel=2 concealcursor=i
+  set conceallevel=2 concealcursor=i
 endif
+" user defined snippets
+let g:neosnippet#snippets_directory = '~/.vim/snippets/'
 " }}}
 
 NeoBundleLazy 'ujihisa/neco-look',    { 'autoload' : {'insert' : '1'} }
@@ -137,10 +162,10 @@ NeoBundle "jceb/vim-hier"
 NeoBundle "dannyob/quickfixstatus"
 " }}}
 
-NeoBundle 'YankRing.vim' " {{{
-let g:yankring_history_dir = '$HOME/.vim'
-nnoremap <silent> <Leader>yu :YRShow<CR>
-nnoremap <Leader>y/ :YRSearch<Space>
+"NeoBundle 'YankRing.vim' " {{{
+"let g:yankring_history_dir = '$HOME/.vim'
+"nnoremap <silent> <Leader>yu :YRShow<CR>
+"nnoremap <Leader>y/ :YRSearch<Space>
 " }}}
 
 " colorscheme
@@ -287,8 +312,13 @@ hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=white
 match ZenkakuSpace /　/
 "}}}
 
-" Q で :q
-nnoremap <silent> Q :<C-u>quit<CR>
+" swap ; :
+nnoremap <silent> ; :
+nnoremap <silent> : ;
+nnoremap <silent> ;; :<C-P><CR>
+
+" visual and star
+vnoremap * "zy:let @/ = @z<CR>n
 
 " colorscheme {{{
 set t_Co=256
