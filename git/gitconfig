@@ -1,9 +1,9 @@
 [user]
 	name = solorabbit
 	email = cn_amb@yahoo.co.jp
+[core]
+        excludesfile = ~/share/git/gitignore
 [color]
 	ui = auto
-[core]
-	excludesfile = ~/share/git/gitignore
 [alias]
 	root = !pwd

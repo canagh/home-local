@@ -7,8 +7,6 @@
 
 alias notify='notify-send -i terminal'
 
-alias gitignored='git ls-files -o -i --exclude-standard'
-
 # vim
 alias vm=vim
 alias vw=view

@@ -22,4 +22,6 @@
 
 
 # temporary directory
-/tmp/
+tmp/
+,/
+,*

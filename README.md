@@ -1,12 +1,5 @@
-# ~/share
-$HOME の内容物で share できるもの
-
-## how to use
-```shellscript
-    git clone git@github.com:solorab/home.git ~/share
-    cd ~/share
-    ./deploy.sh
-```
+# $HOME
+dotfilesとか
 
 ## license
 *MIT License*
