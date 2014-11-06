@@ -166,6 +166,9 @@ NeoBundle 'rkitover/vimpager'
 
 NeoBundle 'solorab/cpl.vim'
 
+NeoBundle 'glidenote/octoeditor.vim'
+let g:octopress_path = '~/local/blog'
+
 " syntax checker
 " " syntastic {{{
 " NeoBundle "scrooloose/syntastic", {
