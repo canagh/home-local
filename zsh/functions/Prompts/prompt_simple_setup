@@ -1,0 +1,10 @@
+# Very simple prompt
+prompt_simple_setup () {
+    PROMPT="%{%(?.${fg[blue]}.${fg[red]})%}%(!.#.$)%{$reset_color%} "
+    PROMPT2="%{%(?.${fg[blue]}.${fg[red]})%}%>%{$reset_color%} "
+    RPROMPT="%{$fg[green]%}%~%{$reset_color%}"
+
+    prompt_opts=( cr percent )
+}
+
+prompt_simple_setup "$@"

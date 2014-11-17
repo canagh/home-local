@@ -165,6 +165,7 @@ let g:autochmodx_no_CursorHold_autocmd = 1
 NeoBundle 'rkitover/vimpager'
 
 NeoBundle 'solorab/cpl.vim'
+NeoBundle 'wting/rust.vim'
 
 NeoBundle 'glidenote/octoeditor.vim'
 let g:octopress_path = '~/local/blog'
