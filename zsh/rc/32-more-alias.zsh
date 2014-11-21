@@ -8,3 +8,5 @@ alias hs=ghci
 alias py=python
 alias py2=python2
 alias py3=python3
+
+alias clrr='clr r'
