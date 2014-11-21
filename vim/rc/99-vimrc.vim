@@ -10,7 +10,7 @@ set smartindent
 set expandtab
 set shiftwidth=4
 
-set relativenumber "相対行表示
+set relativenumber
 au vimrc CursorMoved,CursorMovedI,WinLeave * setl nocursorline
 au vimrc CursorHold,CursorHoldI            * setl cursorline
 au vimrc CursorMoved,CursorMovedI,WinLeave * setl nocursorcolumn
@@ -29,23 +29,24 @@ if has('persistent_undo')
     set undofile
 endif " }}}
 
-set history=128
+set history=256
 
-set hlsearch " highlightする
-set incsearch " incremental検索
-" 大文字を混ぜて検索した場合だけ大文字/小文字を区別する
+set hlsearch
+set incsearch
 set ignorecase
 set smartcase
 
-" 日本語に対応 UTF-8を使う {{{
+set conceallevel=0
+
+" japanese, use UTF-8 {{{
 set fileencodings=utf-8,euc-jp,cp932,iso-2022-jp
 set fileformats=unix,dos,mac
 setl fenc=utf-8
 setl ff=unix
 " }}}
 
-" 空白文字の表示 {{{
-set listchars=trail:_,tab:>\ 
+" show space characters {{{
+set listchars=trail:_,tab:>\  "
 hi ZenkakuSpace cterm=underline ctermfg=lightblue guibg=white
 match ZenkakuSpace /　/
 "}}}
@@ -59,8 +60,10 @@ nnoremap <silent> ;; :<C-P><CR>
 vnoremap * "zy:let @/ = @z<CR>n
 
 " colorscheme {{{
-set t_Co=256
-set background=light
-let g:hybrid_use_Xresources = 1
-colorscheme hybrid
+if has('unix')
+    set t_Co=256
+    set background=light
+    let g:hybrid_use_Xresources = 1
+    colorscheme hybrid
+endif
 " }}}

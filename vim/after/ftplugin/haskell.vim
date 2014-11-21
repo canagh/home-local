@@ -15,7 +15,7 @@ setl cindent
 " neco-ghc
 let b:necoghc_enable_detailed_browse = 1
 " vim2hs
-let b:haskell_conceal_enumerations = 0
+let g:haskell_conceal = 0
 " unite-haddock
 let b:unite_source_haddock_browser = 'firefox'
 nmap <silent> [unite]d :Unite haddock<CR>

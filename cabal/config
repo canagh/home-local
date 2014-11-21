@@ -8,6 +8,7 @@
 -- used to indicate layout for nested sections.
 
 
+HOME: /home/kmiyuki
 remote-repo: hackage.haskell.org:http://hackage.haskell.org/packages/archive
 remote-repo-cache: $HOME/.cabal/packages
 -- local-repo:

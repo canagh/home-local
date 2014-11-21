@@ -1,3 +1,5 @@
+if has('unix')
+
 NeoBundle 'Shougo/vimproc.vim', {
 \ 'build' : {
 \     'windows' : 'tools\\update-dll-mingw',
@@ -216,6 +218,7 @@ NeoBundleLazy 'mitechie/pyflakes-pathogen',     { "autoload" : { "filetypes" : [
 " NeoBundleLazy 'sontek/rope-vim',                { "autoload" : { "filetypes" : [ "python" ] } }
 NeoBundleLazy 'lambdalisue/vim-django-support', { "autoload" : { "filetypes" : [ "python" ] } }
 NeoBundleLazy 'davidhalter/jedi-vim',           { "autoload" : { "filetypes" : [ "python" ] } } " require $ git submodule update --init
+NeoBundleLazy 'vim-scripts/Pydiction', { "autoload" : { "filetypes" : [ "python" ] } }
 
 " html
 NeoBundleLazy 'mattn/zencoding-vim', { "autoload" : { "filetypes" : [ "html" ] } }
@@ -241,3 +244,4 @@ NeoBundleLazy 'eagletmt/coqtop-vim', { 'autoload' : { 'commands' : 'CoqStart' }}
 " arduino
 NeoBundleLazy "sudar/vim-arduino-syntax", { 'autoload' : { 'filename_patterns' : '\.ino$' } }
 
+endif

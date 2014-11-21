@@ -2,6 +2,6 @@
 if [ $# != 2 -a -e "$1" ] ; then
     false
 else
-    clr --link  "$2"
+    clr --link "$2" || { [ "`find "$2" -maxdepth 0 -type l`" ] && rm "$2" }
     ln -s "$1" "$2"
 fi

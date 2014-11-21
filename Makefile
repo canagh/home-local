@@ -2,7 +2,7 @@
 
 export PATH := $(CURDIR)/bin:$(PATH)
 
-default: basic vim git
+default: basic vim git zsh
 
 all: default basic vim git gdb haskell ruby
 
@@ -75,3 +75,6 @@ mikutter/plugin:
 zsh:
 	reln $(CURDIR)/zsh/zshrc ~/.zshrc
 	git clone https://github.com/zsh-users/antigen.git ~/lib/antigen
+
+zsh-without-git:
+	reln $(CURDIR)/zsh/zshrc ~/.zshrc

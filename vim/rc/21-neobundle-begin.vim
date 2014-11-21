@@ -1,13 +1,15 @@
-if has('vim_starting')
-    set nocompatible               " Be iMproved
+if has('unix')
+    if has('vim_starting')
+        set nocompatible               " Be iMproved
+
+        " Required:
+        set runtimepath+=~/.vim/bundle/neobundle.vim/
+    endif
 
     " Required:
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+    call neobundle#begin(expand('~/.vim/bundle/'))
+
+    " Let NeoBundle manage NeoBundle
+    " Required:
+    NeoBundleFetch 'Shougo/neobundle.vim'
 endif
-
-" Required:
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'

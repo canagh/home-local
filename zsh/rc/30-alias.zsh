@@ -16,7 +16,10 @@ alias lA='ls -A'
 alias ll='ls -l'
 alias l=ls
 alias loc=locate
-alias ls='ls --color=auto'
 alias md=mkdir
 alias mp='mkdir -p'
 alias v=view
+case $OSTYPE in
+    darwin* ) alias ls='ls -G' ;;
+    linux*  ) alias ls='ls --color=auto' ;;
+esac
