@@ -159,10 +159,7 @@ nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
 " }}}
 NeoBundle 'sudo.vim'
-NeoBundle 'tyru/autochmodx.vim' " {{{
-let g:autochmodx_scriptish_file_patterns = [ '\c.*\.sh$' ]
-let g:autochmodx_no_CursorHold_autocmd = 1
-" }}}
+NeoBundle 'tyru/autochmodx.vim'
 
 NeoBundle 'rkitover/vimpager'
 

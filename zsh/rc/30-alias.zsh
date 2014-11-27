@@ -19,7 +19,12 @@ alias loc=locate
 alias md=mkdir
 alias mp='mkdir -p'
 alias v=view
-function psg() { local l="$1" ; shift ; ps "$@" $(pgrep "$l") ; }
+function psg() { ps ax | grep "$@" | grep -v grep | awk '{ print $1 }' ; }
+
+# colorize
+alias  grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
 case $OSTYPE in
     darwin* ) alias ls='ls -G' ;;
     linux*  ) alias ls='ls --color=auto' ;;

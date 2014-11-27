@@ -1,38 +1,22 @@
-#!/usr/bin/perl
-use warnings;
-use strict;
+#!/usr/bin/env python3
 
-use Getopt::Long;
-use File::Basename;
-my @excludes;
-my $whitelist;
-my $minimum = 4;
-die "usage: " . basename $0 . " [--exclude NAME] [--whitelist] [--minimum NUM (default = $minimum)] INPUT\n"
-    unless GetOptions(
-        'exclude=s@' => \@excludes,
-        'whitelist' => \$whitelist,
-        'minimum=i' => \$minimum,
-    );
+import os
+import sys
 
-# sort for longest matching
-my @keys;
-if ($whitelist) {
-    @keys = @excludes;
-} else {
-    @keys = sort {length $ENV{$a} cmp length $ENV{$b}} keys %ENV;
-    foreach (@excludes) {
-        @keys = grep !/^$_$/, @keys;
-    }
-}
-if ($minimum) {
-    @keys = grep {$minimum <= length $ENV{$_}} @keys;
-}
+env = os.environ.items()
+env = sorted(env, key=lambda e: (len(e[1]), - len(e[0])), reverse=True)
+env = filter(lambda e: 3 <= len(e[1]), env)
+env = map(lambda e: ('$'+e[0], e[1]), env)
+env = list(env)
 
-my ($line, $key, $value);
-while ($line = <>) {
-    foreach $key (@keys) {
-        $value = quotemeta $ENV{$key};
-        $line =~ s/${value}/\$${key}/g;
-    }
-    print $line;
-}
+def main():
+    for line in sys.stdin:
+        for key,elem in env:
+            line = line.replace(elem, key)
+        print(line, end='')
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    args = parser.parse_args()
+    main()

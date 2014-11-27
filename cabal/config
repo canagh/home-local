@@ -8,12 +8,11 @@
 -- used to indicate layout for nested sections.
 
 
-HOME: /home/kmiyuki
 remote-repo: hackage.haskell.org:http://hackage.haskell.org/packages/archive
-remote-repo-cache: $HOME/.cabal/packages
+remote-repo-cache: /home/user/.cabal/packages
 -- local-repo:
 -- logs-dir:
-world-file: $HOME/.cabal/world
+world-file: /home/user/.cabal/world
 -- verbose: 1
 -- compiler: ghc
 -- with-compiler:
@@ -22,7 +21,7 @@ world-file: $HOME/.cabal/world
 -- program-prefix: 
 -- program-suffix: 
 -- library-vanilla: True
-library-profiling: True
+-- library-profiling: True
 -- shared: False
 -- executable-dynamic: False
 -- executable-profiling: False
@@ -54,7 +53,7 @@ documentation: True
 -- only-dependencies: False
 -- root-cmd:
 -- symlink-bindir:
-build-summary: $HOME/.cabal/logs/build.log
+build-summary: /home/user/.cabal/logs/build.log
 -- build-log:
 remote-build-reporting: anonymous
 -- one-shot: False
@@ -63,7 +62,7 @@ remote-build-reporting: anonymous
 -- password:
 
 install-dirs user
-  -- prefix: $HOME/.cabal
+  -- prefix: /home/user/.cabal
   -- bindir: $prefix/bin
   -- libdir: $prefix/lib
   -- libsubdir: $pkgid/$compiler
