@@ -74,7 +74,4 @@ mikutter/plugin:
 
 zsh:
 	reln $(CURDIR)/zsh/zshrc ~/.zshrc
-	git clone https://github.com/zsh-users/antigen.git ~/lib/antigen
-
-zsh-without-git:
-	reln $(CURDIR)/zsh/zshrc ~/.zshrc
+	[ -d ~/.ssh ] && git clone https://github.com/zsh-users/antigen.git ~/lib/antigen

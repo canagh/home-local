@@ -21,7 +21,6 @@ let b:unite_source_haddock_browser = 'firefox'
 nmap <silent> [unite]d :Unite haddock<CR>
 
 " ghc-mod
-nmap <buffer> <Leader>ft :GhcModType<CR>
-nmap <buffer> <Leader>fu :HierUpdate<CR>
-nmap <buffer> <Leader>fc :HierClear<CR>
+nnoremap <buffer> <Leader><Space> :GhcModType<CR>
+nnoremap <buffer> <Leader>noh :HierClear<CR>
 autocmd BufWritePost *.hs GhcModCheckAndLintAsync

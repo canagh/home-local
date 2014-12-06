@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import os
 import sys
@@ -32,7 +32,7 @@ def gitignored(path):
         import distutils.spawn
         if distutils.spawn.find_executable('git') is None:
             prog = os.path.basename(sys.argv[0])
-            print('{}: git(1) is not found'.format(prog), file=sys.stderr)
+            sys.stderr.write('{}: git(1) is not found\n'.format(prog))
             sys.exit(1)
         import subprocess
         gitignored_cache = subprocess.check_output(
@@ -43,10 +43,11 @@ def gitignored(path):
 
 import argparse
 class PredAction(argparse.Action):
-    def __init__(self, *args, dest, nargs=0, const=None, **kwargs):
+    def __init__(self, dest=None, nargs=0, const=None, *args, **kwargs):
+        assert dest
         if const is None:
             const = dest
-        super().__init__(
+        super(PredAction, self).__init__(
                 *args,
                 const=const,
                 dest='preds',
@@ -143,14 +144,14 @@ if __name__ == '__main__':
     for path in list_files(args.files,
             recursive=args.recursive, follow=args.follow):
         if not os.path.islink(path) and not os.path.exists(path):
-            print('{}: not found: {}'.format(prog, path), file=sys.stderr)
+            sys.stderr.write('{}: not found: {}\n'.format(prog, path))
         elif should_remove(path, preds=args.preds):
             files.append(path)
         elif args.all:
-            print('{}: should not remove: {}'.format(prog, path), file=sys.stderr)
+            sys.stderr.write('{}: should not remove: {}\n'.format(prog, path))
             sys.exit(1)
         elif args.report_ignore:
-            print('{}: ignored: {}'.format(prog, path), file=sys.stderr)
+            sys.stderr.write('{}: ignored: {}\n'.format(prog, path))
     for path in files:
         print(path)
         if not args.simulate:

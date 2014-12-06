@@ -19,7 +19,11 @@ alias loc=locate
 alias md=mkdir
 alias mp='mkdir -p'
 alias v=view
+alias em=emacs
 function psg() { ps ax | grep "$@" | grep -v grep | awk '{ print $1 }' ; }
+# in shell, if the alias's trailing char is space or tab, the first argument is expanded as an alias
+# example: `alias foo=bar ; alias echo='echo ' ; echo foo foo' #=> bar foo
+alias sudo='sudo '
 
 # colorize
 alias  grep='grep --color=auto'

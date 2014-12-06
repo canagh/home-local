@@ -1,4 +1,4 @@
-if has('unix')
+if has('unix') && isdirectory(expand('~/.ssh'))
     if has('vim_starting')
         set nocompatible               " Be iMproved
 

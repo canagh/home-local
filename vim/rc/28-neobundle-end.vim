@@ -1,4 +1,4 @@
-if has('unix')
+if has('unix') && isdirectory(expand('~/.ssh'))
     call neobundle#end()
 
     " Required:

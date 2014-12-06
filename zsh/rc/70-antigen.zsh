@@ -8,4 +8,7 @@ if [[ -d ~/lib/antigen ]] ; then
     antigen-bundle zsh-users/zsh-completions
     fpath=( ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-completions.git/src $fpath ) # fpath support is in pull request
     compinit
+
+    antigen-bundle rupa/z
+    source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-rupa-SLASH-z.git/z.sh
 fi
