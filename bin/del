@@ -12,10 +12,6 @@ elif which_q rmtrash ; then
 
 else
     echo 'please install a tool to use trash' >&2
-    which_q apt-get && echo '$ sudo apt-get install trash-cli' >&2
-    which_q brew && echo '$ brew install rmtrash' >&2
-    which_q port && echo '$ sudo port install rmtrash' >&2
-    [ -d ~/.trash ] || mkdir ~/.trash
-    exec mv -t ~/.trash "$@"
+    exit 1
 
 fi

@@ -1,0 +1,46 @@
+.PHONY: nop ricty direnv mikutter mikutter/plugin rbenv
+
+nop:
+
+rbenv:
+	[ -d rbenv ] || git clone https://github.com/sstephenson/rbenv
+
+ricty:
+	which fontforge
+	fc-list | grep -i inconsolata
+	fc-list | grep -i migu # http://mix-mplus-ipa.sourceforge.jp/migu/
+	[ -d Ricty ] || git clone https://github.com/yascentur/Ricty
+	cd Ricty ; ./ricty_generator.sh auto
+	- mkdir ~/.fonts
+	- cp Ricty/Ricty*.ttf ~/.fonts
+
+direnv:
+	which go
+	[ -d direnv ] || git clone git@github.com:zimbatm/direnv.git ~/lib/direnv
+	make -C direnv
+	reln $(CURDIR)/direnv/direnv ~/bin/direnv
+
+mikutter:
+	which ruby
+	[ -e ~/lib/mikutter ] || git clone git@github.com:mikutter/mikutter.git ~/lib/mikutter
+	- mkdir -p ~/.mikutter/plugin
+	cd ~/lib/mikutter ; bundle install
+	- mkdir -p ~/.local/share/applications
+	reln ~/share/mikutter.desktop ~/.local/share/applications/mikutter.desktop
+	- mkdir -p ~/.local/share/icons
+	reln ~/lib/mikutter/core/skin/data/icon.png ~/.local/share/icons/mikutter.png
+
+mikutter/plugin:
+	which mikutter
+	touch ~/.mikutter/plugin/display_requirements.rb
+	[ -e ~/.mikutter/plugin/mikutter-sqlite-datasource ] || git clone https://github.com/toshia/mikutter-sqlite-datasource ~/.mikutter/plugin/mikutter-sqlite-datasource
+	[ -e ~/.mikutter/plugin/mikutter-sub-parts-client ] || git clone https://github.com/toshia/mikutter-sub-parts-client ~/.mikutter/plugin/mikutter-sub-parts-client
+	[ -e ~/.mikutter/plugin/mikutter-subparts-image ] || git clone https://github.com/moguno/mikutter-subparts-image ~/.mikutter/plugin/mikutter-subparts-image
+	reln ~/.mikutter/plugin/mikutter-subparts-image/sub_parts_image ~/.mikutter/plugin/sub_parts_image
+	reln ~/.mikutter/plugin/mikutter-subparts-image/openimg ~/.mikutter/plugin/openimg
+	[ -e ~/.mikutter/plugin/mikutter_sub_parts_voter_multiline ] || git clone https://github.com/rhenium/mikutter_sub_parts_voter_multiline ~/.mikutter/plugin/mikutter_sub_parts_voter_multiline
+	[ -e ~/.mikutter/plugin/mikutter_focus_to_tab_just_meet ] || git clone https://github.com/moguno/mikutter_focus_to_tab_just_meet ~/.mikutter/plugin/mikutter_focus_to_tab_just_meet
+	[ -e ~/.mikutter/plugin/mikutter-auto-close-proftab ] || git clone https://github.com/moguno/mikutter-auto-close-proftab ~/.mikutter/plugin/mikutter-auto-close-proftab
+	[ -e ~/.mikutter/plugin/mikutter-large-pic-twitter-com ] || git clone https://github.com/moguno/mikutter-large-pic-twitter-com ~/.mikutter/plugin/mikutter-large-pic-twitter-com
+	[ -e ~/.mikutter/plugin/mikutter_update_with_media ] || git clone https://github.com/penguin2716/mikutter_update_with_media ~/.mikutter/plugin/mikutter_update_with_media
+	cd ~/lib/mikutter ; bundle install

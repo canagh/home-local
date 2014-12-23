@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ $# = 2 -a -e "$1" ] ; then
-    [ "`find "$2" -maxdepth 0 -type l`" ] && rm "$2"
+    find "$2" -maxdepth 0 -type l -delete 2>/dev/null
     ln -s "$1" "$2"
 else
     false

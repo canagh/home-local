@@ -24,5 +24,6 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 zstyle ':completion:*' use-cache yes
+zstyle ':completion:*:default' menu select=1 # use ^N ^P ^F ^B for zapping completions
 
 setopt correct

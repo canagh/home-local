@@ -3,6 +3,7 @@
 setopt histignorealldups
 setopt histignorespace
 setopt histreduceblanks
+setopt incappendhistory
 setopt sharehistory
 setopt noflowcontrol
 
