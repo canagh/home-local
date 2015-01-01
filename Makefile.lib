@@ -4,6 +4,9 @@ nop:
 
 rbenv:
 	[ -d rbenv ] || git clone https://github.com/sstephenson/rbenv
+	[ -d ruby-build ] || git clone https://github.com/sstephenson/ruby-build.git
+	- mkdir -p ~/.rbenv/plugins
+	reln ~/lib/ruby-build ~/.rbenv/plugins/ruby-build
 
 ricty:
 	which fontforge
@@ -16,13 +19,13 @@ ricty:
 
 direnv:
 	which go
-	[ -d direnv ] || git clone git@github.com:zimbatm/direnv.git ~/lib/direnv
+	[ -d direnv ] || git clone https://github.com/zimbatm/direnv
 	make -C direnv
 	reln $(CURDIR)/direnv/direnv ~/bin/direnv
 
 mikutter:
 	which ruby
-	[ -e ~/lib/mikutter ] || git clone git@github.com:mikutter/mikutter.git ~/lib/mikutter
+	[ -e ~/lib/mikutter ] || git clone https://github.com/mikutter/mikutter
 	- mkdir -p ~/.mikutter/plugin
 	cd ~/lib/mikutter ; bundle install
 	- mkdir -p ~/.local/share/applications
