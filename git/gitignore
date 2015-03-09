@@ -20,6 +20,9 @@
 ## python vim rope
 .ropeproject/
 
+## ctags
+tags
+
 
 # temporary directory
 tmp/

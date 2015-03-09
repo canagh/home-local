@@ -1,4 +1,4 @@
-.PHONY: default all basic vim emacs utils git gdb haskell ruby zsh mikutter blog competitoin font
+.PHONY: default all basic vim emacs utils git gdb haskell ruby zsh mikutter blog competitoin font keyboard/gnome
 
 export PATH := $(CURDIR)/bin:$(PATH)
 
@@ -57,3 +57,6 @@ competitoin:
 font:
 	mkdir -p ~/.config/fontconfig
 	reln $(CURDIR)/X11/font.conf ~/.config/fontconfig
+
+keyboard/gnome:
+	gsettings set org.gnome.desktop.input-sources xkb-options '["ctrl:swapcaps"]'

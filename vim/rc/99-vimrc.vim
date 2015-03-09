@@ -54,6 +54,10 @@ match ZenkakuSpace /　/
 " swap ; :
 nnoremap <silent> ; :
 nnoremap <silent> : ;
+vnoremap <silent> ; :
+vnoremap <silent> : ;
+
+" repeat
 nnoremap <silent> ;; :<C-P><CR>
 
 " visual and star

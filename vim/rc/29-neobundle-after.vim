@@ -7,4 +7,6 @@ if has('unix') && isdirectory(expand('~/.ssh'))
 
     let g:autochmodx_no_CursorHold_autocmd = 1
 
+    let g:auto_ctags = 1 
+
 endif

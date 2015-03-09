@@ -20,19 +20,6 @@ NeoBundleLazy "sjl/gundo.vim", { "autoload": { "commands": ['GundoToggle'] }} " 
 nnoremap <Leader>gu :GundoToggle<CR>
 " }}}
 
-" " tagbar {{{
-" NeoBundleLazy 'majutsushi/tagbar', {
-" \   "autoload": {
-" \       "commands": ["TagbarToggle"],
-" \   },
-" \   "build": {
-" \       "unix": "sudo apt-get install exuberant-ctags",
-" \       "mac": "brew install ctags",
-" \   },
-" \ }
-" nmap <Leader>gt :TagbarToggle<CR>
-" " }}}
-
 " unite {{{
 NeoBundle 'Shougo/unite.vim'
 " let g:unite_enable_start_insert = 1
@@ -129,6 +116,8 @@ NeoBundle 'matchit.zip'
 " NeoBundle 'Lokaltog/vim-easymotion' " 使ってない
 " NeoBundle 'camelcasemotion'
 
+NeoBundle 'soramugi/auto-ctags.vim'
+
 " marking
 NeoBundle 'nathanaelkane/vim-indent-guides' " {{{
 let g:indent_guides_enable_on_vim_startup=1
@@ -148,6 +137,10 @@ NeoBundle "dannyob/quickfixstatus"
 "nnoremap <silent> <Leader>yu :YRShow<CR>
 "nnoremap <Leader>y/ :YRSearch<Space>
 " }}}
+
+" parentheses
+NeoBundle 'luochen1990/rainbow'
+let g:rainbow_active = 1
 
 " colorscheme
 "NeoBundle 'desert256.vim'
@@ -197,6 +190,7 @@ NeoBundleLazy 'vim-jp/cpp-vim',         { "autoload" : { "filetypes" : [ "cpp" ]
 NeoBundleLazy 'vim-scripts/opengl.vim', { "autoload" : { "filetypes" : [ "cpp", "c" ] } }
 NeoBundleLazy 'kana/vim-smartchr',      { "autoload" : { "filetypes" : [ "cpp", "c" ] } } " 現在 c,cpp でしか使ってない
 " NeoBundleLazy 'kana/vim-smartinput', { 'autoload' : {'insert' : '1'} } " 併用する? http://ac-mopp.blogspot.jp/2013/07/vim-smart-input.html
+NeoBundleLazy 'solorab/sdl2.vim', { "autoload" : { "filetypes" : [ "cpp", "c" ] } }
 
 " haskell
 NeoBundleLazy 'ujihisa/neco-ghc',            { "autoload" : { "filetypes" : [ "haskell" ] } }
@@ -209,6 +203,11 @@ NeoBundleLazy 'eagletmt/unite-haddock',      { "autoload" : { "filetypes" : [ "h
 NeoBundleLazy 'dag/vim2hs',                  { "autoload" : { "filetypes" : [ "haskell" ] } }
 "NeoBundleLazy 'dan-t/vim-hsimport',          { "autoload" : { "filetypes" : [ "haskell" ] } }
 NeoBundleLazy 'Twinside/vim-haskellFold',    { "autoload" : { "filetypes" : [ "haskell" ] } }
+
+" schele
+" gauche
+"NeoBundle 'aharisu/vim_goshrepl'
+"NeoBundle 'aharisu/vim-gdev'
 
 " python
 NeoBundleLazy 'mitechie/pyflakes-pathogen',     { "autoload" : { "filetypes" : [ "python" ] } }
@@ -235,10 +234,18 @@ NeoBundleLazy 'jdonaldson/vaxe', { "autoload" : { "filetypes" : [ "haxe" ] } }
 " idris
 NeoBundleLazy 'idris-hackers/idris-vim', { "autoload" : { "filename_patterns" : "\.idr$" } }
 
+" nimrod
+NeoBundleLazy 'zah/nimrod.vim', { "autoload" : { "filename_patterns" : "\.nim$" } }
+
 " coq
-NeoBundleLazy 'eagletmt/coqtop-vim', { 'autoload' : { 'commands' : 'CoqStart' }}
+NeoBundleLazy 'jvoorhis/coq.vim', { 'autoload' : { 'filetypes' : [ 'coq', 'verilog' ] }}
+NeoBundleLazy 'CoqIDE', { 'autoload' : { 'filetypes' : [ 'coq', 'verilog' ] }}
+" NeoBundleLazy 'eagletmt/coqtop-vim', { 'autoload' : { 'filetypes' : [ 'coq', 'verilog' ] }}
 
 " arduino
 NeoBundleLazy "sudar/vim-arduino-syntax", { 'autoload' : { 'filename_patterns' : '\.ino$' } }
+
+" piet
+NeoBundleLazy 'mmisono/piet.vim', { 'autoload' : { 'filename_patterns' : '\.piet$' } }
 
 endif

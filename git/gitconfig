@@ -1,5 +1,5 @@
 [user]
-	name = solorabbit
+	name = Kimiyuki Ohnaka
 	email = kimiyuki95@gmail.com
 [core]
         excludesfile = ~/share/git/gitignore
@@ -7,3 +7,4 @@
 	ui = auto
 [alias]
 	root = !pwd
+        tree = log --graph --decorate --oneline --abbrev-commit

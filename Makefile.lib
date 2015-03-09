@@ -1,4 +1,4 @@
-.PHONY: nop ricty direnv mikutter mikutter/plugin rbenv
+.PHONY: nop ricty direnv mikutter mikutter/plugin rbenv sikuli bfmeta
 
 nop:
 
@@ -36,6 +36,7 @@ mikutter:
 mikutter/plugin:
 	which mikutter
 	touch ~/.mikutter/plugin/display_requirements.rb
+	[ -e ~/.mikutter/plugin/mikutter-packaged ] || git clone https://github.com/moguno/mikutter-packaged
 	[ -e ~/.mikutter/plugin/mikutter-sqlite-datasource ] || git clone https://github.com/toshia/mikutter-sqlite-datasource ~/.mikutter/plugin/mikutter-sqlite-datasource
 	[ -e ~/.mikutter/plugin/mikutter-sub-parts-client ] || git clone https://github.com/toshia/mikutter-sub-parts-client ~/.mikutter/plugin/mikutter-sub-parts-client
 	[ -e ~/.mikutter/plugin/mikutter-subparts-image ] || git clone https://github.com/moguno/mikutter-subparts-image ~/.mikutter/plugin/mikutter-subparts-image
@@ -47,3 +48,16 @@ mikutter/plugin:
 	[ -e ~/.mikutter/plugin/mikutter-large-pic-twitter-com ] || git clone https://github.com/moguno/mikutter-large-pic-twitter-com ~/.mikutter/plugin/mikutter-large-pic-twitter-com
 	[ -e ~/.mikutter/plugin/mikutter_update_with_media ] || git clone https://github.com/penguin2716/mikutter_update_with_media ~/.mikutter/plugin/mikutter_update_with_media
 	cd ~/lib/mikutter ; bundle install
+
+sikuli:
+	which cmake javac
+	[ -d sikuli ] || git clone https://github.com/sikuli/sikuli
+	- mkdir -p sikuli/sikuli-script/build
+	cd sikuli/sikuli-script/build && cmake .. && make
+	- mkdir -p sikuli/sikuli-ide/build
+	cd sikuli/sikuli-ide/build && cmake .. && make package
+
+bfmeta:
+	which bundle
+	[ -d BFmeta ] || git clone https://github.com/primenumber/BFmeta
+	cd BFmeta && bundle install --path vendor/bundle
