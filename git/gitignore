@@ -1,5 +1,16 @@
 # vim: filetype=conf
 
+a.out
+*.o
+gmon.out
+
+# ocaml
+*.cmi
+*.cmo
+*.cmx
+
+# haskll
+*.hi
 
 # buckup
 *~
@@ -7,21 +18,23 @@
 \#*\#
 ## vim buckup
 *.swp
+*.swo
 
 
-# virtual environment
-## python virtualenv
+# python
 .virtualenv/
-## haskell virthualenv
-.virthualenv/
-
-
-# editor configuration
-## python vim rope
 .ropeproject/
+__pycache__/
+*.pyc
+
+# haskell
+.virthualenv/
+cabal.sandbox.config
+.cabal-sandbox
 
 ## ctags
 tags
+tags.lock
 
 
 # temporary directory

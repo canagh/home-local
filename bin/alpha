@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+import sys
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('-u', '--upper', action='store_true')
+parser.add_argument('-l', '--lower', action='store_false', dest='upper')
+parser.add_argument('-d', '--delimiter', type=str, default=' ')
+parser.add_argument('-1', action='store_const', const="\n", dest='delimiter')
+parser.add_argument('-0', action='store_const', const='',   dest='delimiter')
+parser.add_argument('-n', action='store_const', default="\n", const='')
+args = parser.parse_args()
+sys.stdout.write(args.delimiter.join(list("ABCDEFGHIJKLMNOPQRSTUVWXYZ" if args.upper else "abcdefghijklmnopqrstuvwxyz"))+args.n)

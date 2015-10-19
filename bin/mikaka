@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+import sys
+import argparse
+
+a = \
+    [ '\'',  '#', 'f@', 'f[', 'q@', 'x@', 't@',  'y',  '0',  'o',  '7',  'j',  'f',  'u',  'q',  'x',  't',  '3'
+    ,        'E', 'v@', 'v[', 'a@', 'd@', 'g@',  'Z',        'l',        'n',  'v',  'i',  'a',  'd',  'g',  'e'
+    ,  '(',  '$', '2@', '2[', 'z@', 'r@', 'h@',              '.',  '8',  ']',  '2',  '1',  'z',  'r',  'h',  '4'
+    ,        '%', '^@', '^[', 'w@', 'p@', ':@',              ';',        '/',  '^',  ',',  'w',  'p',  ':',  '5'
+    ,  '&',  ')', '-@', '-[', 's@', 'c@', 'b@',             '\\',  '9',  'm',  '-',  'k',  's',  'c',  'b',  '6'
+    ]
+b = \
+    [ 'ゃ', 'ぁ', 'ば', 'ぱ', 'だ', 'ざ', 'が', 'ん', 'わ', 'ら', 'や', 'ま', 'は', 'な', 'た', 'さ', 'か', 'あ'
+    ,       'ぃ', 'び', 'ぴ', 'ぢ', 'じ', 'ぎ', 'っ',       'り',       'み', 'ひ', 'に', 'ち', 'し', 'き', 'い'
+    , 'ゅ', 'ぅ', 'ぶ', 'ぷ', 'づ', 'ず', 'ぐ',             'る', 'ゆ', 'む', 'ふ', 'ぬ', 'つ', 'す', 'く', 'う'
+    ,       'ぇ', 'べ', 'ぺ', 'で', 'ぜ', 'げ',             'れ',       'め', 'へ', 'ね', 'て', 'せ', 'け', 'え'
+    , 'ょ', 'ぉ', 'ぼ', 'ぽ', 'ど', 'ぞ', 'ご',             'ろ', 'よ', 'も', 'ほ', 'の', 'と', 'そ', 'こ', 'お'
+    ]
+assert len(a) == len(b)
+
+def convert(s, table):
+    t = []
+    i = 0
+    while i < len(s):
+        if i+1 < len(s) and s[i]+s[i+1] in table:
+            t.append(table[s[i]+s[i+1]])
+            i += 2
+        elif s[i] in table:
+            t.append(table[s[i]])
+            i += 1
+        else:
+            t.append(s[i])
+            i += 1
+    return ''.join(t)
+def convert_with(table):
+    return lambda s: convert(s, table)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('string', nargs='*')
+parser.add_argument('--input-both',   action='store_const', const='both',  dest='input', default='both')
+parser.add_argument('--input-lower',  action='store_const', const='lower', dest='input')
+parser.add_argument('--input-upper',  action='store_const', const='upper', dest='input')
+parser.add_argument('--output-lower', action='store_const', const='lower', dest='output', default='lower')
+parser.add_argument('--output-upper', action='store_const', const='upper', dest='output')
+args = parser.parse_args()
+
+f = {}
+if args.input in ['upper', 'both']:
+    f.update(zip(map(lambda s: s.upper(), a), b))
+if args.input in ['lower', 'both']:
+    f.update(zip(map(lambda s: s.lower(), a), b))
+if args.output == 'upper':
+    f.update(zip(b, map(lambda s: s.upper(), a)))
+if args.output == 'lower':
+    f.update(zip(b, map(lambda s: s.lower(), a)))
+f = convert_with(f)
+if len(args.string) == 0:
+    for line in sys.stdin:
+        sys.stdout.write(f(line))
+else:
+    sys.stdout.write(' '.join(map(f, args.string)))
+    sys.stdout.write('\n')

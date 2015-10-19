@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+exec gosh <<EOF
+(load "~/lib/lazyk/lazier.scm")
+(load "~/lib/lazyk/prelude.scm")
+(load "~/lib/lazyk/prelude-numbers.scm")
+(lazy-def 'main '$(cat))
+(print-as-unlambda (laze 'main))
+EOF

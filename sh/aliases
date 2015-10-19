@@ -110,3 +110,5 @@ view-()    { tof "$@" view    -- {} ; }
 export LESS='-r -j10 -P \ ?f%f:Standerd Input\.. ?lmline %lm:.?L/%L. ?PB%PB\%:. (press h for help or q to quit)\ \'
 
 fx() { firefox -new-tab "$@" } # why this is a function is to avoid zsh's complementing -new-tab
+
+alias gdb='gdb -quiet'

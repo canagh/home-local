@@ -8,9 +8,8 @@ parser.add_argument('-f', '--fizz', metavar='STRING', default='fizz',
 parser.add_argument('-b', '--buzz', metavar='STRING', default='buzz',
         help="default is `buzz'")
 parser.add_argument('--fizzbuzz', metavar='STRING')
-parser.add_argument('-l', '--limit', metavar='NUM', type=int)
-parser.add_argument('--100', action='store_const', const=100, dest='limit',
-        help="equivalent to `--limit 100'")
+parser.add_argument('-l', '--limit', metavar='NUM', type=int, default=100)
+parser.add_argument('-i', '--infinitely', action='store_const', const=None, dest='limit')
 args = parser.parse_args()
 if args.fizzbuzz is None:
     args.fizzbuzz = args.fizz + args.buzz

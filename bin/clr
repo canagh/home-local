@@ -19,6 +19,8 @@ def haskell_interface(path):
     return path.endswith('.hi')
 def haskell_middle(path):
     return path.endswith(('.hi', '.o', '.dyn_o', '.dyn_hi'))
+def tex_middle(path):
+    return path.endswith(('.aux', '.bbl', '.blg', '.dvi', '.log'))
 def link_file(path):
     return os.path.islink(path)
 def executable_file(path):
@@ -88,6 +90,7 @@ def get_parser():
     preds.add_argument('--python-compiled', '--pyc', action=PredAction)
     preds.add_argument('--haskell-interface', '--hi', action=PredAction)
     preds.add_argument('--haskell-middle', '--hs', action=PredAction)
+    preds.add_argument('--tex-middle', '--tex', action=PredAction)
     return parser
 
 def list_files(pathes, recursive=False, follow=False):

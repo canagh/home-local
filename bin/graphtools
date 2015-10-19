@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import random
+
+def make_tree(n):
+    for i in range(1,n):
+        yield random.randrange(i), i
+
+import argparse
+parser = argparse.ArgumentParser()
+subparsers = parser.add_subparsers(dest='command')
+make_tree_parser = subparsers.add_parser('make-tree',
+        help='print edges as sorted pair of indices of nodes')
+make_tree_parser.add_argument('n', type=int)
+make_tree_parser.add_argument('-1', '--one-based', action='store_true')
+args = parser.parse_args()
+
+if args.command == 'make-tree':
+    for i, j in make_tree(args.n):
+        if args.one_based:
+            i += 1
+            j += 1
+        print(i, j)

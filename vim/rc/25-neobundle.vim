@@ -52,49 +52,41 @@ set laststatus=2
 let g:airline_section_z = '%3p%% %{g:airline_symbols.linenr} %3l:%3c'
 " }}}
 
-" neocomplcache {{{
-NeoBundleLazy (has('lua') ? 'Shougo/neocomplete' : 'Shougo/neocomplcache'), { 'autoload' : {'insert' : '1'} } " {{{
-if neobundle#is_installed('neocomplete')
+" neocomplete {{{
+if has('lua')
+    NeoBundleLazy 'Shougo/neocomplete.vim', {
+    \ 'autoload' : { 'insert' : 1,}
+    \ }
+endif
+if neobundle#is_installed('neocomplete.vim')
     " for neocomplete
     let g:neocomplete#enable_at_startup = 1
     let g:neocomplete#enable_ignore_case = 1
     let g:neocomplete#enable_smart_case = 1
+    let g:neocomplete#use_vimproc = 1
     if !exists('g:neocomplete#keyword_patterns')
         let g:neocomplete#keyword_patterns = {}
     endif
-    let g:neocomplete#keyword_patterns._ = '\h\w*'
-elseif neobundle#is_installed('neocomplcache')
-    " for neocomplcache
-    let g:neocomplcache_enable_at_startup = 1
-    let g:neocomplcache_enable_ignore_case = 1
-    let g:neocomplcache_enable_smart_case = 1
-    if !exists('g:neocomplcache_keyword_patterns')
-        let g:neocomplcache_keyword_patterns = {}
-    endif
-    let g:neocomplcache_keyword_patterns._ = '\h\w*'
-    let g:neocomplcache_enable_camel_case_completion = 1
-    let g:neocomplcache_enable_underbar_completion = 1
+    let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 endif
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 " }}}
 
-NeoBundleLazy 'Shougo/neosnippet',    { 'autoload' : {'insert' : '1'} } " {{{
+" neosnippet " {{{
+NeoBundleLazy 'Shougo/neosnippet',          { 'autoload' : {'insert' : '1'} }
 NeoBundleLazy 'Shougo/neosnippet-snippets', { 'autoload' : {'insert' : '1'} }
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_target)
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
+\  "\<Plug>(neosnippet_expand_or_jump)"
+\ : pumvisible() ? "\<C-n>" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+\  "\<Plug>(neosnippet_expand_or_jump)"
+\ : "\<TAB>"
 " For snippet_complete marker.
 if has('conceal')
-  set conceallevel=2 concealcursor=i
+    set conceallevel=2 concealcursor=i
 endif
 " user defined snippets
 let g:neosnippet#snippets_directory = '~/.vim/snippets/'
@@ -153,6 +145,7 @@ vmap gx <Plug>(openbrowser-smart-search)
 " }}}
 NeoBundle 'sudo.vim'
 NeoBundle 'tyru/autochmodx.vim'
+NeoBundle 'thinca/vim-template'
 
 NeoBundle 'rkitover/vimpager'
 
@@ -163,17 +156,12 @@ NeoBundle 'glidenote/octoeditor.vim'
 let g:octopress_path = '~/local/blog'
 
 " syntax checker
-" " syntastic {{{
-" NeoBundle "scrooloose/syntastic", {
-" \   "build": {
-" \       "mac" : ["pip install flake8", "npm -g install coffeelint"],
-" \       "unix": ["pip install flake8", "npm -g install coffeelint"],
-" \   },
-" \ }
-" let g:syntastic_mode_map = { 'mode': 'active',
-" \    'passive_filetypes': ['haskell', 'cpp', 'java'],
-" \ }
-" " }}}
+NeoBundle "scrooloose/syntastic"
+let g:syntastic_mode_map = {
+\    'mode': 'passive',
+\    'active_filetypes': ['cpp'],
+\ }
+let g:syntastic_cpp_checkers = ['cppcheck', 'clang-check']
 
 " language {{{
 
@@ -247,5 +235,7 @@ NeoBundleLazy "sudar/vim-arduino-syntax", { 'autoload' : { 'filename_patterns' :
 
 " piet
 NeoBundleLazy 'mmisono/piet.vim', { 'autoload' : { 'filename_patterns' : '\.piet$' } }
+
+" }}}
 
 endif

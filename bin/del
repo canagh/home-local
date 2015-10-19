@@ -1,13 +1,16 @@
 #!/bin/sh
 
-which_q() {
+exists() {
     which "$@" >/dev/null 2>&1
 }
 
-if which_q trash-put; then
+if exists gvfs-trash; then
+    exec gvfs-trash "$@"
+
+elif exists trash-put; then
     exec trash-put "$@"
 
-elif which_q rmtrash ; then
+elif exists rmtrash ; then
     exec rmtrash "$@"
 
 else

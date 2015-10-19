@@ -13,6 +13,7 @@ elif inpath nano ; then export VISUAL=nano
 fi
 export EDITOR=$VISUAL
 export PAGER=less
+export WWW_HOME='https://google.co.jp'
 if   inpath w3m  ; then export BROWSER=w3m
 elif inpath lynx ; then export BROWSER=lynx
 fi

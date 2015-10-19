@@ -2,6 +2,8 @@
 
 export CC=clang
 export CXX=clang++
+export LD=ld.gold
+path=( /usr/lib/ccache/bin $path )
 
 if [ -d ~/.cabal/bin ] ; then
     path=( ~/.cabal/bin $path )
@@ -17,6 +19,6 @@ fi
 export PYTHONSTARTUP=$HOME/share/python/startup.py
 
 # OPAM configuration
-. /home/user/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+eval `opam config env`
 
 export path

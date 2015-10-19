@@ -11,4 +11,8 @@ if [[ -d ~/lib/antigen ]] ; then
 
     antigen-bundle rupa/z
     source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-rupa-SLASH-z.git/z.sh
+
+    antigen-bundle kmyk/OnlineJudgeHelper
+
+    compinit -U
 fi

@@ -26,7 +26,7 @@ world-file: /home/user/.cabal/world
 -- executable-dynamic: False
 -- executable-profiling: False
 -- optimization: True
--- library-for-ghci: True
+library-for-ghci: True
 -- split-objs: False
 -- executable-stripping: True
 -- user-install: True
