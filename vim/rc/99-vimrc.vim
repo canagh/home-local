@@ -1,6 +1,3 @@
-let mapleader=" "
-let maplocalleader=" "
-
 syntax on
 set modeline
 
@@ -62,3 +59,6 @@ nnoremap <silent> ;; :<C-P><CR>
 
 " visual and star
 vnoremap * "zy:let @/ = @z<CR>n
+
+" :w with sudo
+cabbr w!! w !sudo tee > /dev/null %

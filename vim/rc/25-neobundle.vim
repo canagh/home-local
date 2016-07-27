@@ -16,9 +16,12 @@ NeoBundle 'Align'
 
 " history
 NeoBundle 'vim-scripts/repeat.vim'
-NeoBundleLazy "sjl/gundo.vim", { "autoload": { "commands": ['GundoToggle'] }} " {{{
-nnoremap <Leader>gu :GundoToggle<CR>
+NeoBundleLazy 'mbbill/undotree', { 'autoload': { 'commands': ['UndotreeToggle'] }} " {{{
+nnoremap <silent> <Leader>gu :UndotreeToggle<CR>
 " }}}
+" NeoBundleLazy "sjl/gundo.vim", { "autoload": { "commands": ['GundoToggle'] }} " {{{
+" nnoremap <Leader>gu :GundoToggle<CR>
+" " }}}
 
 " unite {{{
 NeoBundle 'Shougo/unite.vim'
@@ -110,6 +113,9 @@ NeoBundle 'matchit.zip'
 
 NeoBundle 'soramugi/auto-ctags.vim'
 
+NeoBundle 'Shougo/vinarise.vim'
+NeoBundle 'vim-scripts/dbext.vim'
+
 " marking
 NeoBundle 'nathanaelkane/vim-indent-guides' " {{{
 let g:indent_guides_enable_on_vim_startup=1
@@ -197,11 +203,13 @@ NeoBundleLazy 'Twinside/vim-haskellFold',    { "autoload" : { "filetypes" : [ "h
 "NeoBundle 'aharisu/vim_goshrepl'
 "NeoBundle 'aharisu/vim-gdev'
 
+" brainfuck
+NeoBundleLazy 'kmyk/brainfuck-highlight.vim', { 'autoload' : { 'filetypes' : 'brainfuck' } }
+
 " python
-NeoBundleLazy 'mitechie/pyflakes-pathogen',     { "autoload" : { "filetypes" : [ "python" ] } }
+NeoBundleLazy 'kevinw/pyflakes-vim',     { "autoload" : { "filetypes" : [ "python" ] } }
 " NeoBundleLazy 'sontek/rope-vim',                { "autoload" : { "filetypes" : [ "python" ] } }
 NeoBundleLazy 'lambdalisue/vim-django-support', { "autoload" : { "filetypes" : [ "python" ] } }
-NeoBundleLazy 'davidhalter/jedi-vim',           { "autoload" : { "filetypes" : [ "python" ] } } " require $ git submodule update --init
 NeoBundleLazy 'vim-scripts/Pydiction', { "autoload" : { "filetypes" : [ "python" ] } }
 
 " html

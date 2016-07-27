@@ -1,7 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
+import re
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument('int', type=int, nargs='*')
+parser.add_argument('int', nargs='*')
+parser.add_argument('--base', type=int, default=10)
+parser.add_argument('-x', action='store_const', dest='base', const=16)
+parser.add_argument('-b', action='store_const', dest='base', const=2)
+parser.add_argument('-o', action='store_const', dest='base', const=8)
+parser.add_argument('-n', action='store_const', default=b'\n', const=b'')
+parser.add_argument('-2', action='store_true', dest='two')
 args = parser.parse_args()
-sys.stdout.write(''.join(map(chr,args.int)))
+def nsplit(n):
+    return lambda s: \
+        [s[i:i+n] for i in range(0, len(s), n)]
+if args.two:
+    if args.base in [2,8]:
+        parser.error('option conflicts: -2 and -b,-o')
+    args.base = 16
+    args.int = list(*map(nsplit(2), args.int))
+sys.stdout.buffer.write(bytes(map(lambda n: int(n,args.base), args.int)) + args.n)

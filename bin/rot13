@@ -1,2 +1,32 @@
-#!/bin/sh
-exec tr A-Za-z N-ZA-Mn-za-m
+#!/usr/bin/env python3
+import sys
+import string
+
+def rot13(c, n):
+    s = None
+    if c in string.ascii_lowercase:
+        s = string.ascii_lowercase
+    elif c in string.ascii_uppercase:
+        s =   string.ascii_uppercase
+    if s is not None:
+        c = s[(s.index(c) + n) % len(s)]
+    return c
+def rot47(c, n):
+    s = '!\\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
+    if c in s:
+        c = s[(s.index(c) + n) % len(s)]
+    return c
+
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('str', type=str, nargs='*')
+parser.add_argument('-n', type=int, default=13)
+parser.add_argument('-47', action='store_const', dest='f', default=rot13, const=rot47)
+args = parser.parse_args()
+if args.str:
+    print(*map(lambda s: ''.join(map(lambda c: args.f(c,args.n), s)), args.str))
+else:
+    for s in sys.stdin:
+        for c in s:
+            print(args.f(c, args.n), end='')
+# exec tr A-Za-z N-ZA-Mn-za-m

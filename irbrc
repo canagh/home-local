@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 begin
     require 'rubygems'
-
     # you should compile the ruby binary with readline-dev
     begin
         require 'wirble' # gem
@@ -19,7 +18,6 @@ begin
         IRB.conf[:SAVE_HISTORY] = 100000
         IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
     end
-
 rescue => e
     p e
 end

@@ -29,6 +29,10 @@ export PYTHONSTARTUP="$HOME"/share/python/startup.py
 # haskell
 export PATH="$HOME/.cabal/bin":"$PATH"
 
+# go
+export GOPATH="$HOME/.go"
+export PATH="$GOPATH/bin":"$PATH"
+
 eval "$(direnv hook $0)"
 
 # javascript

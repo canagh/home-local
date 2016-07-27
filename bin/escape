@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+import sys
+while True:
+    c = sys.stdin.buffer.read(1)
+    if not c:
+        break
+    sys.stdout.buffer.write(repr(c)[2:-1].encode())
+    sys.stdout.buffer.flush()

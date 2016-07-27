@@ -1,7 +1,7 @@
 #!/usr/bin/zsh
 
 hash -d blog=~/local/blog
-hash -d posts=~blog/source/_posts
+hash -d posts=~blog/content/post
 hash -d contest=~/local/competition/contest
 
 hash -d s=~/share

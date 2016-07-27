@@ -24,3 +24,12 @@ import argparse
 import subprocess
 import re
 import random
+import math
+import itertools
+import functools
+import operator
+import struct
+import time
+import telnetlib
+import socket
+import string
