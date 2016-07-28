@@ -1,6 +1,0 @@
-[Desktop Entry]
-Name=XKill
-Exec=xkill %u
-Type=Application
-NoDisplay=true
-Icon=/usr/share/icons/Humanity/actions/48/window-close.svg

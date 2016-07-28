@@ -1,4 +1,4 @@
 #!/usr/bin/zsh
 
-fpath=( ~/share/zsh/functions $fpath )
-fpath=( ~/share/zsh/functions/Prompts $fpath )
+fpath=( $(dirname $(readlink ~/.zshrc))/functions $fpath )
+fpath=( $(dirname $(readlink ~/.zshrc))/functions/Prompts $fpath )

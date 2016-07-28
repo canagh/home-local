@@ -2,7 +2,7 @@
 	name = Kimiyuki Onaka
 	email = kimiyuki95@gmail.com
 [core]
-        excludesfile = ~/share/git/gitignore
+        excludesfile = ~/local/dotfiles/gitignore
 [color]
 	ui = auto
 [alias]

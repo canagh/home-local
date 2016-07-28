@@ -1,6 +1,6 @@
 #!/bin/sh
 
-path=( ~/bin ~/local/bin ~/share/bin $path )
+path=( ~/bin ~/local/dotfiles/bin $path )
 export path
 
 export EDITOR=vim

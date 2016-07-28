@@ -19,7 +19,7 @@ fi
 export GOPATH=$HOME/.go
 path=( $GOPATH/bin $path )
 
-export PYTHONSTARTUP=$HOME/share/python/startup.py
+export PYTHONSTARTUP=$HOME/local/dotfiles/python.startup.py
 
 # OPAM configuration
 # eval `opam config env`

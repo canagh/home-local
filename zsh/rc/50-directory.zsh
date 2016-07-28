@@ -2,11 +2,9 @@
 
 hash -d blog=~/local/blog
 hash -d posts=~blog/content/post
-hash -d contest=~/local/competition/contest
+hash -d contest=~/local/competitive-programming-workspace
 
-hash -d s=~/share
-hash -d d=~/Desktop
-hash -d c=~/local/competition
+hash -d dt=~/Desktop
 hash -d dl=~/Downloads
 
 setopt autocd

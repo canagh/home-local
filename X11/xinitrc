@@ -1,8 +1,0 @@
-#!/bin/sh
-# run window-mgr
-#exec gnome-session
-xmodmap -e 'add mod3 = Muhenkan'
-export GTK_IM_MODULE=fcitx
-export  QT_IM_MODULE=fcitx
-export XMODIFIERS="@im=fcitx"
-exec startxfce4
