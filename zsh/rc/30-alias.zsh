@@ -1,8 +1,8 @@
 #!/bin/sh
 
-alias c=cat
-alias cpr='cp -r'
+alias r=cat
 alias e=$EDITOR
+alias cpr='cp -r'
 alias fg1='fg %1'
 alias fg2='fg %2'
 alias fg3='fg %3'

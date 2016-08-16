@@ -36,6 +36,8 @@ cabal.sandbox.config
 tags
 tags.lock
 
+# nohup
+nohup.out
 
 # temporary directory
 tmp/

@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+
+import argparse
+import functools
+import os, sys, os.path
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-b', '--binary', default='./a.out')
+parser.add_argument('--diff', action='store_const', const=True, default=False)
+parser.add_argument('--no-diff', action='store_const', const=False, dest='diff')
+parser.add_argument(metavar='test', nargs='*', dest='test_files')
+args = parser.parse_args()
+
+# gather tests
+
+if len(args.test_files) == 0:
+    path = os.path.isdir('test') and 'test' or '.'
+    for dirpath, dirnames, filenames in os.walk(path):
+        for fname in filenames:
+            if ((not fname.startswith('.') and not fname.endswith(('~','#'))) and
+                    (fname.endswith(('.in','.out')) or
+                        fname.find('.in.') != -1 or fname.find('.out.') != -1)):
+                args.test_files.append(os.path.join(dirpath, fname))
+
+args.tests = {}
+def add_case(case, fname, typ):
+    if case not in args.tests:
+        args.tests[case] = {}
+    if typ in args.tests[case]:
+        parser.error('duplicated testcase: ' + case)
+    args.tests[case][typ] = fname
+
+for f in args.test_files:
+    if f.find('.in') != -1:
+        add_case(f.partition('.in')[0], f, 'in')
+    elif f.endswith('.out') != -1:
+        add_case(f.partition('.out')[0], f, 'out')
+    else:
+        parser.error('unknown type testcase: ' + f)
+for case, prop in args.tests.items():
+    if 'in' not in prop and 'out' in prop:
+        parser.error('dangling testcase: ' + case)
+args.tests = list(args.tests.items())
+args.tests.sort()
+
+
+# run tests
+
+import subprocess
+try:
+    import colorama
+    colorama.init()
+    clr = colorama.Fore
+except:
+    class clr:
+        RED   = '\033[31m'
+        GREEN = '\033[32m'
+        BLUE  = '\033[34m'
+        RESET = '\033[39m'
+
+failures = [0]
+def result(success, returncode=None):
+    if success and (returncode is None or returncode == 0):
+        print(clr.BLUE + 'success' + clr.RESET)
+    else:
+        ret = ': return code: {}'.format(returncode) if returncode else ''
+        print(clr.RED + 'failed' + ret + clr.RESET)
+        failures[0] += 1
+
+for case, prop in args.tests:
+    print(clr.GREEN + 'try: ' + case + clr.RESET)
+    if 'in' in prop:
+        infile = prop['in']
+        inproc = subprocess.Popen([os.path.abspath(infile)] if
+                os.access(infile, os.X_OK) else ['cat', infile],
+                stdout=subprocess.PIPE, stderr=sys.stderr)
+        exeproc = subprocess.Popen([args.binary], stdin=inproc.stdout,
+                stdout=(subprocess.PIPE if 'out' in prop else sys.stdout),
+                stderr=sys.stderr)
+        if 'out' in prop:
+            outfile = prop['out']
+            if args.diff:
+                diffproc = subprocess.Popen(['diff', '-', outfile],
+                        stdin=exeproc.stdout, stdout=sys.stdout, stderr=sys.stderr)
+                diffproc.communicate()
+                result(diffproc.returncode == 0, returncode=exeproc.returncode)
+            else:
+                a = exeproc.stdout.read().decode()
+                exeproc.communicate()
+                b = open(outfile).read()
+                if a != b:
+                    print(a, end='')
+                    print(clr.RED + 'correct output is:' + clr.RESET)
+                    print(b, end='')
+                result(a == b, returncode=exeproc.returncode)
+        else:
+            exeproc.communicate()
+            result(exeproc.returncode == 0, returncode=exeproc.returncode)
+    else:
+        raise ValueError('wrong testcase: ' + case)
+    print()
+
+if failures[0] == 0:
+    print(clr.BLUE + 'succeeded: all tests' + clr.RESET)
+    sys.exit(0)
+else:
+    print(clr.RED + 'failed: {} failures (total {})'.format(failures[0], len(args.tests)) + clr.RESET)
+    sys.exit(1)

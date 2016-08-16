@@ -11,7 +11,7 @@ else:
     import rlcompleter
     readline.parse_and_bind("tab: complete")
     # histfile
-    histfile = os.path.join(os.environ['HOME'], 'local', 'python.history')
+    histfile = os.path.join(os.environ['HOME'], '.python_history')
     try:
         readline.read_history_file(histfile)
     except IOError:
