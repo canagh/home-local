@@ -19,3 +19,6 @@ alias py2=python2
 alias py3=python3
 
 alias clrr='clr -r'
+
+alias rot13='tr A-Za-z N-ZA-Mn-za-m'
+function cd!() { if cd "$@" ; then : ; else echo mkdir "$@" ; mkdir "$@" ; cd "$@" ; fi ; }

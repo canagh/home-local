@@ -7,3 +7,6 @@ set charset ASCII
 set disassembly-flavor intel
 # source /usr/share/peda/peda.py
 source ~/lib/peda/peda.py
+define heap
+    python from libheap import *
+end
