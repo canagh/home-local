@@ -21,15 +21,37 @@ else:
     del histfile
 
 import argparse
-import subprocess
-import re
-import random
-import math
-import itertools
+import base64
+import binascii
 import functools
+import itertools
+import math
 import operator
-import struct
-import time
-import telnetlib
+import random
+import re
 import socket
 import string
+import struct
+import subprocess
+import telnetlib
+import time
+try:
+    import Crypto
+    import Crypto.PublicKey
+    import Crypto.PublicKey.RSA
+except ImportError:
+    pass
+try:
+    import gmpy2
+except ImportError:
+    pass
+if sys.version_info.major == 3:
+    import urllib.parse
+    import urllib.request
+if sys.version_info.major == 2:
+    try:
+        import pwnlib
+        from pwnlib.util.packing import p8, p16, p32, p64
+        from pwnlib.util.packing import u8, u16, u32, u64
+    except ImportError:
+        pass
