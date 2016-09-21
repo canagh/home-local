@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+import sys
+import itertools
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('file', nargs='+')
+parser.add_argument('--stdin', action='store_true')
+parser.add_argument('-m', '--mode', choices=[ 'zero', 'end', 'loop' ], default='zero')
+args = parser.parse_args()
+
+fhs = []
+for path in args.file:
+    fhs += [ open(path, 'rb').read() ]
+if args.stdin:
+    fhs += [ sys.stdin.buffer.read() ]
+
+for i in itertools.count():
+    if all(map(lambda fh: len(fh) <= i, fhs)):
+        sys.stdout.flush()
+        break
+    c = 0
+    for fh in fhs:
+        if i < len(fh):
+            c ^= fh[i]
+        else:
+            if args.mode == 'zero':
+                pass
+            elif args.mode == 'end':
+                sys.exit(0)
+            elif args.mode == 'loop':
+                c ^= fh[i % len(fh)]
+    sys.stdout.buffer.write(bytes([ c ]))

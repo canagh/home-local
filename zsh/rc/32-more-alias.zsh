@@ -22,3 +22,21 @@ alias clrr='clr -r'
 
 alias rot13='tr A-Za-z N-ZA-Mn-za-m'
 function cd!() { if cd "$@" ; then : ; else echo mkdir "$@" ; mkdir "$@" ; cd "$@" ; fi ; }
+function objdump2() {
+    r2 -qc ';
+    e scr.color=false ;
+    aaa ;
+    pd $SS@$S ;
+    ' "$@" | sed ';
+    s/..// ;
+    s/^[^(].\{9\}/          / ;
+    s/^(/\n&/ ;
+    s/^ *;-- section\.\./\n&/ ;
+    s/^ *;-- section_end\.\..*$/&\n/ ;
+    s/^ \{10\}/    / ;
+    s/0x0\+\([0-9]\)/0x\1/g ;
+    '
+}
+function freq() {
+    sed 's/./&\n/g' | sort | uniq -c | sort -n
+}

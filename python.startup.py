@@ -24,6 +24,7 @@ import argparse
 import base64
 import binascii
 import functools
+import hashlib
 import itertools
 import math
 import operator
@@ -39,6 +40,10 @@ try:
     import Crypto
     import Crypto.PublicKey
     import Crypto.PublicKey.RSA
+except ImportError:
+    pass
+try:
+    import numpy as np
 except ImportError:
     pass
 try:
