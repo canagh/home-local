@@ -9,6 +9,7 @@ basic:
 
 zsh:
 	- ln -s $(CURDIR)/zsh/zshrc ~/.zshrc
+	curl -sL zplug.sh/installer | zsh
 
 vim:
 	- git clone https://github.com/kmyk/vimrc ~/local/vimrc

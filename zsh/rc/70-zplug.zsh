@@ -7,6 +7,4 @@ if [[ -e ~/.zplug/zplug ]] ; then
     autoload -U compinit
     compinit
 
-else
-    echo please run '$ curl -sL zplug.sh/installer | zsh'
 fi

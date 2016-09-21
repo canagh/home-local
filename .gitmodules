@@ -1,7 +1,0 @@
-[submodule "zsh/antigen"]
-	path = zsh/antigen
-	url = git@github.com:zsh-users/antigen.git
-
-[submodule "zsh/auto-fu.zsh"]
-	path = zsh/auto-fu.zsh
-	url = git@github.com:hchbaw/auto-fu.zsh.git
