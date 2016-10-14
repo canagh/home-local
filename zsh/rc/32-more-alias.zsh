@@ -18,6 +18,8 @@ alias py=py3
 alias py2=python2
 alias py3=python3
 
+alias time='command time -f "%es %MKB"'
+
 alias clrr='clr -r'
 
 alias rot13='tr A-Za-z N-ZA-Mn-za-m'
