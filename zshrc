@@ -42,16 +42,21 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 
 # Set aliases
-alias e=nvim
+export EDITOR=nvim
+alias e=$EDITOR
 alias r=cat
 alias j=jobs
 alias md=mkdir
 alias ls='\ls --color=auto'
 alias la='ls -a'
 alias ll='ls -l'
+alias cpr='cp -r'
 
 alias open=xdg-open
 alias del='gio trash'
+alias clr='gio trash'
+function clr() { find -maxdepth 1 -name \*~ -delete }
+function clrr() { find -name \*~ -delete }
 function chpwd() { ls }
 
 alias cc='clang -std=c99 -Wall'
