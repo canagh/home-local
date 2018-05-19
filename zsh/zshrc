@@ -1,6 +1,0 @@
-#!/usr/bin/zsh
-[ -L ~/.zshrc ] || echo ~/.zshrc: warning: '~/.zshrc should be symbolic-linkded'
-local f
-for f in $(dirname $(readlink ~/.zshrc))/rc/*.*sh ; do
-    source "$f"
-done

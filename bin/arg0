@@ -1,3 +1,0 @@
-#!/bin/sh
-# show the program name
-echo $0

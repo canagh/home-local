@@ -1,2 +1,0 @@
-#!/bin/sh
-exec wget --post-data="`cat`" --header='Content-Type: text/plain' -O - 'https://api.github.com/markdown/raw'

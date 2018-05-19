@@ -1,8 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=Mikutter
-Exec=sh -c '~/share/bin/mikutter'
-Terminal=false
-Type=Application
-StartupNotify=true
-Icon=mikutter

@@ -1,8 +1,6 @@
 [user]
 	name = Kimiyuki Onaka
 	email = kimiyuki95@gmail.com
-[core]
-        excludesfile = ~/local/dotfiles/gitignore
 [color]
 	ui = auto
 [alias]

@@ -1,3 +1,0 @@
-#!/bin/sh
-export BUNDLE_GEMFILE=$HOME/lib/mikutter/Gemfile
-exec bundle exec ruby $HOME/lib/mikutter/mikutter.rb "$@"

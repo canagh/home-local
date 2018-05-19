@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# Python Version: 2.x / 3.x
 
 import os
 import sys
@@ -10,7 +10,6 @@ except ImportError:
 else:
     import rlcompleter
     readline.parse_and_bind("tab: complete")
-    # histfile
     histfile = os.path.join(os.environ['HOME'], '.python_history')
     try:
         readline.read_history_file(histfile)
@@ -36,23 +35,35 @@ import struct
 import subprocess
 import telnetlib
 import time
+
 try:
     import Crypto
     import Crypto.PublicKey
     import Crypto.PublicKey.RSA
 except ImportError:
     pass
+
 try:
     import numpy as np
 except ImportError:
     pass
+
+try:
+    from sympy.functions.combinatorial.factorials import binomial
+    from sympy.functions.combinatorial.factorials import factorial
+    from sympy.functions.combinatorial.numbers import fibonacci
+except ImportError:
+    pass
+
 try:
     import gmpy2
 except ImportError:
     pass
+
 if sys.version_info.major == 3:
     import urllib.parse
     import urllib.request
+
 if sys.version_info.major == 2:
     try:
         import pwnlib

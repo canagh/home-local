@@ -1,6 +1,0 @@
-#!/bin/bash
-read -n1 q
-case "$q" in
-    y | Y ) exit 0 ;;
-    * ) exit 1 ;;
-esac
