@@ -68,6 +68,6 @@ alias py3=python3
 alias py=py3
 
 export PYTHONSTARTUP=$(dirname $(realpath ~/.zshrc))/python.startup.py
-
-path=( /usr/bin $path )
-export path
+export path=( /home/user/bin $path )
+export path=( $HOME/.rbenv/bin $path )
+eval "$(rbenv init - zsh)"
