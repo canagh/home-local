@@ -15,6 +15,9 @@ bindkey -e
 HISTSIZE=1000000
 SAVEHIST=1000000
 HISTFILE=~/.zsh_history
+bindkey "^R" history-incremental-search-backward
+bindkey "^S" history-incremental-search-forward
+setopt no_flow_control
 
 setopt histignorealldups sharehistory
 
@@ -41,20 +44,25 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 
-# Set aliases
+# envvars
 export EDITOR=nvim
+export LANG='en_US.UTF-8'
+
+# Set aliases
 alias e=$EDITOR
 alias r=cat
-alias j=jobs
+alias j='jobs -l'
 alias md=mkdir
+alias mp='mkdir -p'
 alias ls='\ls --color=auto'
 alias la='ls -a'
 alias ll='ls -l'
+alias mv='\mv -b'
+alias cp='\cp -b'
 alias cpr='cp -r'
 
 alias open=xdg-open
 alias del='gio trash'
-alias clr='gio trash'
 function clr() { find -maxdepth 1 -name \*~ -delete }
 function clrr() { find -name \*~ -delete }
 function chpwd() { ls }
@@ -71,3 +79,4 @@ export PYTHONSTARTUP=$(dirname $(realpath ~/.zshrc))/python.startup.py
 export path=( /home/user/bin $path )
 export path=( $HOME/.rbenv/bin $path )
 eval "$(rbenv init - zsh)"
+which aws_zsh_completer.sh >/dev/null && source aws_zsh_completer.sh
