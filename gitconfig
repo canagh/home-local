@@ -6,3 +6,9 @@
 [alias]
 	root = !pwd
         tree = log --graph --decorate --oneline --abbrev-commit
+        fetch-pull-request = "!sh -c 'git fetch origin pull/$1/head:pull/$1' $1"
+[merge]
+	ff = false
+	conflictStyle = diff3
+[pull]
+	ff = only

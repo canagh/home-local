@@ -19,7 +19,9 @@ bindkey "^R" history-incremental-search-backward
 bindkey "^S" history-incremental-search-forward
 setopt no_flow_control
 
-setopt histignorealldups sharehistory
+setopt hist_ignore_space
+setopt histignorealldups
+setopt sharehistory
 
 # Use modern completion system  (default)
 autoload -Uz compinit
@@ -61,16 +63,20 @@ alias mv='\mv -b'
 alias cp='\cp -b'
 alias cpr='cp -r'
 
+alias pbcopy='xsel --clipboard --input'
+alias pbpaste='xsel --clipboard --output'
 alias open=xdg-open
-alias del='gio trash'
 function clr() { find -maxdepth 1 -name \*~ -delete }
 function clrr() { find -name \*~ -delete }
 function chpwd() { ls }
 
-alias cc='clang -std=c99 -Wall'
-alias ccg='clang -std=c99 -Wall -ggdb3 -fsanitize=undefined -DDEBUG'
-alias cxx='clang++ -std=c++14 -Wall -O2'
-alias cxxg='clang++ -std=c++14 -Wall -ggdb3 -fsanitize=undefined -DDEBUG -D_GLIBCXX_DEBUG'
+alias cc='clang -std=c99 -Wall -DLOCAL -O2'
+alias ccg='clang -std=c99 -Wall -DLOCAL -ggdb3 -fsanitize=undefined'
+alias cxxo='clang -std=c99 -Wall -DLOCAL -Ofast -mtune=native -march=native'
+alias cxx='clang++ -std=c++17 -I ~/Library -Wall -DLOCAL -O2'
+alias cxxg='clang++ -std=c++17 -I ~/Library -Wall -DLOCAL -ggdb3 -fsanitize=undefined -D_GLIBCXX_DEBUG'
+alias cxxo='clang++ -std=c++17 -I ~/Library -Wall -DLOCAL -Ofast -mtune=native -march=native'
+alias oj-bundle='\oj-bundle -I ~/Library'
 alias py2=python2
 alias py3=python3
 alias py=py3
@@ -79,4 +85,15 @@ export PYTHONSTARTUP=$(dirname $(realpath ~/.zshrc))/python.startup.py
 export path=( /home/user/bin $path )
 export path=( $HOME/.rbenv/bin $path )
 eval "$(rbenv init - zsh)"
+export path=( $HOME/.cargo/bin $path )
 which aws_zsh_completer.sh >/dev/null && source aws_zsh_completer.sh
+# eval "$(opam config env)"
+
+# added by travis gem
+[ -f /home/user/.travis/travis.sh ] && source /home/user/.travis/travis.sh
+
+function oj-a () { oj d "$@" && [ ! -e a.cpp ] && atcoder-tools codegen "$@" > a.cpp ; }
+
+# export PATH="/home/user/.pyenv/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"

@@ -26,11 +26,15 @@ gmon.out
 .ropeproject/
 __pycache__/
 *.pyc
+.mypy_cache/
+.tox/
+*.egg-info/
 
 # haskell
 .virthualenv/
 cabal.sandbox.config
 .cabal-sandbox
+.stack-work
 
 ## ctags
 tags
@@ -43,3 +47,6 @@ nohup.out
 tmp/
 ,/
 ,*
+
+# java
+*.class

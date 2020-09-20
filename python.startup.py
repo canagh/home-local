@@ -22,10 +22,13 @@ else:
 import argparse
 import base64
 import binascii
+import collections
 import datetime
+import fractions
 import functools
 import hashlib
 import itertools
+import json
 import math
 import operator
 import random
@@ -57,13 +60,20 @@ except ImportError:
     pass
 
 try:
+    import requests
+except ImportError:
+    pass
+
+try:
     import gmpy2
 except ImportError:
     pass
 
 if sys.version_info.major == 3:
+    import pathlib
     import urllib.parse
     import urllib.request
+    from typing import *
 
 if sys.version_info.major == 2:
     try:
